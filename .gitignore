@@ -22,7 +22,7 @@
 *.nav
 *.nlo
 *.out
-*.pdf
+algo_report.pdf
 *.pdfsync
 *.ps
 *.snm
