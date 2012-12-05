@@ -91,12 +91,29 @@ intra-marginal trader otherwise we are considered extra-marginal.
 The price that we then submit will depend upon which capacity we are acting
 under based on the follow equations.
 
-$\tau = 
+\textbf{Intra-marginal buyer}
+
+$\tau =
 \begin{cases}
-      \hat{p}*(1- \frac{e^{-r\theta}-1}{e^{\theta}-1}), & \text{if} r \in (-1,0)  \\
-      1, & \text{if} r \in (0,1) 
-\end{cases}
-$
+      \hat{p}^*(1- \frac{e^{-r\theta}-1}{e^{\theta}-1}), &  \text{if r } \in (-1,0)  \\
+      \hat{p}^* + (l_i-\hat{p}^*)(\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if
+      r } \in (0,1)
+\end{cases}$
+
+where $\theta$ (REFERENCE) measures the volatility of the
+market, $l_i$ is the limit price, $\hat{p}^*$ is the estimator of the
+equilibrium price.
+
+\textbf{Extra-marginal buyer}
+
+$\tau =
+\begin{cases}
+      l_i(1-\frac{e^{-r\theta}-1}{e^\theta-1} &  \text{if r } \in (-1,0)  \\
+      l_i & \text{if
+      r } \in (0,1)
+\end{cases}$
+
+
 \begin{itemize} \itemsep0pt
 	\item Graph of all trades with projected price equilibrium
 	\item \textbf{MEGA GRAPH}
