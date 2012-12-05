@@ -53,7 +53,7 @@
 Rupert
 
 An automated trader is an algorithm that automatically places trading orders on
-a stock market.
+an electronic market.
 The trader receives buy or sell orders from customers with a price and
 quantity.
 The trader makes money by buying for less than the customers price or selling
@@ -61,12 +61,19 @@ for more than the customers price.
 Therefore the goal of a trading strategy is maximise these margins and the
 trading volume to maximise the amount of profit.
 
+In a double auction buyers submit bids to the market and sellers submit asks.
+When a bid equals or exceeds a seller's asks the bid is accepted and the trade
+occurs. Experiments have shown (Smith 1962) that the prices in the market will
+rapidly converge on the price equilibrium in a number of market environments.
+
 IBM published a paper in 2001 that showed that their MGD trading strategy and
 Dave Cliff's ZIP were able to outperform human traders.
 Algorithmic strategies are able to react more quickly to changing market
 conditions and combine information from a multiple sources.
 
-We have implemented the Adaptive Aggressiveness trading algorithm and compare
+In this paper we experiment with different trading strategies for the
+continuous double auction.
+We have implemented the Adaptive Aggressiveness trading algorithm and compared
 its performance with other adaptive algorithms as well as simpler traders.
 
 \begin{itemize}
@@ -82,7 +89,8 @@ more accurately, a minimal simulation of a limit order book financial exchange. 
 minimalistic it has the advantage of being both easy to understand and quick to run.
 
 BSE acts like a dark pool continuous double auction as both buyers and sellers simultaneously bid 
-towards their limit price and can see all other offers but do not know the identity of the trader. 
+towards their limit price and can see all other offers but do not know the identity of the trader.
+Only a single commodity is traded. 
 This has a number of implications, the main one being the difficulty of implementing the MGD trader 
 in this environment as it requires non-anonymised data to calculate which trades have been updated 
 each time step. This is covered in more detail in Section \ref{sec:traders_GDV}. Other traders (e.g. 
@@ -99,6 +107,56 @@ Zero-Intelligence-Plus (ZIP) traders
 
 \subsubsection{GD-Variants} \label{sec:traders_GDV}
 Rupert
+
+The Gjerstad Dickhaut (GD) trading strategy was invented by John Dickhaut and
+Steven Gjerstad in their 1998 paper \emph{Price Formation in Double Auctions}.
+GD works by building a belief function of whether a bid at a particular price
+will be accepted by a seller.
+The buyer then aims to maximise their profit thorugh a combination of margin
+and chance of trading.
+The belief values are formed based on observed trades and outstanding shouts.
+The GD strategy makes some simple assumptions such as if a bid was rejected a
+lower bid will also be rejected since it will be less attractive to a seller.
+The results of the experiments showed that GD has a higher efficiency than ZI.
+The efficiency is the margin divided by the maximum theoreticaly margin
+(difference between limit and price equilibrium).
+They also showed that GD was able to cope with chaning supply and demand
+conditions.
+
+Modified Gjerstad Dickhaut (MGD) (Tesauro, Das, IBM)  is a version of GD that
+is better suited to volatile conditions that can occur at the start of a
+session where there is very little information about accepted and rejected
+orders.
+An MGD agent remembers the highest and lowest prices from the last session.
+A MGD buyer will then set the belief function to 1 for all prices above the
+lowest price and to 0 for all prices below the lowest price.
+MGD is also able to hold multiple units.
+
+% http://researcher.ibm.com/researcher/files/us-kephart/ec01_dblauc.pdf
+
+GDX is a Dynamic Programming based variant of GD.
+GDX uses the same belief function as GD but uses Dynamic Programming to
+maximise the long term reward instead of the short term reward.
+Dynamic Programming is used to compute optimal policies in Markov Decision
+Problems.
+The emphasis placed between short and long term rewards can be controlled using
+the discount value ($\gamma$).
+$\gamma = 0$ will result in the same behaviour as the standard GD strategy
+(short-term reward) while $\gamma = 1$ will cause GDX to maximise the long term
+reward.
+However setting $\gamma$ close to 1 will cause GDX to always wait for a better
+deal and thus not make any trades.
+They found that under certain market environments GDX was able to outperform
+both GD and ZIP.
+With a $\gamma$ between 0.75 and 0.85 GDX always outperforms GD.
+GDX is more flexible than GD and can handle multiple goods although
+optimisations are needed to keep the state space tractable.
+
+% http://researcher.ibm.com/researcher/files/us-kephart/gdx_aamas02.pdf
+
+The Zero Intelligence (ZIC) trader does not learn from market events (Gode
+1993).
+
 \begin{itemize} \itemsep0pt
 	\item Shavers / Sniper / XKCD, etc.
 	\item MGD anonymised data (see BSE paragraph 2)
