@@ -13,13 +13,13 @@
 \author{
   \alignauthor
     Rupert Bedford\\
-    \email{rb9281@bris.ac.uk}
+    \email{rb9281@bristol.ac.uk}
   \alignauthor
     Max Robinson\\
-    \email{mr9388@bris.ac.uk}
+    \email{mr9388@bristol.ac.uk}
   \alignauthor
     Jonathan Simmonds
-    \email{js9721@bris.ac.uk}
+    \email{js9721@bristol.ac.uk}
 }
 \date{7 December 2012}
 
@@ -93,11 +93,13 @@ towards their limit price and can see all other offers but do not know the ident
 Only a single commodity is traded. 
 This has a number of implications, the main one being the difficulty of implementing the MGD trader 
 in this environment as it requires non-anonymised data to calculate which trades have been updated 
-each time step. This is covered in more detail in Section \ref{sec:traders_GDV}.
+each time step. This is covered in more detail in Section \ref{sec:traders_GDV}. Other traders (e.g. 
+ZIP and AA) do not have this limitation.\\
+
 
 \subsection{Traders} \label{sec:traders}
 \subsubsection{ZIP} \label{sec:traders_ZIP}
-ZIP trad
+Zero-Intelligence-Plus (ZIP) traders
 \begin{itemize} \itemsep0pt
 	\item What was significant --- key points
 	\item Advantages/disadvantages
@@ -166,14 +168,29 @@ The Zero Intelligence (ZIC) trader does not learn from market events (Gode
 The adaptive aggressive algorithm relies on the principal that you can be in
 two different states. One where you trade more frequently closer to your limit
 price, higher chance of trading but lower profit per trade. The other where you
-trade further from your limit price, which decreases the liklihood fo making a
+trade further from your limit price, which decreases the likelihood of making a
 trade but increases the amount of profit you will make when you do trade.
 
 The Adaptive-Aggressive algorithm maintains an aggressiveness value (r), which
 determines how close to your limit price you will be trading. A completely
 aggressive buyer ($r = 1$) will buy at their limit price, and a completely
 passive trader ($r = -1$) will buy at the minimum market price (\$1 in our case)
+\subsection{Price Equilibrium Estimator}
+One of the key features that most trading algorithms rely on is the ability to
+estimate the equilibrium price of the market. For this we used the following
+equation which estimates the market equilibrium price based on the N most
+recent transactions, known as a moving average.
 
+\begin{equation}
+\hat p^* = \frac{\sum^T_{i=T-N+1}w_ip_i}{\sum^T_{i=T-N+1}w_i}\\
+\text{where $w_T = 1$ and $w_{i-1} = \lambda w_i$}
+\label{equest}
+\end{equation}
+
+The $w_i$ represents the weight of the transaction so that we weight more
+recent transactions more heavily with the $\lambda$ affect how severe this
+weighting is. We set the value of $\lambda$ to 0.9 which was the value
+recommended in the original paper\cite{p100,AA_Thesis}
 \subsubsection{Price estimation} \label{sec:AA_price_estimation}
 Short term learning reflects how the value of our aggressive is calculated and
 then subsequently updated. However, first we must define two concepts. An
@@ -191,46 +208,95 @@ The price that we then submit will depend upon which capacity we are acting
 under based on the follow equations.
 
 \textbf{Intra-marginal buyer}
-
-$\tau =
+\begin{equation}
+\tau =
 \begin{cases}
       \hat{p}^*(1- \frac{e^{-r\theta}-1}{e^{\theta}-1}), &  \text{if r } \in (-1,0)  \\
       \hat{p}^* + (l_i-\hat{p}^*)(\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if
       r } \in (0,1)
-\end{cases}$
+\end{cases}
+\label{intrabuyer}
+\end{equation}
 
-where $\theta$ (REFERENCE) measures the volatility of the
+where $\theta$ (\ref{sec:AA_long_term_learning}) measures the volatility of the
 market, $l_i$ is the limit price for the buyer, $\hat{p}^*$ is the estimator of the
 equilibrium price.
 
 \textbf{Extra-marginal buyer}
-
-$\tau =
+\begin{equation}
+\tau =
 \begin{cases}
       l_i(1-\frac{e^{-r\theta}-1}{e^\theta-1} &  \text{if r } \in (-1,0)  \\
-      l_i & \text{if
-      r } \in (0,1)
-\end{cases}$
+      l_i & \text{if r } \in (0,1)
+\end{cases}
+\label{extrabuyer}
+\end{equation}
 
 \textbf{Intra-marginal seller}
-
-$\tau =
+\begin{equation}
+\label{intraseller}
+\tau =
 \begin{cases}
       \hat{p}^* + (MAX-\hat{p}^*)( \frac{e^{-r\theta}-1}{e^{\theta}-1}), &  \text{if r } \in (-1,0)  \\
-      c_j + (\hat{p}^*-c_j)(1-\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if
-      r } \in (0,1)
-\end{cases}$
+      c_j + (\hat{p}^*-c_j)(1-\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if r } \in (0,1)
+\end{cases}
+\end{equation}
 
 where MAX is the maximum value that can be submitted to the market and $c_j$ is
-te limit price for the seller.
+the limit price for the seller.
 
 \textbf{Extra-marginal seller}
-
-$\tau =
+\begin{equation}
+\tau =
 \begin{cases}
       c_j + (MAX-c_j)(1-\frac{e^{-r\theta}-1}{e^\theta-1} &  \text{if r } \in (-1,0)  \\
       c_j & \text{if r } \in (0,1)
-\end{cases}$
+\end{cases}
+\label{extraseller}
+\end{equation}
+
+In the paper, there was a different value used instead of $\theta$, designed to
+ensure that the curve provided by the equations was continuous. However, we
+found that just using $\theta$ was still sufficiently accurate and greatly
+simplified the above equations.
+
+One of the equations is then used to determine the ideal price that we want to
+be trading at. We then use the following rules to determine the actual shout
+that we will make when asked to submit a new order. The $o_{bid}$ and $o_{ask}$
+represent the best bid (highest) and best ask (lowest) on the market that have
+not yet been accepted. The value of $\eta$ is set as a parameter and reflects
+how quickly we converge on our estimated price (higher $\eta$ converge slower).
+
+\textbf{Bidding rules for Buyer}
+if ($l_i \leq o_bid$) - Submit no bid (market transacting above our limit)\\
+else submit bid given by Equation \ref{bidieqn}
+
+\begin{equation}
+bid_i = \frac{o_{bid} + (\tau - o_{bid}}{\eta}
+\label{bidieqn}
+\end{equation}
+
+\textbf{Bidding rules for Seller}
+if ($c_j \geq o_{ask}$) - Submit no ask (market transacting below our limit)\\
+else submit bid given by Equation \ref{askieqn}
+
+\begin{equation}
+ask_i = o_{ask} - \frac{o_{ask}-\tau}{\eta}
+\label{askieqn}
+\end{equation}
+
+Since these all require an existing bid on the market, there were difficult
+rules that were used to determine what shout to make if we were the first
+trader selected to make a bid. These can be found in the Adaptive Aggressive
+paper \textbf{REFERENCE GOES HERE}  but are not defined here.
+
+Initially when we ran our algorithm we found that it was occasionally making a
+loss upon receiving a new order from the scheduler with a different limit
+price. The reason for this was that our previous bids had been submitted using
+the limit price from the previous order. Since on the Bristol Stock Exchange it
+is not possible to remove a bid, we added additional logic to notify us of the
+new order. If it was found that the new order contained a limit that was
+outside of our trading range, we cleared our previous bid using a stub.
 
 \begin{itemize} \itemsep0pt
 	\item Graph of all trades with projected price equilibrium
@@ -283,6 +349,6 @@ Group hug
 
 
 %\pagebreak
-%\bibliographystyle{unsrt}
-%\bibliography{References}
+\bibliographystyle{unsrt}
+\bibliography{algo_report}
 \end{document}
