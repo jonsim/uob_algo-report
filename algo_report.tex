@@ -304,13 +304,36 @@ outside of our trading range, we cleared our previous bid using a stub.\\
 
 
 \subsubsection{Short term learning} \label{sec:AA_short_term_learning}
-% OWNER: MAX
-% - Graphs - r vs price equilibrium
-Once we decided what capacity we are acting in we then use the following
-equations to calculate our aggressiveness
+The aggressiveness of the Adaptive Aggressive algorithm is updated at every
+time step using Equation \ref{updateaggressive} based on the following rules.
 
-$r(t+1) = r(t) + \beta_1(\delta(t) - r(t))\\\delta(t) = (1 \pm
-\lambda_r)r_{shout} \pm \lambda_a$
+\textbf{Learning Rules for Buyer:}
+if (trade occurs at price q)\\
+    \indent if ($\tau \geq q$) be less aggressive (our price too high)\\
+    \indent else be more aggressive ( our price too low)\\
+else if ($\tau \leq o_bid$) be more aggressive ( our price too low)
+
+\textbf{Learning Rules for Seller:}
+if (trade occurs at price q)\\
+    \indent if ($\tau \leq q$) be less aggressive (our price too low)\\
+    \indent else be more aggressive ( our price too high\\
+else if ($\tau \leq o_bid$) be more aggressive ( our price too high)
+
+\begin{equation}
+r(t+1) = r(t) + \beta_1(\delta(t) - r(t))\\\delta(t) = (1 \pm
+\lambda_r)r_{shout} \pm \lambda_a
+\label{updateaggressive}
+\end{equation}
+
+$\lambda_r$ and $\lambda_a$ representive the relative and absolute change in
+r respectively. The absolute change exists to prevent r from never being able
+to escape from a value of 0. Depending on the rules above, we either set the
+two values to positive to become more aggressive or negative to become less
+aggressive.
+
+\begin{itemize} \itemsep0pt
+	\item Graphs --- \tt r \rm vs price equilibrium
+\end{itemize}
 
 Descriptive text.\\
 
