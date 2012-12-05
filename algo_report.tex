@@ -304,6 +304,8 @@ outside of our trading range, we cleared our previous bid using a stub.\\
 
 
 \subsubsection{Short term learning} \label{sec:AA_short_term_learning}
+% OWNER: Max
+% - Graphs - r vs price equilibrium.
 The aggressiveness of the Adaptive Aggressive algorithm is updated at every
 time step using Equation \ref{updateaggressive} based on the following rules.
 
@@ -329,13 +331,7 @@ $\lambda_r$ and $\lambda_a$ representive the relative and absolute change in
 r respectively. The absolute change exists to prevent r from never being able
 to escape from a value of 0. Depending on the rules above, we either set the
 two values to positive to become more aggressive or negative to become less
-aggressive.
-
-\begin{itemize} \itemsep0pt
-	\item Graphs --- \tt r \rm vs price equilibrium
-\end{itemize}
-
-Descriptive text.\\
+aggressive.\\
 
 
 \subsubsection{Long term learning} \label{sec:AA_long_term_learning}
