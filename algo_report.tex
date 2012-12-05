@@ -125,7 +125,7 @@ $\tau =
 \end{cases}$
 
 where $\theta$ (REFERENCE) measures the volatility of the
-market, $l_i$ is the limit price, $\hat{p}^*$ is the estimator of the
+market, $l_i$ is the limit price for the buyer, $\hat{p}^*$ is the estimator of the
 equilibrium price.
 
 \textbf{Extra-marginal buyer}
@@ -137,6 +137,25 @@ $\tau =
       r } \in (0,1)
 \end{cases}$
 
+\textbf{Intra-marginal seller}
+
+$\tau =
+\begin{cases}
+      \hat{p}^* + (MAX-\hat{p}^*)( \frac{e^{-r\theta}-1}{e^{\theta}-1}), &  \text{if r } \in (-1,0)  \\
+      c_j + (\hat{p}^*-c_j)(1-\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if
+      r } \in (0,1)
+\end{cases}$
+
+where MAX is the maximum value that can be submitted to the market and $c_j$ is
+te limit price for the seller.
+
+\textbf{Extra-marginal seller}
+
+$\tau =
+\begin{cases}
+      c_j + (MAX-c_j)(1-\frac{e^{-r\theta}-1}{e^\theta-1} &  \text{if r } \in (-1,0)  \\
+      c_j & \text{if r } \in (0,1)
+\end{cases}$
 
 \begin{itemize} \itemsep0pt
 	\item Graph of all trades with projected price equilibrium
