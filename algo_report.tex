@@ -1,68 +1,30 @@
+\documentclass{acm_proc_article-sp}
 
-% !TEX encoding = UTF-8 Unicode
-
-
-\documentclass[12pt]{article} % use larger type; default would be 10pt
-
-
-
-%%% PAGE DIMENSIONS
-% \usepackage{times} % Times New Roman font
-\usepackage{geometry} % to change the page dimensions
-\geometry{a4paper} % or letterpaper (US) or a5paper or....
-\geometry{margin = 1.8cm} % for example, change the margins to 2 inches all round
-\geometry{top = 2.2cm}
+\usepackage{graphicx}
+\usepackage{amsmath}
+\usepackage{float}
+\usepackage{natbib}
 \usepackage{url}
-% \geometry{landscape} % set up the page for landscape
-% read geometry.pdf for detailed page layout information
-
-\usepackage[parfill]{parskip} % Activate to begin paragraphs with an empty line rather than an indent
-
-%%% PACKAGES
-\usepackage{amssymb,amsmath} % for equations
-\usepackage{booktabs} % for much better looking tables
-\usepackage{multirow} % for multi-row cells.
-\usepackage{array} % for better arrays (eg matrices) in maths
-\usepackage{paralist} % very flexible & customisable lists (eg. enumerate/itemize, etc.)
-\usepackage{verbatim} % adds environment for commenting out blocks of text & for better verbatim
-\usepackage{subfig} % make it possible to include more than one captioned figure/table in a single float
-\usepackage{graphicx} % support the \includegraphics command and options
-\usepackage{wrapfig}
-\usepackage{float} % allow accurate float placement
-% These packages are all incorporated in the memoir class to one degree or another...
-
-%%% HEADERS & FOOTERS
-\usepackage{fancyhdr} % This should be set AFTER setting up the page geometry
-\pagestyle{fancy} % options: empty , plain , fancy
-\renewcommand{\headrulewidth}{1pt} % customise the layout...
-%\lhead{Algorithmic and Economic Aspect of the Internet Assignment} \chead{} \rhead{js9721, rb9281, mr0000}
-\lhead{} \chead{} \rhead{}
-\lfoot{}\cfoot{\thepage}\rfoot{}
-
-\title{Analysis of an Adaption of the Adaptive Aggressive Algorithm: Asking are AA Algorithms Actually All that Acurate in Applicable Auctions Anyway?}
-\author{Jonathan Simmonds, Rupert Bedford, Max Robinson}
-\date{} % Activate to display a given date or no date (if empty),
-% otherwise the current date is printed
-
-%%% SECTION TITLE APPEARANCE
-\usepackage{sectsty}
-\allsectionsfont{\sffamily\mdseries\upshape} % (See the fntguide.pdf for font help)
-% (This matches ConTeXt defaults)
-
-%%% ToC (table of contents) APPEARANCE
-\usepackage[nottoc,notlof,notlot]{tocbibind} % Put the bibliography in the ToC
-\usepackage[titles,subfigure]{tocloft} % Alter the style of the Table of Contents
-\renewcommand{\cftsecfont}{\rmfamily\mdseries\upshape}
-\renewcommand{\cftsecpagefont}{\rmfamily\mdseries\upshape} % No bold!
-
-%%% END Article customizations
-
-%%% The "real" document content comes below...
+\usepackage{amssymb}
 
 \begin{document}
+\title{Analysis of an Adaption of the Adaptive Aggressive Algorithm: Asking are AA Algorithms Actually All that Accurate in Applicable Auctions Anyway?}
+\numberofauthors{3} 
+\author{
+  \alignauthor
+    Rupert Bedford\\
+    \email{rb9281@bris.ac.uk}
+  \alignauthor
+    Max Robinson\\
+    \email{mr9388@bris.ac.uk}
+  \alignauthor
+    Jonathan Simmonds
+    \email{js9721@bris.ac.uk}
+}
+\date{7 December 2012}
 
-\maketitle{}
-\vspace{3cm}
+\maketitle
+\begin{abstract}
 \begin{verbatim}
                              .::::. 
                            .::::::::. 
@@ -83,15 +45,14 @@
    ..::::                  ':::::::::'        .:' '''' 
 ..''''':'                    ':::::.' 
 \end{verbatim}
+\end{abstract}
 
 \pagebreak
 
-\section{Abstract}
-
-
 \section{Introduction}
 Rupert
-\begin{itemize} \itemsep0pt
+
+\begin{itemize}
 	\item What is automated trading (history)
 	\item What our goal was
 \end{itemize}
