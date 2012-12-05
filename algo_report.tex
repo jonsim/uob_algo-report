@@ -132,7 +132,8 @@ recent transactions, known as a moving average.
 The $w_i$ represents the weight of the transaction so that we weight more
 recent transactions more heavily with the $\lambda$ affect how severe this
 weighting is. We set the value of $\lambda$ to 0.9 which was the value
-recommended in the original paper\cite{p100,AA_Thesis}
+recommended in the original paper \cite[p.~100]{AA_thesis}.\\
+
 \subsubsection{Price estimation} \label{sec:AA_price_estimation}
 Short term learning reflects how the value of our aggressive is calculated and
 then subsequently updated. However, first we must define two concepts. An
@@ -230,7 +231,7 @@ ask_i = o_{ask} - \frac{o_{ask}-\tau}{\eta}
 Since these all require an existing bid on the market, there were difficult
 rules that were used to determine what shout to make if we were the first
 trader selected to make a bid. These can be found in the Adaptive Aggressive
-paper \textbf{REFERENCE GOES HERE}  but are not defined here.
+paper \cite[p.~32]{AA_paper} but are not defined here.
 
 Initially when we ran our algorithm we found that it was occasionally making a
 loss upon receiving a new order from the scheduler with a different limit
