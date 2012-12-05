@@ -143,7 +143,7 @@ $\tau =
       r } \in (0,1)
 \end{cases}$
 
-where $\theta$ (REFERENCE) measures the volatility of the
+where $\theta$ (\ref{sec:AA_long_term_learning}) measures the volatility of the
 market, $l_i$ is the limit price for the buyer, $\hat{p}^*$ is the estimator of the
 equilibrium price.
 
@@ -175,6 +175,50 @@ $\tau =
       c_j + (MAX-c_j)(1-\frac{e^{-r\theta}-1}{e^\theta-1} &  \text{if r } \in (-1,0)  \\
       c_j & \text{if r } \in (0,1)
 \end{cases}$
+
+In the paper, there was a different value used instead of $\theta$, designed to
+ensure that the curve provided by the equations was continuous. However, we
+found that just using $\theta$ was still sufficiently accurate and greatly
+simplified the above equations.
+
+One of the equations is then used to determine the ideal price that we want to
+be trading at. We then use the following rules to determine the actual shout
+that we will make when asked to submit a new order. The $o_{bid}$ and $o_{ask}$
+represent the best bid (highest) and best ask (lowest) on the market that have
+not yet been accepted. The value of $\eta$ is set as a parameter and reflects
+how quickly we converge on our estimated price (higher $\eta$ converge slower).
+
+\textbf{Bidding rules for Buyer}
+if ($l_i \leq o_bid$) - Submit no bid (market transacting above our limit)\\
+else submit bid given by Equation \ref{bidieqn}
+
+\begin{equation}
+bid_i = \frac{o_{bid} + (\tau - o_{bid}}{\eta}
+\label{bidieqn}
+\end{equation}
+
+\textbf{Bidding rules for Seller}
+if ($c_j \geq o_{ask}$) - Submit no ask (market transacting below our limit)\\
+else submit bid given by Equation \ref{askieqn}
+
+\begin{equation}
+ask_i = o_{ask} - \frac{o_{ask}-\tau}{\eta}
+\label{askieqn}
+\end{equation}
+
+Since these all require an existing bid on the market, there were difficult
+rules that were used to determine what shout to make if we were the first
+trader selected to make a bid. These can be found in the Adaptive Aggressive
+paper \textbf{REFERENCE GOES HERE}  but are not defined here.
+
+Initially when we ran our algorithm we found that it was occasionally making a
+loss upon receiving a new order from the scheduler with a
+different limit price. The reason for this was that our previous bids had been
+submitted using the limit price from the previous order. Since on the Bristol
+Stock Exchange it is not possible to remove a bid, we added additional logic to
+notify us of the new order. If it was found that the new order contained a
+limit that was outside of our trading range, we cleared our previous bid using
+a stub.
 
 \begin{itemize} \itemsep0pt
 	\item Graph of all trades with projected price equilibrium
