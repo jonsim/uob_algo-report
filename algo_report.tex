@@ -7,6 +7,9 @@
 \usepackage{url}
 \usepackage{amssymb}
 
+%\usepackage{fancyhdr}
+%\lfoot{HELLO}\cfoot{\thepage}\rfoot{WORLD}
+
 \begin{document}
 \title{Analysis of an Adaption of the Adaptive Aggressive Algorithm: Asking are AA Algorithms Actually All that Accurate in Applicable Auctions Anyway?}
 \numberofauthors{3} 
@@ -50,7 +53,9 @@
 \pagebreak
 
 \section{Introduction} \label{sec:introduction}
-Rupert
+% OWNER: Rupert
+% - What is automated trading (history)
+% - What our goal was
 
 An automated trader is an algorithm that automatically places trading orders on
 an electronic market.
@@ -74,12 +79,7 @@ conditions and combine information from a multiple sources.
 In this paper we experiment with different trading strategies for the
 continuous double auction.
 We have implemented the Adaptive Aggressiveness trading algorithm and compared
-its performance with other adaptive algorithms as well as simpler traders.
-
-\begin{itemize}
-	\item What is automated trading (history)
-	\item What our goal was
-\end{itemize}
+its performance with other adaptive algorithms as well as simpler traders.\\
 
 
 \section{Environment} \label{sec:environment}
@@ -99,31 +99,35 @@ ZIP and AA) do not have this limitation.\\
 
 \subsection{Traders} \label{sec:traders}
 \subsubsection{ZIP} \label{sec:traders_ZIP}
-Zero-Intelligence-Plus (ZIP) traders
-\begin{itemize} \itemsep0pt
-	\item What was significant --- key points
-	\item Advantages/disadvantages
-\end{itemize}
+% OWNER: Jonny
+% - What was significant --- key points
+% - Advantages/disadvantages
+Zero-Intelligence-Plus (ZIP) traders.\\
 
-\subsubsection{GD-Variants} \label{sec:traders_GDV}
-Rupert
+
+\subsubsection{GD Variants} \label{sec:traders_GDV}
+% OWNER: Rupert
+% - Shavers / Sniper / XKCD, etc.
+% - MGD anonymised data (see BSE paragraph 2)
+% - We implemented it but couldn't do a full implementation
 
 The Gjerstad Dickhaut (GD) trading strategy was invented by John Dickhaut and
-Steven Gjerstad in their 1998 paper \emph{Price Formation in Double Auctions}.
+Steven Gjerstad in their 1998 paper \emph{Price Formation in Double
+Auctions}\cite{gd}.
 GD works by building a belief function of whether a bid at a particular price
 will be accepted by a seller.
-The buyer then aims to maximise their profit thorugh a combination of margin
+The buyer then aims to maximise their profit through a combination of margin
 and chance of trading.
 The belief values are formed based on observed trades and outstanding shouts.
 The GD strategy makes some simple assumptions such as if a bid was rejected a
 lower bid will also be rejected since it will be less attractive to a seller.
 The results of the experiments showed that GD has a higher efficiency than ZI.
-The efficiency is the margin divided by the maximum theoreticaly margin
+The efficiency is the margin divided by the maximum theoretically margin
 (difference between limit and price equilibrium).
-They also showed that GD was able to cope with chaning supply and demand
+They also showed that GD was able to cope with changing supply and demand
 conditions.
 
-Modified Gjerstad Dickhaut (MGD) (Tesauro, Das, IBM)  is a version of GD that
+Modified Gjerstad Dickhaut (MGD) \cite{mgd} is a version of GD that
 is better suited to volatile conditions that can occur at the start of a
 session where there is very little information about accepted and rejected
 orders.
@@ -132,9 +136,7 @@ A MGD buyer will then set the belief function to 1 for all prices above the
 lowest price and to 0 for all prices below the lowest price.
 MGD is also able to hold multiple units.
 
-% http://researcher.ibm.com/researcher/files/us-kephart/ec01_dblauc.pdf
-
-GDX is a Dynamic Programming based variant of GD.
+GDX\cite{gdx} is a Dynamic Programming based variant of GD.
 GDX uses the same belief function as GD but uses Dynamic Programming to
 maximise the long term reward instead of the short term reward.
 Dynamic Programming is used to compute optimal policies in Markov Decision
@@ -152,19 +154,15 @@ With a $\gamma$ between 0.75 and 0.85 GDX always outperforms GD.
 GDX is more flexible than GD and can handle multiple goods although
 optimisations are needed to keep the state space tractable.
 
-% http://researcher.ibm.com/researcher/files/us-kephart/gdx_aamas02.pdf
-
 The Zero Intelligence (ZIC) trader does not learn from market events (Gode
-1993).
+1993).\\
 
-\begin{itemize} \itemsep0pt
-	\item Shavers / Sniper / XKCD, etc.
-	\item MGD anonymised data (see BSE paragraph 2)
-	\item We implemented it but couldn't do a full implementation
-\end{itemize}
 
-\pagebreak
+\pagebreak % QUESTIONABLE
 \subsection{Adaptive Aggressive Traders} \label{sec:AA}
+% OWNER: Max
+% - ???
+
 The adaptive aggressive algorithm relies on the principal that you can be in
 two different states. One where you trade more frequently closer to your limit
 price, higher chance of trading but lower profit per trade. The other where you
@@ -192,7 +190,12 @@ recent transactions more heavily with the $\lambda$ affect how severe this
 weighting is. We set the value of $\lambda$ to 0.9 which was the value
 recommended in the original paper \cite[p.~100]{AA_thesis}.\\
 
+
 \subsubsection{Price estimation} \label{sec:AA_price_estimation}
+% OWNER: Max
+% - Graph of all trades with projected price equilibrium
+% - MEGA GRAPH
+
 Short term learning reflects how the value of our aggressive is calculated and
 then subsequently updated. However, first we must define two concepts. An
 intra-marginal trader is a trader that bids above the equilibrium if they are a
@@ -297,12 +300,7 @@ price. The reason for this was that our previous bids had been submitted using
 the limit price from the previous order. Since on the Bristol Stock Exchange it
 is not possible to remove a bid, we added additional logic to notify us of the
 new order. If it was found that the new order contained a limit that was
-outside of our trading range, we cleared our previous bid using a stub.
-
-\begin{itemize} \itemsep0pt
-	\item Graph of all trades with projected price equilibrium
-	\item \textbf{MEGA GRAPH}
-\end{itemize}
+outside of our trading range, we cleared our previous bid using a stub.\\
 
 
 \subsubsection{Short term learning} \label{sec:AA_short_term_learning}
@@ -337,38 +335,37 @@ aggressive.
 	\item Graphs --- \tt r \rm vs price equilibrium
 \end{itemize}
 
-\subsubsection{Long term learning} \label{sec:AA_long_term_learning}
-Max
-\begin{itemize} \itemsep0pt
-	\item $\theta$
-\end{itemize}
+Descriptive text.\\
 
+
+\subsubsection{Long term learning} \label{sec:AA_long_term_learning}
+% OWNER: Max
+% - theta
+Text.\\
 
 
 \section{Calibration} \label{sec:calibration}
-Group hug
-\begin{itemize} \itemsep0pt
-	\item $\beta_1$, $\beta_2$, $\gamma$, $\eta$
-	\item potential to compare statistically?
-\end{itemize}
+% OWNER: Group
+% - $\beta_1$, $\beta_2$, $\gamma$, $\eta$
+% - potential to compare statistically?
+Text.\\
 
 
 \section{Results} \label{sec:results}
-Group hug
-\begin{itemize} \itemsep0pt
-	\item Graph: Average balance over time
-	\item Statistical \textbf{anal}ysis --- why you used a certain test\\
-Ed's report: ``According to the conducted Wilcoxon-Mann-Whitney two-tailed rank-sum tests, the difference in the observed efficiencies is significant ($U = 2, N_1 = N_2 = 10, p < 0.0003$)."
-	\item Experiment with changing scheduler
-	\item Other graphs
-\end{itemize}
+% OWNER: Group
+% - Graph: Average balance over time
+% - Statistical analysis - why you used a certain test
+%   Ed's report: ``According to the conducted Wilcoxon-Mann-Whitney two-tailed rank-sum tests, the difference in the observed efficiencies is significant ($U = 2, N_1 = N_2 = 10, p < 0.0003$)."
+% - Experiment with changing scheduler
+% - Other graphs
+Text.\\
+
 
 \section{Conclusion} \label{sec:conclusion}
-Group hug
-\begin{itemize} \itemsep0pt
-	\item Thank you and good night
-	\item Hold for applause
-\end{itemize}
+% OWNER: Group
+% - Thank you and good night
+% - Hold for applause
+Text.\\
 
 
 %\pagebreak
