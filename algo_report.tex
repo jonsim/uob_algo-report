@@ -24,13 +24,32 @@
 \date{7 December 2012}
 
 \maketitle
-\begin{abstract}
-Abstract goes here.
+\begin{abstract} \label{sec:abstract}
+\begin{verbatim}
+                             .::::. 
+                           .::::::::. 
+                           ::::::::::: 
+                           ':::::::::::.. 
+                            :::::::::::::::' 
+                             ':::::::::::. 
+                               .::::::::::::::' 
+                             .:::::::::::... 
+                            ::::::::::::::'' 
+                .:::.       '::::::::'':::: 
+              .::::::::.      ':::::'  ':::: 
+             .::::':::::::.    :::::    '::::. 
+           .:::::' ':::::::::. :::::      ':::. 
+         .:::::'     ':::::::::.:::::       '::. 
+       .::::''         '::::::::::::::       '::. 
+      .::''              '::::::::::::         :::... 
+   ..::::                  ':::::::::'        .:' '''' 
+..''''':'                    ':::::.' 
+\end{verbatim}
 \end{abstract}
 
 \pagebreak
 
-\section{Introduction}
+\section{Introduction} \label{sec:introduction}
 Rupert
 
 \begin{itemize}
@@ -39,31 +58,36 @@ Rupert
 \end{itemize}
 
 
-\section{Environment}
-\subsection{BSE}
-Jonny
-\begin{itemize} \itemsep0pt
-	\item Limitations
-	\item Restrictions (level of info --- sealed bid double auction, dark pools? (\url{http://en.wikipedia.org/wiki/Dark_liquidity}, \url{http://en.wikipedia.org/wiki/Algorithmic_trading#Strategies_that_only_pertain_to_dark_pools}) etc.)
-\end{itemize}
+\section{Environment} \label{sec:environment}
+\subsection{BSE} \label{sec:BSE}
+For this assignment we use the Bristol Stock Exchange (BSE) as a virtual trading environment or, 
+more accurately, a minimal simulation of a limit order book financial exchange. As it is 
+minimalistic it has the advantage of being both easy to understand and quick to run.
 
-\subsection{Traders}
-\subsubsection{ZIP}
+BSE acts like a dark pool continuous double auction as both buyers and sellers simultaneously bid 
+towards their limit price and can see all other offers but do not know the identity of the trader. 
+This has a number of implications, the main one being the difficulty of implementing the MGD trader 
+in this environment as it requires non-anonymised data to calculate which trades have been updated 
+each time step. This is covered in more detail in Section \ref{sec:traders_GDV}.
+
+\subsection{Traders} \label{sec:traders}
+\subsubsection{ZIP} \label{sec:traders_ZIP}
 Jonny
 \begin{itemize} \itemsep0pt
 	\item What was significant --- key points
 	\item Advantages/disadvantages
 \end{itemize}
 
-\subsubsection{GD-Variants}
+\subsubsection{GD-Variants} \label{sec:traders_GDV}
 Rupert
 \begin{itemize} \itemsep0pt
 	\item Shavers / Sniper / XKCD, etc.
+	\item MGD anonymised data (see BSE paragraph 2)
 	\item We implemented it but couldn't do a full implementation
 \end{itemize}
 
 \pagebreak
-\subsection{Adaptive Aggressive Traders}
+\subsection{Adaptive Aggressive Traders} \label{sec:AA}
 The adaptive aggressive algorithm relies on the principal that you can be in
 two different states. One where you trade more frequently closer to your limit
 price, higher chance of trading but lower profit per trade. The other where you
@@ -72,10 +96,10 @@ trade but increases the amount of profit you will make when you do trade.
 
 The Adaptive-Aggressive algorithm maintains an aggressiveness value (r), which
 determines how close to your limit price you will be trading. A completely
-aggressive buyer (r = 1) will buy at their limit price, and a completely
-passive trader (r = -1) will buy at the minimum market price (\$1 in our case)
+aggressive buyer ($r = 1$) will buy at their limit price, and a completely
+passive trader ($r = -1$) will buy at the minimum market price (\$1 in our case)
 
-\subsubsection{Price estimation}
+\subsubsection{Price estimation} \label{sec:AA_price_estimation}
 Short term learning reflects how the value of our aggressive is calculated and
 then subsequently updated. However, first we must define two concepts. An
 intra-marginal trader is a trader that bids above the equilibrium if they are a
@@ -139,7 +163,7 @@ $\tau =
 \end{itemize}
 
 
-\subsubsection{Short term learning}
+\subsubsection{Short term learning} \label{sec:AA_short_term_learning}
 Once we decided what capacity we are acting in we then use the following
 equations to calculate our aggressiveness
 
@@ -149,7 +173,7 @@ $r(t+1) = r(t) + \beta_1(\delta(t) - r(t))\\\delta(t) = (1 \pm
 	\item Graphs --- \tt r \rm vs price equilibrium
 \end{itemize}
 
-\subsubsection{Long term learning}
+\subsubsection{Long term learning} \label{sec:AA_long_term_learning}
 Max
 \begin{itemize} \itemsep0pt
 	\item $\theta$
@@ -157,7 +181,7 @@ Max
 
 
 
-\section{Calibration}
+\section{Calibration} \label{sec:calibration}
 Group hug
 \begin{itemize} \itemsep0pt
 	\item $\beta_1$, $\beta_2$, $\gamma$, $\eta$
@@ -165,7 +189,7 @@ Group hug
 \end{itemize}
 
 
-\section{Results}
+\section{Results} \label{sec:results}
 Group hug
 \begin{itemize} \itemsep0pt
 	\item Graph: Average balance over time
@@ -175,7 +199,7 @@ Ed's report: ``According to the conducted Wilcoxon-Mann-Whitney two-tailed rank-
 	\item Other graphs
 \end{itemize}
 
-\section{Conclusion}
+\section{Conclusion} \label{sec:conclusion}
 Group hug
 \begin{itemize} \itemsep0pt
 	\item Thank you and good night
