@@ -64,24 +64,24 @@
 \maketitle{}
 \vspace{3cm}
 \begin{verbatim}
-                                        .::::. 
-                                      .::::::::. 
-                                      ::::::::::: 
-                                      ':::::::::::.. 
-                                       :::::::::::::::' 
-                                        ':::::::::::. 
-                                          .::::::::::::::' 
-                                        .:::::::::::... 
-                                       ::::::::::::::'' 
-                           .:::.       '::::::::'':::: 
-                         .::::::::.      ':::::'  ':::: 
-                        .::::':::::::.    :::::    '::::. 
-                      .:::::' ':::::::::. :::::      ':::. 
-                    .:::::'     ':::::::::.:::::       '::. 
-                  .::::''         '::::::::::::::       '::. 
-                 .::''              '::::::::::::         :::... 
-              ..::::                  ':::::::::'        .:' '''' 
-           ..''''':'                    ':::::.' 
+                             .::::. 
+                           .::::::::. 
+                           ::::::::::: 
+                           ':::::::::::.. 
+                            :::::::::::::::' 
+                             ':::::::::::. 
+                               .::::::::::::::' 
+                             .:::::::::::... 
+                            ::::::::::::::'' 
+                .:::.       '::::::::'':::: 
+              .::::::::.      ':::::'  ':::: 
+             .::::':::::::.    :::::    '::::. 
+           .:::::' ':::::::::. :::::      ':::. 
+         .:::::'     ':::::::::.:::::       '::. 
+       .::::''         '::::::::::::::       '::. 
+      .::''              '::::::::::::         :::... 
+   ..::::                  ':::::::::'        .:' '''' 
+..''''':'                    ':::::.' 
 \end{verbatim}
 
 \pagebreak
@@ -99,11 +99,15 @@ Rupert
 
 \section{Environment}
 \subsection{BSE}
-Jonny
-\begin{itemize} \itemsep0pt
-	\item Limitations
-	\item Restrictions (level of info --- sealed bid double auction, dark pools? (\url{http://en.wikipedia.org/wiki/Dark_liquidity}, \url{http://en.wikipedia.org/wiki/Algorithmic_trading#Strategies_that_only_pertain_to_dark_pools}) etc.)
-\end{itemize}
+For this assignment we use the Bristol Stock Exchange (BSE) as a virtual trading environment or, 
+more accurately, a minimal simulation of a limit order book financial exchange. As it is 
+minimalistic it has the advantage of being both easy to understand and quick to run.
+
+BSE acts like a dark pool continuous double auction as both buyers and sellers simultaneously bid 
+towards their limit price and can see all other offers but do not know the identity of the trader. 
+This has a number of implications, the main one being the difficulty of implementing the MGD trader 
+in this environment as it requires non-anonymised data to calculate which trades have been updated 
+each time step.
 
 \subsection{Traders}
 \subsubsection{ZIP}
@@ -117,6 +121,7 @@ Jonny
 Rupert
 \begin{itemize} \itemsep0pt
 	\item Shavers / Sniper / XKCD, etc.
+	\item MGD anonymised data (see BSE paragraph 2)
 	\item We implemented it but couldn't do a full implementation
 \end{itemize}
 
