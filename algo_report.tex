@@ -135,46 +135,56 @@ The price that we then submit will depend upon which capacity we are acting
 under based on the follow equations.
 
 \textbf{Intra-marginal buyer}
-
-$\tau =
+\begin{equation}
+\tau =
 \begin{cases}
       \hat{p}^*(1- \frac{e^{-r\theta}-1}{e^{\theta}-1}), &  \text{if r } \in (-1,0)  \\
       \hat{p}^* + (l_i-\hat{p}^*)(\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if
       r } \in (0,1)
-\end{cases}$
+\end{cases}
+\label{intrabuyer}
+\end{equation}
 
 where $\theta$ (\ref{sec:AA_long_term_learning}) measures the volatility of the
 market, $l_i$ is the limit price for the buyer, $\hat{p}^*$ is the estimator of the
 equilibrium price.
 
 \textbf{Extra-marginal buyer}
-
-$\tau =
+\begin{equation}
+\tau =
 \begin{cases}
       l_i(1-\frac{e^{-r\theta}-1}{e^\theta-1} &  \text{if r } \in (-1,0)  \\
       l_i & \text{if
       r } \in (0,1)
-\end{cases}$
+\end{cases}
+
+\label{extrabuyer}
+\end{equation}
 
 \textbf{Intra-marginal seller}
-
-$\tau =
+\begin{equation}
+\tau =
 \begin{cases}
       \hat{p}^* + (MAX-\hat{p}^*)( \frac{e^{-r\theta}-1}{e^{\theta}-1}), &  \text{if r } \in (-1,0)  \\
       c_j + (\hat{p}^*-c_j)(1-\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if
       r } \in (0,1)
-\end{cases}$
+\end{cases}
+\label{intraseller}
+\end{equation}
 
 where MAX is the maximum value that can be submitted to the market and $c_j$ is
 the limit price for the seller.
 
 \textbf{Extra-marginal seller}
-
-$\tau =
+\begin{equation}
+\tau =
 \begin{cases}
       c_j + (MAX-c_j)(1-\frac{e^{-r\theta}-1}{e^\theta-1} &  \text{if r } \in (-1,0)  \\
       c_j & \text{if r } \in (0,1)
-\end{cases}$
+\end{cases}
+
+\label{extraseller}
+\end{equation}
 
 In the paper, there was a different value used instead of $\theta$, designed to
 ensure that the curve provided by the equations was continuous. However, we
@@ -212,13 +222,12 @@ trader selected to make a bid. These can be found in the Adaptive Aggressive
 paper \textbf{REFERENCE GOES HERE}  but are not defined here.
 
 Initially when we ran our algorithm we found that it was occasionally making a
-loss upon receiving a new order from the scheduler with a
-different limit price. The reason for this was that our previous bids had been
-submitted using the limit price from the previous order. Since on the Bristol
-Stock Exchange it is not possible to remove a bid, we added additional logic to
-notify us of the new order. If it was found that the new order contained a
-limit that was outside of our trading range, we cleared our previous bid using
-a stub.
+loss upon receiving a new order from the scheduler with a different limit
+price. The reason for this was that our previous bids had been submitted using
+the limit price from the previous order. Since on the Bristol Stock Exchange it
+is not possible to remove a bid, we added additional logic to notify us of the
+new order. If it was found that the new order contained a limit that was
+outside of our trading range, we cleared our previous bid using a stub.
 
 \begin{itemize} \itemsep0pt
 	\item Graph of all trades with projected price equilibrium
