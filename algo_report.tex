@@ -13,13 +13,13 @@
 \author{
   \alignauthor
     Rupert Bedford\\
-    \email{rb9281@bris.ac.uk}
+    \email{rb9281@bristol.ac.uk}
   \alignauthor
     Max Robinson\\
-    \email{mr9388@bris.ac.uk}
+    \email{mr9388@bristol.ac.uk}
   \alignauthor
     Jonathan Simmonds
-    \email{js9721@bris.ac.uk}
+    \email{js9721@bristol.ac.uk}
 }
 \date{7 December 2012}
 
@@ -68,11 +68,13 @@ BSE acts like a dark pool continuous double auction as both buyers and sellers s
 towards their limit price and can see all other offers but do not know the identity of the trader. 
 This has a number of implications, the main one being the difficulty of implementing the MGD trader 
 in this environment as it requires non-anonymised data to calculate which trades have been updated 
-each time step. This is covered in more detail in Section \ref{sec:traders_GDV}.
+each time step. This is covered in more detail in Section \ref{sec:traders_GDV}. Other traders (e.g. 
+ZIP and AA) do not have this limitation.\\
+
 
 \subsection{Traders} \label{sec:traders}
 \subsubsection{ZIP} \label{sec:traders_ZIP}
-ZIP trad
+Zero-Intelligence-Plus (ZIP) traders
 \begin{itemize} \itemsep0pt
 	\item What was significant --- key points
 	\item Advantages/disadvantages
@@ -91,7 +93,7 @@ Rupert
 The adaptive aggressive algorithm relies on the principal that you can be in
 two different states. One where you trade more frequently closer to your limit
 price, higher chance of trading but lower profit per trade. The other where you
-trade further from your limit price, which decreases the liklihood fo making a
+trade further from your limit price, which decreases the likelihood of making a
 trade but increases the amount of profit you will make when you do trade.
 
 The Adaptive-Aggressive algorithm maintains an aggressiveness value (r), which
@@ -147,7 +149,7 @@ $\tau =
 \end{cases}$
 
 where MAX is the maximum value that can be submitted to the market and $c_j$ is
-te limit price for the seller.
+the limit price for the seller.
 
 \textbf{Extra-marginal seller}
 
