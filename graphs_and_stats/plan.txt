@@ -1,0 +1,20 @@
+Jonny
+
+price equilibrium lambda
+    0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9, 1.0
+    11 * (2 + 2) = 44 AA
+    22 + 22 ZIP
+    22 + 22 ZIC
+    130 traders
+    5000 trials
+
+ditto beta1, beta2 sans 0.0
+
+Rupert
+
+Price equilibrium with different lambdas graph
+Fix 10000 run grep
+
+Max 
+
+aggro vs price for thetas
