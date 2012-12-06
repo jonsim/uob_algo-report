@@ -62,21 +62,18 @@
 % - What our goal was
 
 An automated trader is an algorithm that automatically places trading orders on
-an electronic market.
-The trader receives buy or sell orders from customers with a price and
-quantity.
-The trader makes money by buying for less than the customers price or selling
-for more than the customers price.
-Therefore the goal of a trading strategy is maximise these margins and the
-trading volume to maximise the amount of profit.
+an electronic market. In 2012 on the New York Stock Exchange program trading accounted for between 30\% and 40\% of the trade volume\cite{nyse_press}.
+A trader receives buy and sell orders from customers. An order consists of a price the customer wants to trade at and the volume they want to trade.
+The trader makes money through the margin between the order price and the price they trade at. A trader aims to buy below the order price and sell above the order price.
+A trading strategy has to balance the profit margins with the change of completing a trade to maximise profit.
 
-In a double auction buyers submit bids to the market and sellers submit asks.
+In a double auction buyers submit bids to the market and sellers submit asks. The bids and asks determine the price of the good.
 When a bid equals or exceeds a seller's asks the bid is accepted and the trade
 occurs. Experiments have shown  that the prices in the market will
 rapidly converge on the price equilibrium in a number of market
 environments\cite{smith_1962}.
 
-IBM published a paper in 2001 that showed that their MGD trading strategy and
+IBM published a paper in 2001 that showed that their Modified Gjerstad Dickhaut (MGD) trading strategy and
 Dave Cliff's ZIP were able to outperform human traders\cite{ibm_human}.
 Algorithmic strategies are able to react more quickly to changing market
 conditions and combine information from a multiple sources.
@@ -95,7 +92,7 @@ continuous double auction. Each trader has access to Level 2 market data which
 includes the individual buy and sell orders (the limit order book). The
 environment is simpler than a real exchange as traders only buy or sell one
 unit of a single commodity at a time. Traders can also take as long as they
-need to respond to market events and submit orders.
+need to respond to market events and submit orders. BSE includes 5 traders: Giveaway, ZIC, Shaver, Sniper and ZIP.
 
 Traders have access to the limit order book which contains the outstanding
 shouts made in the market. The limit order book is anonymised so the identity
@@ -104,14 +101,12 @@ random trader is asked to make a shout. If the maximum bid in the market
 exceeds or equals the minimum ask a trade occurs. Each trader is updated with
 any orders or trades that have occurred since the last update.
 
-BSE includes 5 traders: Giveaway, ZIC, Shaver, Sniper and ZIP.
-
 Some trading algorithms require more depth in the order book. The Modified
 Gjerstad Dickhaut (MGD) algorithm needs to be able to match trades with
 outstanding orders to build up the accepted and rejected order information.
 This is covered in more detail in Section \ref{sec:traders_GDV}. Some of the
 other traders in our experiments, such as AA and ZIP only need Level 1 data
-(high and low).
+(bid high and ask low).
 
 Traders are assigned orders to a given supply and demand schedule. BSE supports three method of price generation: fixed, random and jittered. Fixed maintains a constant difference between orders when they are sorted. Random generates orders at random in a certain range. Jittered is similar to fixed except it adds a small amount of noise which is more realisitic. There are also three options for determining when orders are submitted to traders: drip-fixed, drip-jitter and drip poission. With drip-fixed orders arrive at a fixed interval. Drip-jitter is the same with a small amount of added noise. Drip-poisson models the arrival of orders as a poisson process.
 
