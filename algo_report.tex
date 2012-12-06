@@ -149,28 +149,28 @@ its profit margin over time.
 
 The change in price at subsequent time steps can be defined mathematically for a single given trader as:
 \begin{equation}
-%Change in price
-\Delta(t) = \beta \cdot ( \tau(t) - p(t))
+    \label{eqn:change_in_price}
+    \Delta(t) = \beta \cdot ( \tau(t) - p(t))
 \end{equation}
 where $\tau(t)$ is your target price and $p(t)$ is your current offer on the market (or `shout').
 
 The change in profit margin at subsequent time steps can then be defined as:
 \begin{equation}
-%Change in margin
-\Gamma(t) = \gamma \cdot \Gamma(t-1) + (1 - \gamma) \cdot \Delta(t)
+    \label{eqn:change_in_margin}
+    \Gamma(t) = \gamma \cdot \Gamma(t-1) + (1 - \gamma) \cdot \Delta(t)
 \end{equation}
 
 The new margin can then be calculated as:
 \begin{equation}
-%New margin
-\mu(t) = \frac{p(t) + \Gamma(t)}{l} - 1
+    \label{eqn:new_margin}
+    \mu(t) = \frac{p(t) + \Gamma(t)}{l} - 1
 \end{equation}
 where $l$ is your limit price.
 
 Finally the new price can be calculated by:
 \begin{equation}
-%New price
-p(t+1) = l \cdot (1 + \mu(t))
+    \label{eqn:new_price}
+    p(t+1) = l \cdot (1 + \mu(t))
 \end{equation}
 
 We used the implementation of the ZIP algorithm provided in the BSE (Section \ref{sec:BSE}).\\
@@ -596,7 +596,7 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
   \label{tbl:beta1_results_big}
   \begin{tabular}{ | c | c | }
     \hline
-    \textbf{$\beta_1$ value} & \textbf{Average finishing balance (3dp)} \\
+    \textbf{$\beta_1$ value} & \textbf{Average finishing balance (3 dp.)} \\
     \hline
     0.1 & 129.138 \\
     0.2 & 129.038 \\
@@ -621,7 +621,7 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
   \label{tbl:beta1_results_small}
   \begin{tabular}{ | c | c | }
     \hline
-    \textbf{$\beta_1$ value} & \textbf{Average finishing balance (3dp)} \\
+    \textbf{$\beta_1$ value} & \textbf{Average finishing balance (3 dp.)} \\
     \hline
     0.00 & 108.298 \\
     0.01 & 124.723 \\
@@ -659,14 +659,11 @@ Each session used a different ratio of the traders.
   \label{tbl:results}
   \begin{tabular}{ | c | c | }
     \hline
-    Strategy & Average Balance \\
+    Strategy & Average finishing balance (3 dp.) \\
     \hline
     ZIC & 93.863 \\
-    \hline
     SHVR & 106.139 \\
-    \hline
     ZIP & 120.434 \\
-    \hline
     AA & 136.555 \\
     \hline
   \end{tabular}
