@@ -79,24 +79,35 @@ conditions and combine information from a multiple sources.
 
 In this paper we experiment with different trading strategies for the
 continuous double auction.
-We have implemented the Adaptive Aggressiveness trading algorithm and compared
-its performance with other adaptive algorithms as well as simpler traders.\\
+We have implemented the Adaptive Aggressiveness\cite{AA_thesis} trading
+algorithm and compared its performance with other adaptive algorithms as well
+as simpler traders.\\
 
 
 \section{Environment} \label{sec:environment}
 \subsection{BSE} \label{sec:BSE}
-For this assignment we use the Bristol Stock Exchange (BSE) as a virtual trading environment or, 
-more accurately, a minimal simulation of a limit order book financial exchange. As it is 
-minimalistic it has the advantage of being both easy to understand and quick to run.
+The Bristol Stock Exchange (BSE) is a virtual trading environment for the
+continuous double auction. Each trader has access to Level 2 market data which
+includes the individual buy and sell orders (the limit order book). The
+environment is simpler than a real exchange as traders only buy or sell one
+unit of a single commodity at a time. Traders can also take as long as they
+need to respond to market events and submit orders.
 
-BSE acts like a dark pool continuous double auction as both buyers and sellers simultaneously bid 
-towards their limit price and can see all other offers but do not know the identity of the trader.
-Only a single commodity is traded. 
-This has a number of implications, the main one being the difficulty of implementing the MGD trader 
-in this environment as it requires non-anonymised data to calculate which trades have been updated 
-each time step. This is covered in more detail in Section \ref{sec:traders_GDV}. Other traders (e.g. 
-ZIP and AA) do not have this limitation.\\
+Traders have access to the limit order book which contains the outstanding
+shouts made in the market. The limit order book is anonymised so the identity
+of the trader who made each shout is unknown. At each simulation time step a
+random trader is asked to make a shout. If the maximum bid in the market
+exceeds or equals the minimum ask a trade occurs. Each trader is updated with
+any orders or trades that have occurred since the last update.
 
+BSE includes 5 traders: Giveaway, ZIC, Shaver, Sniper and ZIP.
+
+Some trading algorithms require more depth in the order book. The Modified
+Gjerstad Dickhaut (MGD) algorithm needs to be able to match trades with
+outstanding orders to build up the accepted and rejected order information.
+This is covered in more detail in Section \ref{sec:traders_GDV}. Some of the
+other traders in our experiments, such as AA and ZIP only need Level 1 data
+(high and low).
 
 \subsection{Traders} \label{sec:traders}
 \subsubsection{ZIP} \label{sec:traders_ZIP}
@@ -158,6 +169,13 @@ optimisations are needed to keep the state space tractable.
 The Zero Intelligence (ZIC) trader does not learn from market events (Gode
 1993).\\
 
+\subsubsection{Other Traders}
+The giveaway trader submits orders at its limit price so never makes any profit
+or loss unless it is given a new order whilst it has an outstanding shout in
+the market. The shaver trader submits a shout one price unit better (for the
+other party) than the current best shout. The sniper trader gets increasingly
+aggressive the closer it is to the end of the session. The aggressiveness
+controls the amount it is willing to improve the current best shout.
 
 \pagebreak % QUESTIONABLE
 \subsection{Adaptive Aggressive Traders} \label{sec:AA}
@@ -363,7 +381,7 @@ r(t+1) = r(t) + \beta_1(\delta(t) - r(t))\\\delta(t) = (1 \pm
 \label{updateaggressive}
 \end{equation}
 
-$\lambda_r$ and $\lambda_a$ representive the relative and absolute change in
+$\lambda_r$ and $\lambda_a$ representative the relative and absolute change in
 r respectively. The absolute change exists to prevent r from never being able
 to escape from a value of 0. Depending on the rules above, we either set the
 two values to positive to become more aggressive or negative to become less
@@ -380,7 +398,7 @@ One of the first conclusions we can draw from the graph is that our trader is
 always playing an active role in the market, that is they are trading above the
 market equilibrium. The reason for this is that the scheduler was set to
 periodic meaning that the limit prices were provided in order to create the
-sine wave visibile in Fig. \ref{aavtime}. Therefore, everyone receives limit
+sine wave visible in Fig. \ref{aavtime}. Therefore, everyone receives limit
 prices close to each other meaning that we have a competitive market which
 means we have to trade close to our limit price. This is further reinforced by
 the short order duration making it difficult to wait for a trade.
@@ -409,6 +427,17 @@ Text.\\
 % - $\beta_1$, $\beta_2$, $\gamma$, $\eta$
 % - potential to compare statistically?
 Text.\\
+
+The $\eta$ value in the AA bidding function determines how quickly the shout
+price moves towards from the best shout to the calculated target price. A
+higher value of $\eta$ will reduce the rate of change making the trader slower
+to react to market events. This is confirmed by our tests. A trader with $\eta
+= 1000$ makes an average profit of 94.507 over 100 trades. Another trader with
+a lower $\eta = 100$ makes a higher average profit of 116.553. Using $\eta = 3$
+from the AA paper gives a profit of 136.555. So clearly it is important for the
+shout price to respond to quickly up the changing market. Setting $\eta$ too
+low would cause outlier trades to have a significant effect which would reduce
+the margins.
 
 We update our aggressiveness and theta values more often than in the original Adaptive Aggressiveness paper\cite{AA_thesis}. This is advantageous since it allows us to update to rapidly changing market conditions. Since we update these values more often the learning rates have to be comparatively lower otherwise the algorithm will effectively learn immediately. This is supported by TABLE that shows the profits over 8000 trials for different values of $\beta_1$ don't change significantly. However the same experiment with smaller $\beta_1$ values shows greater variation in profits.
 
