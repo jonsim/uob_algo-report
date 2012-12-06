@@ -389,19 +389,45 @@ because the trader lacks information about the market and therefore adopts a
 more passive role to prevent selling far above the equilibrium
 
 The dips in the aggressiveness correspond to the falling equilibrium price
-where we can afford to trade further below our limit price. 
+where we can afford to trade further below our limit because the gap between
+our limit price and the market equilibrium is increasing.
+
 \begin{figure} 
   \centering
   \includegraphics[width=\columnwidth]{graphs_and_stats/aggressiveness_vs_price.pdf}
   \label{aavtime}
-  \caption{Aggressive and Price equilibrium throughout a trading day}
+  \caption{Aggressive and Price equilibrium throughout a trading day for an AA
+  buyer}
 \end{figure}
 
 \subsubsection{Long term learning} \label{sec:AA_long_term_learning}
 % OWNER: Max
 % - theta
-Text.\\
+The Adaptive Aggressive algorithm incorporates a long term learning that is
+affected by the volatility of the market. In order to do this we create a
+measure of the market volatility ($\theta$) which is then updated every
+timestep using Equation \ref{updtheta}. The value of $\theta^*(\alpha)$
+represents the value of $\theta$ that will allow us to act optimally in a
+market with a volatility of $\alpha$.  The $\alpha$ (see Equation
+\ref{updtheta}) is measure of the volatility of the market which is calculated
+by looking at the variance of the last N trades around the market equilibrium.
+So if the majority of trades are close to the equilibrium price then we are in
+a stable market and vice versa.
 
+\begin{equation}
+\label{updtheta}
+\begin{split}
+\theta(t+1)=\theta(t)+\beta_2(\theta^*(\alpha)-\theta_t)\\\\
+\alpha = \frac{\sqrt{\frac 1 N \sum^T_{i=T-N+1}(p_i-\hat p^*)^2}}{\hat p^*}
+\end{split}
+\end{equation}
+
+\begin{equation}
+\theta^*(\alpha) = (\theta_{max}-\theta_{min})
+(1-\frac{(\alpha-\alpha_{min})}{(\alpha_{max} -\alpha_{min})}e^{\gamma(
+\frac{\alpha-\alpha_{min}}{\alpha_{max}-\alpha_{min}}-1)} + \theta_{min}
+\label{thetastar}
+\end{equation}
 
 \section{Calibration} \label{sec:calibration}
 % OWNER: Group
