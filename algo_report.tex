@@ -98,11 +98,50 @@ ZIP and AA) do not have this limitation.\\
 
 
 \subsection{Traders} \label{sec:traders}
+\subsubsection{ZIC} \label{sec:traders_ZIC}
+% OWER: Jonny
+% - 
+The Zero Intelligence (ZIC) trader does not learn from market events\cite{ZIC_paper}.\\
+
 \subsubsection{ZIP} \label{sec:traders_ZIP}
 % OWNER: Jonny
 % - What was significant --- key points
 % - Advantages/disadvantages
-Zero-Intelligence-Plus (ZIP) traders.\\
+Zero-Intelligence-Plus (ZIP) traders were designed to improve on ZIC traders (Section \ref{sec:traders_ZIC}). They make use of a simple learning mechanism which allows them to adjust their profit margin (which in turn are used to define the their current offer(s) on the market) in response to other completed trades on the market --- thus reacting to current market conditions.
+
+The key parameters in the algorithm are the learning rate, $\beta$ --- which represents how quickly you to react to market change; and the `momentum', $\gamma$ --- which represents how market volatility is smoothed over. More accurately, the learning rate controls how quickly the algorithm moves towards its current target price while the momentum controls how quickly the algorithm changes its profit margin over time.
+%$\beta$ --- the learning rate, how quickly the algorithm moves its price towards its target price
+%$\gamma$ --- the momentum, how quickly the algorithm changes its profit margin over time
+
+The change in price at subsequent time steps can be defined mathematically for a single given trader as:
+\begin{equation}
+%Change in price
+\Delta(t) = \beta \cdot ( \tau(t) - p(t))
+\end{equation}
+where $\tau(t)$ is your target price and $p(t)$ is your current offer on the market (or `shout').
+
+The change in profit margin at subsequent time steps can then be defined as:
+\begin{equation}
+%Change in margin
+\Gamma(t) = \gamma \cdot \Gamma(t-1) + (1 - \gamma) \cdot \Delta(t)
+\end{equation}
+
+The new margin can then be calculated as:
+\begin{equation}
+%New margin
+\mu(t) = \frac{p(t) + \Gamma(t)}{l} - 1
+\end{equation}
+where $l$ is your limit price.
+
+Finally the new price can be calculated by:
+\begin{equation}
+%New price
+p(t+1) = l \cdot (1 + \mu(t))
+\end{equation}
+
+
+where $\beta$ is the learning rate, $\tau$ is the `target price' and $p$ is the (the price that, based on the current market observations, you believe is most likely to go through 
+\\
 
 
 \subsubsection{GD Variants} \label{sec:traders_GDV}
@@ -153,9 +192,6 @@ both GD and ZIP.
 With a $\gamma$ between 0.75 and 0.85 GDX always outperforms GD.
 GDX is more flexible than GD and can handle multiple goods although
 optimisations are needed to keep the state space tractable.
-
-The Zero Intelligence (ZIC) trader does not learn from market events (Gode
-1993).\\
 
 
 \pagebreak % QUESTIONABLE
