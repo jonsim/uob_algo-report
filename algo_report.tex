@@ -1,4 +1,6 @@
-\documentclass{acm_proc_article-sp}
+%\documentclass{acm_proc_article-sp} UNCOMMENT FOR NO PAGE NUMBERS (doesn't extend/reduce document length)
+\documentclass[preprint]{acm_proc_article-sp} %Remove preprint for camera-ready 
+\pagenumbering{arabic} % Remove for camera-ready
 
 \usepackage{graphicx}
 \usepackage{amsmath}
@@ -7,6 +9,10 @@
 \usepackage{url}
 \usepackage{amssymb}
 
+%\usepackage{algpseudocode}
+\usepackage{algorithmic}
+\usepackage{algorithm}
+%\usepackage{program}
 %\usepackage{fancyhdr}
 %\lfoot{HELLO}\cfoot{\thepage}\rfoot{WORLD}
 
@@ -79,31 +85,95 @@ conditions and combine information from a multiple sources.
 
 In this paper we experiment with different trading strategies for the
 continuous double auction.
-We have implemented the Adaptive Aggressiveness trading algorithm and compared
-its performance with other adaptive algorithms as well as simpler traders.\\
+We have implemented the Adaptive Aggressiveness\cite{AA_thesis} trading
+algorithm and compared its performance with other adaptive algorithms as well
+as simpler traders.\\
 
 
 \section{Environment} \label{sec:environment}
 \subsection{BSE} \label{sec:BSE}
-For this assignment we use the Bristol Stock Exchange (BSE) as a virtual trading environment or, 
-more accurately, a minimal simulation of a limit order book financial exchange. As it is 
-minimalistic it has the advantage of being both easy to understand and quick to run.
+The Bristol Stock Exchange (BSE) is a virtual trading environment for the
+continuous double auction. Each trader has access to Level 2 market data which
+includes the individual buy and sell orders (the limit order book). The
+environment is simpler than a real exchange as traders only buy or sell one
+unit of a single commodity at a time. Traders can also take as long as they
+need to respond to market events and submit orders.
 
-BSE acts like a dark pool continuous double auction as both buyers and sellers simultaneously bid 
-towards their limit price and can see all other offers but do not know the identity of the trader.
-Only a single commodity is traded. 
-This has a number of implications, the main one being the difficulty of implementing the MGD trader 
-in this environment as it requires non-anonymised data to calculate which trades have been updated 
-each time step. This is covered in more detail in Section \ref{sec:traders_GDV}. Other traders (e.g. 
-ZIP and AA) do not have this limitation.\\
+Traders have access to the limit order book which contains the outstanding
+shouts made in the market. The limit order book is anonymised so the identity
+of the trader who made each shout is unknown. At each simulation time step a
+random trader is asked to make a shout. If the maximum bid in the market
+exceeds or equals the minimum ask a trade occurs. Each trader is updated with
+any orders or trades that have occurred since the last update.
 
+BSE includes 5 traders: Giveaway, ZIC, Shaver, Sniper and ZIP.
+
+Some trading algorithms require more depth in the order book. The Modified
+Gjerstad Dickhaut (MGD) algorithm needs to be able to match trades with
+outstanding orders to build up the accepted and rejected order information.
+This is covered in more detail in Section \ref{sec:traders_GDV}. Some of the
+other traders in our experiments, such as AA and ZIP only need Level 1 data
+(high and low).
 
 \subsection{Traders} \label{sec:traders}
+\subsubsection{ZIC} \label{sec:traders_ZIC}
+% OWER: Jonny
+% - 
+The Zero Intelligence (ZI) agents were first proposed in 1993\cite{ZIC_paper} and are trading agents 
+which have `zero intelligence' --- they simply make offers randomly between the maximum and minimum 
+allowed market price. Zero Intelligence Constrained (ZIC) traders are marginally more intelligent as 
+they make offers randomly between the worst offer ever seen and their limit price --- preventing them 
+from losing money on trades.
+
+Their random behaviour, which appears to exhibit human-like performance\cite[p.~1]{ZIP_paper1}, 
+makes them perfect as a control to test our algorithm's performance against. We used the 
+implementation of ZIC provided in the BSE (Section \ref{sec:BSE}).\\
+
+
 \subsubsection{ZIP} \label{sec:traders_ZIP}
 % OWNER: Jonny
 % - What was significant --- key points
 % - Advantages/disadvantages
-Zero-Intelligence-Plus (ZIP) traders.\\
+Zero-Intelligence-Plus (ZIP) traders were invented in 1997 and designed to improve on ZIC traders 
+(Section \ref{sec:traders_ZIC})\cite{ZIP_paper1}. They make use of a simple learning mechanism which 
+allows them to adjust their profit margin (which in turn are used to define the their current 
+offer(s) on the market) in response to other completed trades on the market --- thus reacting to 
+current market conditions. This simplistic algorithm allows surprisingly complex behaviour with a 
+minimal performance cost.
+
+The key parameters in the algorithm are the learning rate, $\beta$ --- which represents how quickly 
+you to react to market change; and the `momentum', $\gamma$ --- which represents how market 
+volatility is smoothed over. More accurately, the learning rate controls how quickly the algorithm 
+moves towards its current target price while the momentum controls how quickly the algorithm changes 
+its profit margin over time.
+
+The change in price at subsequent time steps can be defined mathematically for a single given trader as:
+\begin{equation}
+%Change in price
+\Delta(t) = \beta \cdot ( \tau(t) - p(t))
+\end{equation}
+where $\tau(t)$ is your target price and $p(t)$ is your current offer on the market (or `shout').
+
+The change in profit margin at subsequent time steps can then be defined as:
+\begin{equation}
+%Change in margin
+\Gamma(t) = \gamma \cdot \Gamma(t-1) + (1 - \gamma) \cdot \Delta(t)
+\end{equation}
+
+The new margin can then be calculated as:
+\begin{equation}
+%New margin
+\mu(t) = \frac{p(t) + \Gamma(t)}{l} - 1
+\end{equation}
+where $l$ is your limit price.
+
+Finally the new price can be calculated by:
+\begin{equation}
+%New price
+p(t+1) = l \cdot (1 + \mu(t))
+\end{equation}
+
+We used the implementation of the ZIP algorithm provided in the BSE (Section \ref{sec:BSE}).\\
 
 
 \subsubsection{GD Variants} \label{sec:traders_GDV}
@@ -128,7 +198,7 @@ The efficiency is the margin divided by the maximum theoretically margin
 They also showed that GD was able to cope with changing supply and demand
 conditions.
 
-Modified Gjerstad Dickhaut (MGD) \cite{mgd} is a version of GD that
+Modified Gjerstad Dickhaut (MGD)\cite{mgd} is a version of GD that
 is better suited to volatile conditions that can occur at the start of a
 session where there is very little information about accepted and rejected
 orders.
@@ -153,17 +223,21 @@ They found that under certain market environments GDX was able to outperform
 both GD and ZIP.
 With a $\gamma$ between 0.75 and 0.85 GDX always outperforms GD.
 GDX is more flexible than GD and can handle multiple goods although
-optimisations are needed to keep the state space tractable.
-
-The Zero Intelligence (ZIC) trader does not learn from market events (Gode
-1993).\\
+optimisations are needed to keep the state space tractable.\\
 
 
-\pagebreak % QUESTIONABLE
+\subsubsection{Other Traders}
+The giveaway trader submits orders at its limit price so never makes any profit
+or loss unless it is given a new order whilst it has an outstanding shout in
+the market. The shaver trader submits a shout one price unit better (for the
+other party) than the current best shout. The sniper trader gets increasingly
+aggressive the closer it is to the end of the session. The aggressiveness
+controls the amount it is willing to improve the current best shout.\\
+
+
 \subsection{Adaptive Aggressive Traders} \label{sec:AA}
 % OWNER: Max
 % - ???
-
 The adaptive aggressive algorithm relies on the principal that you can be in
 two different states. One where you trade more frequently closer to your limit
 price, higher chance of trading but lower profit per trade. The other where you
@@ -173,7 +247,9 @@ trade but increases the amount of profit you will make when you do trade.
 The Adaptive-Aggressive algorithm maintains an aggressiveness value (r), which
 determines how close to your limit price you will be trading. A completely
 aggressive buyer ($r = 1$) will buy at their limit price, and a completely
-passive trader ($r = -1$) will buy at the minimum market price (\$1 in our case)
+passive trader ($r = -1$) will buy at the minimum market price (\$1 in our case).\\
+
+
 \subsection{Price Equilibrium Estimator}
 One of the key features that most trading algorithms rely on is the ability to
 estimate the equilibrium price of the market. For this we used the following
@@ -181,21 +257,20 @@ equation which estimates the market equilibrium price based on the N most
 recent transactions, known as a moving average.
 
 \begin{equation}
-\hat p^* = \frac{\sum^T_{i=T-N+1}w_ip_i}{\sum^T_{i=T-N+1}w_i}\\
-\text{where $w_T = 1$ and $w_{i-1} = \lambda w_i$}
-\label{equest}
+    \label{eqn:equilibrium_estimator}
+    \hat p^* = \frac{\sum^T_{i=T-N+1}w_ip_i}{\sum^T_{i=T-N+1}w_i}\\
+    \text{where $w_T = 1$ and $w_{i-1} = \lambda w_i$.}
 \end{equation}
 
 The $w_i$ represents the weight of the transaction so that we weight more
 recent transactions more heavily with the $\lambda$ affect how severe this
 weighting is. We set the value of $\lambda$ to 0.9 which was the value
-recommended in the original paper \cite[p.~100]{AA_thesis}.\\
+recommended in the original paper\cite[p.~100]{AA_thesis}.
 
-We also tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over 8000 
-market sessions (of 600 timesteps each) to find their effect on AA's performance. We didn't find any
-statistically significant difference between the different values. Our results
-are included in table \ref{tbl:lambda_results}.
-\begin{table}
+We also tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over 8000 market sessions (of 
+600 timesteps each) to find their effect on AA's performance. We didn't find any statistically 
+significant difference between the different values. Our results are included in Table \ref{tbl:lambda_results}.
+\begin{table}[h]
   \centering
   \label{tbl:lambda_results}
   \begin{tabular}{ | c | c | }
@@ -218,15 +293,16 @@ are included in table \ref{tbl:lambda_results}.
     ZIP & 116.719 \\
     \hline
   \end{tabular}
-\end{table}
+\end{table}\\
+
 
 \subsubsection{Price estimation} \label{sec:AA_price_estimation}
 % OWNER: Max
 % - Graph of all trades with projected price equilibrium
 % - MEGA GRAPH
-
 \begin{figure}
   \centering
+  \label{fig:equilibrium}
   \includegraphics[width=\columnwidth]{graphs_and_stats/equilibriums.pdf}
   \caption{The affect of the weighting value on the price equilibrium
   estimate.}
@@ -249,13 +325,12 @@ under based on the follow equations.
 
 \textbf{Intra-marginal buyer}
 \begin{equation}
-\tau =
-\begin{cases}
-      \hat{p}^*(1- \frac{e^{-r\theta}-1}{e^{\theta}-1}), &  \text{if r } \in (-1,0)  \\
-      \hat{p}^* + (l_i-\hat{p}^*)(\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if
-      r } \in (0,1)
-\end{cases}
-\label{intrabuyer}
+    \label{eqn:intrabuyer}
+    \tau =
+    \begin{cases}
+        \hat{p}^*(1- \frac{e^{-r\theta}-1}{e^{\theta}-1}), &  \text{if r } \in (-1,0)  \\
+        \hat{p}^* + (l_i-\hat{p}^*)(\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if r} \in (0,1)
+    \end{cases}
 \end{equation}
 
 where $\theta$ (\ref{sec:AA_long_term_learning}) measures the volatility of the
@@ -264,22 +339,22 @@ equilibrium price.
 
 \textbf{Extra-marginal buyer}
 \begin{equation}
-\tau =
-\begin{cases}
-      l_i(1-\frac{e^{-r\theta}-1}{e^\theta-1} &  \text{if r } \in (-1,0)  \\
-      l_i & \text{if r } \in (0,1)
-\end{cases}
-\label{extrabuyer}
+    \label{eqn:extrabuyer}
+    \tau =
+    \begin{cases}
+        l_i(1-\frac{e^{-r\theta}-1}{e^\theta-1} &  \text{if r } \in (-1,0)  \\
+        l_i & \text{if r } \in (0,1)
+    \end{cases}
 \end{equation}
 
 \textbf{Intra-marginal seller}
 \begin{equation}
-\label{intraseller}
-\tau =
-\begin{cases}
-      \hat{p}^* + (MAX-\hat{p}^*)( \frac{e^{-r\theta}-1}{e^{\theta}-1}), &  \text{if r } \in (-1,0)  \\
-      c_j + (\hat{p}^*-c_j)(1-\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if r } \in (0,1)
-\end{cases}
+    \label{eqn:intraseller}
+    \tau =
+    \begin{cases}
+        \hat{p}^* + (\text{MAX}-\hat{p}^*)( \frac{e^{-r\theta}-1}{e^{\theta}-1}), &  \text{if r } \in (-1,0)  \\
+        c_j + (\hat{p}^*-c_j)(1-\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if r } \in (0,1)
+    \end{cases}
 \end{equation}
 
 where MAX is the maximum value that can be submitted to the market and $c_j$ is
@@ -287,12 +362,12 @@ the limit price for the seller.
 
 \textbf{Extra-marginal seller}
 \begin{equation}
-\tau =
-\begin{cases}
-      c_j + (MAX-c_j)(1-\frac{e^{-r\theta}-1}{e^\theta-1} &  \text{if r } \in (-1,0)  \\
-      c_j & \text{if r } \in (0,1)
-\end{cases}
-\label{extraseller}
+    \label{eqn:extraseller}
+    \tau =
+    \begin{cases}
+        c_j + (\text{MAX}-c_j)(1-\frac{e^{-r\theta}-1}{e^\theta-1} &  \text{if r } \in (-1,0)  \\
+        c_j & \text{if r } \in (0,1)
+    \end{cases}
 \end{equation}
 
 In the paper, there was a different value used instead of $\theta$, designed to
@@ -307,31 +382,46 @@ represent the best bid (highest) and best ask (lowest) on the market that have
 not yet been accepted. The value of $\eta$ is set as a parameter and reflects
 how quickly we converge on our estimated price (higher $\eta$ converge slower).
 
-\textbf{Bidding rules for Buyer}
+%\textbf{Bidding rules for buyer:}
+\begin{algorithm}[H]
+    \label{alg:bidding_rules_buyer}
+    \caption{Bidding rules for buyer}
+    \begin{algorithmic}
+        \IF{$l_i \leq o_{bid}$}
+            \STATE submit no bid (market transacting above our limit).
+        \ELSE
+%            \STATE submit bid given by Equation \ref{eqn:bidding_rules_buyer}.
+            \STATE submit bid given by $bid_i = \textstyle o_{bid} + \frac{(\tau - o_{bid})}{\textstyle \eta}$.
+        \ENDIF
+    \end{algorithmic}
+\end{algorithm}
+%\begin{equation}
+%\label{eqn:bidding_rules_buyer}
+%bid_i = \frac{o_{bid} + (\tau - o_{bid}}{\eta}
+%\end{equation}
 
-\begin{tabbing}
-if ($l_i \leq o_bid$) - Submit no bid (market transacting above our limit)\\
-else submit bid given by Equation \ref{bidieqn}
-\end{tabbing}
-
-\begin{equation}
-bid_i = \frac{o_{bid} + (\tau - o_{bid}}{\eta}
-\label{bidieqn}
-\end{equation}
-
-\textbf{Bidding rules for Seller}
-if ($c_j \geq o_{ask}$) - Submit no ask (market transacting below our limit)\\
-else submit bid given by Equation \ref{askieqn}
-
-\begin{equation}
-ask_i = o_{ask} - \frac{o_{ask}-\tau}{\eta}
-\label{askieqn}
-\end{equation}
+%\textbf{Bidding rules for seller:}
+\begin{algorithm}[H]
+    \label{alg:bidding_rules_seller}
+    \caption{Bidding rules for seller}
+    \begin{algorithmic}
+        \IF{$c_j \geq o_{ask}$}
+            \STATE submit no ask (market transacting below our limit).
+        \ELSE
+%            \STATE submit ask given by Equation \ref{eqn:bidding_rules_seller}.
+            \STATE submit ask given by $ask_i = o_{ask} - \frac{\textstyle o_{ask}-\tau}{\textstyle \eta}$.
+        \ENDIF
+    \end{algorithmic}
+\end{algorithm}
+%\begin{equation}
+%\label{eqn:bidding_rules_seller}
+%ask_i = o_{ask} - \frac{o_{ask}-\tau}{\eta}
+%\end{equation}
 
 Since these all require an existing bid on the market, there were difficult
 rules that were used to determine what shout to make if we were the first
 trader selected to make a bid. These can be found in the Adaptive Aggressive
-paper \cite[p.~32]{AA_paper} but are not defined here.
+paper\cite[p.~32]{AA_paper} but are not defined here.
 
 Initially when we ran our algorithm we found that it was occasionally making a
 loss upon receiving a new order from the scheduler with a different limit
@@ -346,34 +436,56 @@ outside of our trading range, we cleared our previous bid using a stub.\\
 % OWNER: Max
 % - Graphs - r vs price equilibrium.
 The aggressiveness of the Adaptive Aggressive algorithm is updated at every
-time step using Equation \ref{updateaggressive} based on the following rules.
+time step using Equation \ref{eqn:update_aggressive} based on the following rules.
 
-\textbf{Learning Rules for Buyer:}
-if (trade occurs at price q)\\
-    \indent if ($\tau \geq q$) be less aggressive (our price too high)\\
-    \indent else be more aggressive ( our price too low)\\
-else if ($\tau \leq o_bid$) be more aggressive ( our price too low)
+%\textbf{Learning rules for buyer:}
+\begin{algorithm}[H]
+\label{alg:learning_rules_buyer}
+\caption{Learning rules for buyer}
+\begin{algorithmic}
+    \IF{trade occurs at price $q$}
+        \IF{$\tau \geq q$}
+            \STATE be less aggressive (our price too high).
+        \ELSE
+            \STATE be more aggressive (our price too low).
+        \ENDIF
+    \ELSIF{ $\tau \leq o_{bid}$ }
+        \STATE be more aggressive (our price too low).
+    \ENDIF
+\end{algorithmic}
+\end{algorithm}
 
-\textbf{Learning Rules for Seller:}
-if (trade occurs at price q)\\
-    \indent if ($\tau \leq q$) be less aggressive (our price too low)\\
-    \indent else be more aggressive ( our price too high\\
-else if ($\tau \leq o_bid$) be more aggressive ( our price too high)
+%\textbf{Learning rules for seller:}
+\begin{algorithm}[h]
+\label{alg:learning_rules_seller}
+\caption{Learning rules for seller}
+\begin{algorithmic}
+    \IF{trade occurs at price $q$}
+        \IF{$\tau \leq q$}
+            \STATE be less aggressive (our price too low).
+        \ELSE
+            \STATE be more aggressive (our price too high).
+        \ENDIF
+    \ELSIF{ $\tau \leq o_{bid}$ }
+        \STATE be more aggressive (our price too high).
+    \ENDIF
+\end{algorithmic}
+\end{algorithm}
 
 \begin{equation}
+\label{eqn:update_aggressive}
 r(t+1) = r(t) + \beta_1(\delta(t) - r(t))\\\delta(t) = (1 \pm
 \lambda_r)r_{shout} \pm \lambda_a
-\label{updateaggressive}
 \end{equation}
 
-$\lambda_r$ and $\lambda_a$ representive the relative and absolute change in
+$\lambda_r$ and $\lambda_a$ representative the relative and absolute change in
 r respectively. The absolute change exists to prevent r from never being able
 to escape from a value of 0. Depending on the rules above, we either set the
 two values to positive to become more aggressive or negative to become less
 aggressive.\\
 
 The aggressive is depending on our limit price and the current market state as
-is illustrated in Fig. \ref{aavtime}. In order to collect more data, we
+is illustrated in Figure \ref{fig:avtime}. In order to collect more data, we
 increases the scheduler to distribute items every five timesteps instead of
 every thirty. This increases the number of trades in the market which in turn
 provides us with a far more accurate estimate of the price equilibrium and more
@@ -383,7 +495,7 @@ One of the first conclusions we can draw from the graph is that our trader is
 always playing an active role in the market, that is they are trading above the
 market equilibrium. The reason for this is that the scheduler was set to
 periodic meaning that the limit prices were provided in order to create the
-sine wave visibile in Fig. \ref{aavtime}. Therefore, everyone receives limit
+sine wave visible in Figure \ref{fig:avtime}. Therefore, everyone receives limit
 prices close to each other meaning that we have a competitive market which
 means we have to trade close to our limit price. This is further reinforced by
 the short order duration making it difficult to wait for a trade.
@@ -397,11 +509,11 @@ where we can afford to trade further below our limit because the gap between
 our limit price and the market equilibrium is increasing.
 
 \begin{figure} 
-  \centering
-  \includegraphics[width=\columnwidth]{graphs_and_stats/aggressiveness_vs_price.pdf}
-  \label{aavtime}
-  \caption{Aggressive and Price equilibrium throughout a trading day for an AA
-  buyer}
+\centering
+\label{fig:avtime}
+\includegraphics[width=\columnwidth]{graphs_and_stats/aggressiveness_vs_price.pdf}
+\caption{Aggressive and Price equilibrium throughout a trading day for an AA
+buyer}
 \end{figure}
 
 \subsubsection{Long term learning} \label{sec:AA_long_term_learning}
@@ -410,10 +522,10 @@ our limit price and the market equilibrium is increasing.
 The Adaptive Aggressive algorithm incorporates a long term learning that is
 affected by the volatility of the market. In order to do this we create a
 measure of the market volatility ($\theta$) which is then updated every
-timestep using Equation \ref{updtheta}. The value of $\theta^*(\alpha)$
+timestep using Equation \ref{eqn:update_theta}. The value of $\theta^*(\alpha)$
 represents the value of $\theta$ that will allow us to act optimally in a
 market with a volatility of $\alpha$.  The $\alpha$ (see Equation
-\ref{updtheta}) is measure of the volatility of the market which is calculated
+\ref{eqn:update_theta}) is measure of the volatility of the market which is calculated
 by looking at the variance of the last N trades around the market equilibrium.
 So if the majority of trades are close to the equilibrium price then we are in
 a stable market and vice versa.
@@ -423,29 +535,43 @@ target price  away from the equilibrium. So a high value of theta means that a
 relatively small change in aggressivenesss wil result in the the 
 
 \begin{equation}
-\label{updtheta}
+\label{eqn:update_theta}
 \begin{split}
-\theta(t+1)=\theta(t)+\beta_2(\theta^*(\alpha)-\theta_t)\\\\
-\alpha = \frac{\sqrt{\frac 1 N \sum^T_{i=T-N+1}(p_i-\hat p^*)^2}}{\hat p^*}
+    \theta(t+1)=\theta(t)+\beta_2(\theta^*(\alpha)-\theta_t)\\\\
+    \alpha = \frac{\sqrt{\frac 1 N \sum^T_{i=T-N+1}(p_i-\hat p^*)^2}}{\hat p^*}
 \end{split}
 \end{equation}
 
 \begin{equation}
-\theta^*(\alpha) = (\theta_{max}-\theta_{min})
-\frac{(1-e^{\gamma(
-\frac{\alpha-\alpha_{min}}{\alpha_{max}-\alpha_{min}}-1)}}{1-e^{-\gamma}} + \theta_{min}
-\label{thetastar}
+    \label{eqn:theta_star}
+    \theta^*(\alpha) = (\theta_{max}-\theta_{min})
+    (1-\frac{(\alpha-\alpha_{min})}{(\alpha_{max} -\alpha_{min})}e^{\gamma(
+    \frac{\alpha-\alpha_{min}}{\alpha_{max}-\alpha_{min}}-1)} + \theta_{min}
 \end{equation}
 
 \section{Calibration} \label{sec:calibration}
 % OWNER: Group
 % - $\beta_1$, $\beta_2$, $\gamma$, $\eta$
 % - potential to compare statistically?
-Text.\\
+The $\eta$ value in the AA bidding function determines how quickly the shout
+price moves towards from the best shout to the calculated target price. A
+higher value of $\eta$ will reduce the rate of change making the trader slower
+to react to market events. This is confirmed by our tests. A trader with $\eta
+= 1000$ makes an average profit of 94.507 over 100 trades. Another trader with
+a lower $\eta = 100$ makes a higher average profit of 116.553. Using $\eta = 3$
+from the AA paper gives a profit of 136.555. So clearly it is important for the
+shout price to respond to quickly up the changing market. Setting $\eta$ too
+low would cause outlier trades to have a significant effect which would reduce
+the margins.
 
-We update our aggressiveness and theta values more often than in the original Adaptive Aggressiveness paper\cite{AA_thesis}. This is advantageous since it allows us to update to rapidly changing market conditions. Since we update these values more often the learning rates have to be comparatively lower otherwise the algorithm will effectively learn immediately. This is supported by TABLE that shows the profits over 8000 trials for different values of $\beta_1$ don't change significantly. However the same experiment with smaller $\beta_1$ values shows greater variation in profits.
+We update our aggressiveness and theta values more often than in the original Adaptive Aggressiveness 
+paper\cite{AA_thesis}. This is advantageous since it allows us to update to rapidly changing market 
+conditions. Since we update these values more often the learning rates have to be comparatively lower 
+otherwise the algorithm will effectively learn immediately. This is supported by TABLE that shows 
+the profits over 8000 trials for different values of $\beta_1$ don't change significantly. However 
+the same experiment with smaller $\beta_1$ values shows greater variation in profits.
 
-\begin{table}
+\begin{table}[h]
   \centering
   \label{tbl:beta1_results_big}
   \begin{tabular}{ | c | c | }
@@ -470,7 +596,7 @@ We update our aggressiveness and theta values more often than in the original Ad
 \end{table}
 
 % TODO This data is incomplete, long test needed
-\begin{table}
+\begin{table}[h]
   \centering
   \label{tbl:beta1_results_small}
   \begin{tabular}{ | c | c | }
@@ -508,8 +634,9 @@ We ran 22750 market sessions with the ZIC, SHVR, ZIP and AA traders.
 Each session used a different ratio of the traders.
 %TODO
 
-\begin{table}
+\begin{table}[h]
   \centering
+  \label{tbl:results}
   \begin{tabular}{ | c | c | }
     \hline
     Strategy & Average Balance \\
@@ -524,7 +651,6 @@ Each session used a different ratio of the traders.
     \hline
   \end{tabular}
   \caption{Average balances for different trading strategies.}
-  \label{tbl:results}
 \end{table}
 
 % TODO: Big graph of time and price

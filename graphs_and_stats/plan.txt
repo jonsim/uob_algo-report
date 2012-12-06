@@ -5,7 +5,7 @@ price equilibrium lambda
     11 * (2 + 2) = 44 AA
     22 + 22 ZIP
     22 + 22 ZIC
-    130 traders
+    132 traders
     5000 trials
 
 ditto beta1, beta2 sans 0.0
