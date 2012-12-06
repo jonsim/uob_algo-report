@@ -308,8 +308,11 @@ not yet been accepted. The value of $\eta$ is set as a parameter and reflects
 how quickly we converge on our estimated price (higher $\eta$ converge slower).
 
 \textbf{Bidding rules for Buyer}
+
+\begin{tabbing}
 if ($l_i \leq o_bid$) - Submit no bid (market transacting above our limit)\\
 else submit bid given by Equation \ref{bidieqn}
+\end{tabbing}
 
 \begin{equation}
 bid_i = \frac{o_{bid} + (\tau - o_{bid}}{\eta}
@@ -415,6 +418,10 @@ by looking at the variance of the last N trades around the market equilibrium.
 So if the majority of trades are close to the equilibrium price then we are in
 a stable market and vice versa.
 
+The theta affects the degree to which changing the aggressiveness moves the
+target price  away from the equilibrium. So a high value of theta means that a
+relatively small change in aggressivenesss wil result in the the 
+
 \begin{equation}
 \label{updtheta}
 \begin{split}
@@ -425,8 +432,8 @@ a stable market and vice versa.
 
 \begin{equation}
 \theta^*(\alpha) = (\theta_{max}-\theta_{min})
-(1-\frac{(\alpha-\alpha_{min})}{(\alpha_{max} -\alpha_{min})}e^{\gamma(
-\frac{\alpha-\alpha_{min}}{\alpha_{max}-\alpha_{min}}-1)} + \theta_{min}
+\frac{(1-e^{\gamma(
+\frac{\alpha-\alpha_{min}}{\alpha_{max}-\alpha_{min}}-1)}}{1-e^{-\gamma}} + \theta_{min}
 \label{thetastar}
 \end{equation}
 
