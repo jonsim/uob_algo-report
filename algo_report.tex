@@ -190,6 +190,34 @@ recent transactions more heavily with the $\lambda$ affect how severe this
 weighting is. We set the value of $\lambda$ to 0.9 which was the value
 recommended in the original paper \cite[p.~100]{AA_thesis}.\\
 
+We also tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over 8000 
+market sessions (of 600 timesteps each) to find their effect on AA's performance. We didn't find any
+statistically significant difference between the different values. Our results
+are included in table \ref{tbl:lambda_results}.
+\begin{table}
+  \centering
+  \label{tbl:lambda_results}
+  \begin{tabular}{ | c | c | }
+    \hline
+    \textbf{$\lambda$ value} & \textbf{Average finishing balance (3dp)} \\
+    \hline
+    0.0 & 128.048 \\
+    0.1 & 128.040 \\
+    0.2 & 128.041 \\
+    0.3 & 128.314 \\
+    0.4 & 128.268 \\
+    0.5 & 128.278 \\
+    0.6 & 128.224 \\
+    0.7 & 128.380 \\
+    0.8 & 128.172 \\
+    0.9 & 128.365 \\
+    1.0 & 128.462 \\
+    \hline \hline
+    ZIC & 89.521 \\
+    ZIP & 116.719 \\
+    \hline
+  \end{tabular}
+\end{table}
 
 \subsubsection{Price estimation} \label{sec:AA_price_estimation}
 % OWNER: Max
