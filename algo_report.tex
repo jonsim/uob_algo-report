@@ -68,11 +68,12 @@ trading volume to maximise the amount of profit.
 
 In a double auction buyers submit bids to the market and sellers submit asks.
 When a bid equals or exceeds a seller's asks the bid is accepted and the trade
-occurs. Experiments have shown (Smith 1962) that the prices in the market will
-rapidly converge on the price equilibrium in a number of market environments.
+occurs. Experiments have shown  that the prices in the market will
+rapidly converge on the price equilibrium in a number of market
+environments\cite{smith_1962}.
 
 IBM published a paper in 2001 that showed that their MGD trading strategy and
-Dave Cliff's ZIP were able to outperform human traders.
+Dave Cliff's ZIP were able to outperform human traders\cite{ibm_human}.
 Algorithmic strategies are able to react more quickly to changing market
 conditions and combine information from a multiple sources.
 
@@ -435,6 +436,58 @@ a stable market and vice versa.
 % - potential to compare statistically?
 Text.\\
 
+We update our aggressiveness and theta values more often than in the original Adaptive Aggressiveness paper\cite{AA_thesis}. This is advantageous since it allows us to update to rapidly changing market conditions. Since we update these values more often the learning rates have to be comparatively lower otherwise the algorithm will effectively learn immediately. This is supported by TABLE that shows the profits over 8000 trials for different values of $\beta_1$ don't change significantly. However the same experiment with smaller $\beta_1$ values shows greater variation in profits.
+
+\begin{table}
+  \centering
+  \label{tbl:beta1_results_big}
+  \begin{tabular}{ | c | c | }
+    \hline
+    \textbf{$\beta_1$ value} & \textbf{Average finishing balance (3dp)} \\
+    \hline
+    0.1 & 129.138 \\
+    0.2 & 129.038 \\
+    0.3 & 129.312 \\
+    0.4 & 129.230 \\
+    0.5 & 129.467 \\
+    0.6 & 129.062 \\
+    0.7 & 129.164 \\
+    0.8 & 129.137 \\
+    0.9 & 129.271 \\
+    1.0 & 129.286 \\
+    \hline \hline
+    ZIC & 89.159 \\
+    ZIP & 117.167 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+% TODO This data is incomplete, long test needed
+\begin{table}
+  \centering
+  \label{tbl:beta1_results_small}
+  \begin{tabular}{ | c | c | }
+    \hline
+    \textbf{$\beta_1$ value} & \textbf{Average finishing balance (3dp)} \\
+    \hline
+    0.00 & 108.298 \\
+    0.01 & 124.723 \\
+    0.02 & 129.345 \\
+    0.03 & 126.885 \\
+    0.04 & 129.817 \\
+    0.05 & 129.336 \\
+    0.06 & 128.708 \\
+    0.07 & 128.842 \\
+    0.08 & 129.643 \\
+    0.09 & 128.207 \\
+    0.10 & 132.184 \\
+    \hline \hline
+    ZIC & 89.208 \\
+    ZIP & 118.276 \\
+    \hline
+  \end{tabular}
+\end{table}
+
 
 \section{Results} \label{sec:results}
 % OWNER: Group
@@ -444,13 +497,17 @@ Text.\\
 % - Experiment with changing scheduler
 % - Other graphs
 
+We ran 22750 market sessions with the ZIC, SHVR, ZIP and AA traders.
+Each session used a different ratio of the traders.
+%TODO
+
 \begin{table}
   \centering
   \begin{tabular}{ | c | c | }
     \hline
     Strategy & Average Balance \\
     \hline
-    ZIC & $93.863$ \\
+    ZIC & 93.863 \\
     \hline
     SHVR & 106.139 \\
     \hline
@@ -460,8 +517,10 @@ Text.\\
     \hline
   \end{tabular}
   \caption{Average balances for different trading strategies.}
+  \label{tbl:results}
 \end{table}
 
+% TODO: Big graph of time and price
 
 \section{Conclusion} \label{sec:conclusion}
 % OWNER: Group
