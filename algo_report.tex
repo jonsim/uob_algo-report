@@ -50,8 +50,6 @@
 \end{verbatim}
 \end{abstract}
 
-\pagebreak
-
 \section{Introduction} \label{sec:introduction}
 % OWNER: Rupert
 % - What is automated trading (history)
@@ -109,6 +107,8 @@ This is covered in more detail in Section \ref{sec:traders_GDV}. Some of the
 other traders in our experiments, such as AA and ZIP only need Level 1 data
 (high and low).
 
+Traders are assigned orders to a given supply and demand schedule. BSE supports three method of price generation: fixed, random and jittered. Fixed maintains a constant difference between orders when they are sorted. Random generates orders at random in a certain range. Jittered is similar to fixed except it adds a small amount of noise which is more realisitic. There are also three options for determining when orders are submitted to traders: drip-fixed, drip-jitter and drip poission. With drip-fixed orders arrive at a fixed interval. Drip-jitter is the same with a small amount of added noise. Drip-poisson models the arrival of orders as a poisson process.
+
 \subsection{Traders} \label{sec:traders}
 \subsubsection{ZIC} \label{sec:traders_ZIC}
 % OWER: Jonny
@@ -161,6 +161,15 @@ where $\beta$ is the learning rate, $\tau$ is the `target price' and $p$ is the 
 % - Shavers / Sniper / XKCD, etc.
 % - MGD anonymised data (see BSE paragraph 2)
 % - We implemented it but couldn't do a full implementation
+
+\begin{equation}
+  f(p) = \frac{\text{AAG}(p) + \text{BG}(p)}{\text{AAG}(p) + \text{BG}(p) +
+  \text{UAL}(p)}
+\end{equation}
+
+$\text{AAG}(p)$ is number of accepted asks in the history window $\geq p$.
+$\text{BG}(p)$ is
+the number of bids $\geq p$. $\text{UAL}(p)$ is the number of unaccepted asks $\leq p$. 
 
 The Gjerstad Dickhaut (GD) trading strategy was invented by John Dickhaut and
 Steven Gjerstad in their 1998 paper \emph{Price Formation in Double
