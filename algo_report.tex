@@ -182,15 +182,6 @@ We used the implementation of the ZIP algorithm provided in the BSE (Section \re
 % - MGD anonymised data (see BSE paragraph 2)
 % - We implemented it but couldn't do a full implementation
 
-\begin{equation}
-  f(p) = \frac{\text{AAG}(p) + \text{BG}(p)}{\text{AAG}(p) + \text{BG}(p) +
-  \text{UAL}(p)}
-\end{equation}
-
-$\text{AAG}(p)$ is number of accepted asks in the history window $\geq p$.
-$\text{BG}(p)$ is
-the number of bids $\geq p$. $\text{UAL}(p)$ is the number of unaccepted asks $\leq p$. 
-
 The Gjerstad Dickhaut (GD) trading strategy was invented by John Dickhaut and
 Steven Gjerstad in their 1998 paper \emph{Price Formation in Double
 Auctions}\cite{gd}.
@@ -206,6 +197,16 @@ The efficiency is the margin divided by the maximum theoretically margin
 (difference between limit and price equilibrium).
 They also showed that GD was able to cope with changing supply and demand
 conditions.
+
+The GD belief function for a seller:
+\begin{equation}
+  f(p) = \frac{\text{AAG}(p) + \text{BG}(p)}{\text{AAG}(p) + \text{BG}(p) +
+  \text{UAL}(p)}
+\end{equation}
+
+$\text{AAG}(p)$ is number of accepted asks in the history window $\geq p$.
+$\text{BG}(p)$ is
+the number of bids $\geq p$. $\text{UAL}(p)$ is the number of unaccepted asks $\leq p$.
 
 Modified Gjerstad Dickhaut (MGD)\cite{mgd} is a version of GD that
 is better suited to volatile conditions that can occur at the start of a
