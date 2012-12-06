@@ -308,12 +308,13 @@ significant difference between the different values. Our results are included in
   estimate.}
 \end{figure}
 
-Short term learning reflects how the value of our aggressive is calculated and
-then subsequently updated. However, first we must define two concepts. An
-intra-marginal trader is a trader that bids above the equilibrium if they are a
-buyer (or asks below the equilibrium if they are a seller). Whereas an
-extra-marginal trader will never trade above the equilibrium if they are a
-buyer (or below the equilibrium if they are a seller).
+The adaptive aggressive algorithm uses a target price calculated dependent upon
+the state of the marget. However, before we can go into detail, we must define
+two concepts. An intra-marginal trader is a trader that bids above the
+equilibrium if they are a buyer (or asks below the equilibrium if they are a
+seller). Whereas an extra-marginal trader will never trade above the
+equilibrium if they are a buyer (or below the equilibrium if they are a
+seller).
 
 Whether our trader is acting in an extra-marginal or intra-marginal capacity
 will depend upon the limit price for our order. If we have a limit price above
@@ -482,7 +483,25 @@ $\lambda_r$ and $\lambda_a$ representative the relative and absolute change in
 r respectively. The absolute change exists to prevent r from never being able
 to escape from a value of 0. Depending on the rules above, we either set the
 two values to positive to become more aggressive or negative to become less
-aggressive.\\
+aggressive.
+
+The $r_{shout}$ is the value of aggressiveness that would give us the current
+best outstanding shout. These were computer by reversing the functions found in
+\ref{sec:AA_price_estimation}, an example can be seen in Equation
+\ref{eqn:reverse_intra_buyer} for calculating the reverse of the intra marginal
+buyer.
+
+\begin{equation}
+\label{eqn:reverse_intra_buyer}
+r_{shout}=
+\begin{cases}
+ -ln\left(\frac{ (1-\frac{\tau}{\hat p^*}) (e^\theta-1) + 1}{\theta}\right) & \tau
+< \hat p^*\\
+ln\left( \frac{(e^\theta -1) (\frac{\tau - \hat p^*}{l_i - \hat p^*} + 1)
+}{\theta} \right)&
+\textstyle{otherwise}
+\end{cases}
+\end{equation}
 
 The aggressive is depending on our limit price and the current market state as
 is illustrated in Figure \ref{fig:avtime}. In order to collect more data, we
@@ -532,7 +551,8 @@ a stable market and vice versa.
 
 The theta affects the degree to which changing the aggressiveness moves the
 target price  away from the equilibrium. So a high value of theta means that a
-relatively small change in aggressivenesss wil result in the the 
+relatively small change in aggressiveness will result in a large move away from
+the equilibrium price. This is illustrated in Fig. %\ref{fig:theta}.
 
 \begin{equation}
 \label{eqn:update_theta}
