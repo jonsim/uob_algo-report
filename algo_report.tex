@@ -265,7 +265,7 @@ recent transactions, known as a moving average.
 The $w_i$ represents the weight of the transaction so that we weight more
 recent transactions more heavily with the $\lambda$ affect how severe this
 weighting is. We set the value of $\lambda$ to 0.9 which was the value
-recommended in the original paper \cite[p.~100]{AA_thesis}.
+recommended in the original paper\cite[p.~100]{AA_thesis}.
 
 We also tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over 8000 market sessions (of 
 600 timesteps each) to find their effect on AA's performance. We didn't find any statistically 
@@ -421,7 +421,7 @@ how quickly we converge on our estimated price (higher $\eta$ converge slower).
 Since these all require an existing bid on the market, there were difficult
 rules that were used to determine what shout to make if we were the first
 trader selected to make a bid. These can be found in the Adaptive Aggressive
-paper \cite[p.~32]{AA_paper} but are not defined here.
+paper\cite[p.~32]{AA_paper} but are not defined here.
 
 Initially when we ran our algorithm we found that it was occasionally making a
 loss upon receiving a new order from the scheduler with a different limit
