@@ -316,9 +316,9 @@ the different values. Our results are included in Table
 % - MEGA GRAPH
 \begin{figure}
   \centering
-  \label{fig:equilibrium}
   \includegraphics[width=\columnwidth]{graphs_and_stats/graph_equilibriums.pdf}
   \caption{The affect of the weighting value on the price equilibrium
+  \label{fig:equilibrium}
   estimate.}
 \end{figure}
 
@@ -552,10 +552,10 @@ our limit price and the market equilibrium is increasing.
 
 \begin{figure}[H] 
 \centering
-\label{fig:avtime}
 \includegraphics[width=\columnwidth]{graphs_and_stats/graph_aggressiveness_vs_price.pdf}
 \caption{Aggressive and Price equilibrium throughout a trading day for an AA
 buyer}
+\label{fig:avtime}
 \end{figure}
 
 \subsubsection{Long term learning} \label{sec:AA_long_term_learning}
@@ -583,9 +583,9 @@ initialised to 0.02 and 0.15 respectively).
 
 \begin{figure}
   \centering
-  \label{fig:theta}
   \includegraphics[width=\columnwidth]{graphs_and_stats/graph_thetas.pdf}
   \caption{How different thetas affect the target price calculations}
+  \label{fig:theta}
 \end{figure}
 
 The $\theta$ affects the degree to which changing the aggressiveness moves the
@@ -602,9 +602,9 @@ oscillate.
 
 \begin{figure}
   \centering
-  \label{fig:theta_v_time}
   \includegraphics[width=\columnwidth]{graphs_and_stats/graph_theta_vs_time.pdf}
   \caption{How theta varies across a market day}
+  \label{fig:theta_v_time}
 \end{figure}
 
 %\begin{figure} 
@@ -640,22 +640,31 @@ higher value of $\eta$ will reduce the rate of change making the trader slower
 to react to market events. This is confirmed by our tests. A trader with $\eta
 = 1000$ makes an average profit of 94.507 over 100 trades. Another trader with
 a lower $\eta = 100$ makes a higher average profit of 116.553. Using $\eta = 3$
-from the AA paper gives a profit of 136.555. So clearly it is important for the
+from the AA thesis\cite{AA_thesis} gives a profit of 136.555. So clearly it is important for the
 shout price to respond to quickly up the changing market. Setting $\eta$ too
 low would cause outlier trades to have a significant impact which would reduce
 the margins.
 
-We update our aggressiveness and theta values more often than in the original Adaptive Aggressiveness 
-paper\cite{AA_thesis}. This is advantageous since it allows us to update to rapidly changing market 
-conditions. Since we update these values more often the learning rates have to be comparatively lower 
-otherwise the algorithm will effectively learn immediately. This is supported by Table 
-%\ref{tbl:beta1_results_big} that shows 
-the profits over 8000 trials for different values of $\beta_1$ don't change significantly. However 
-the same experiment with smaller $\beta_1$ values shows greater variation in profits.
+We update our aggressiveness and theta values more often than in the original
+Adaptive Aggressiveness paper\cite{AA_thesis}. This is advantageous since it
+allows us to update to rapidly changing market conditions. Since we update
+these values more often the learning rates have to be comparatively lower
+otherwise the algorithm will effectively learn immediately. We ran tests over
+four thousand market sessions with various different values of $\beta_1$ (which
+controls the rate of change of aggressiveness) and $\beta_2$ which controls the
+rate of change of theta, the results are shown in Table \ref{tbl:beta_results}.
+The average profit made by the Adaptive Aggressive algorithm did not appear to
+be heavily affected by the variation in either of the two $\beta$ values.
+However, if we set the value of $\beta_1$ to zero then we have a marked drop in
+performance, this is because the aggressiveness will not change and our
+algorithm will not be able to adapt to changing market conditions. Although a
+value of zero for $\beta_2$ does not appear to have a significant effect. This
+is because we initalise $\theta$ to -4 which is a fairly accurate model of our
+environment. \textbf{RUPERT PUT THE THETA=2 RESULTS HERE}
+
 
 \begin{table}[h]
   \centering
-  \label{tbl:beta_results}
   \begin{tabular}{ | c | C{2.7cm} | C{2.7cm} | }
     \hline
     \multirow{2}{*}{\textbf{Value ($v$)}} & \multicolumn{2}{ c | }{\textbf{Average finishing balance (3 dp.)}} \\
@@ -687,11 +696,11 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
     \hline
   \end{tabular}
   \caption{Difference in finishing balance with respect to change in $\beta_1$ and $\beta_2$ values.}
+  \label{tbl:beta_results}
 \end{table}
 
 \begin{table}[h]
   \centering
-  \label{tbl:lambda_results2}
   \begin{tabular}{ | c | c | }
     \hline
     \textbf{$\lambda$ value} & \textbf{Average finishing balance (3 dp.)} \\
@@ -713,6 +722,7 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
     \hline
   \end{tabular}
   \caption{Difference in finishing balance with respect to change in $\lambda$.}
+  \label{tbl:lambda_results}
 \end{table}
 
 
@@ -726,7 +736,6 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
 
 \begin{table}[H]
   \centering
-  \label{tbl:results}
   \begin{tabular}{ | c | C{2.5cm} | C{2.5cm} | }
     \hline
     \multirow{2}{*}{\textbf{Strategy}} & \multicolumn{2}{c|}{\textbf{Average
@@ -742,6 +751,7 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
     \hline
   \end{tabular}
   \caption{Average balances for different trading strategies.}
+  \label{tbl:results}
 \end{table}
 
 We ran 22750 market sessions with AA, SHVR, ZIC and ZIP traders (half
@@ -753,17 +763,16 @@ each trader paired with AA we can reject the null hypothesis ($p < 2.2 \cdot
 virtually identical.
 
 \begin{figure}[H]
-  \label{fig:average_balance_vs_time}
   \centering
   \includegraphics[width=\columnwidth]{graphs_and_stats/graph_average_balance_vs_time.pdf}
   \caption{Average balance over 22750 trials.}
+  \label{fig:average_balance_vs_time}
 \end{figure}
 
 Figure \ref{fig:average_balance_vs_time} shows that AA consistently makes more profit.
 
 \begin{table}[H]
   \centering
-  \label{tbl:two_traders}
   \begin{tabular}{ | c | c | }
     \hline
     Strategy & Average finishing balance (3 dp.) \\
@@ -773,6 +782,7 @@ Figure \ref{fig:average_balance_vs_time} shows that AA consistently makes more p
     \hline
   \end{tabular}
   \caption{Market session with just AA and ZIP traders.}
+  \label{tbl:two_traders}
 \end{table}
 
 We ran the Wilcoxon signed-rank test on the values in Table
