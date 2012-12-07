@@ -69,26 +69,24 @@ Bristol Stock Exchange}
 
 An automated trader is an algorithm that automatically places trading orders on
 an electronic market. In 2012 on the New York Stock Exchange program trading accounted for between 30\% and 40\% of the trade volume\cite{nyse_press}.
-A trader receives buy and sell orders from customers. An order consists of a price the customer wants to trade at and the volume they want to trade.
-The trader makes money through the margin between the order price and the price they trade at. A trader aims to buy below the order price and sell above the order price.
+A trader receives buy and sell orders from customers where an order consists of a price the customer wants to trade at and the volume they want to trade.
+The trader makes money through the margin between the order price and the price they trade at.
 A trading strategy has to balance the profit margins with the change of completing a trade to maximise profit.
 
-In a double auction buyers submit bids to the market and sellers submit asks. The bids and asks determine the price of the good.
+In a double auction the bids and asks determine the price of the commodity.
 When a bid equals or exceeds a seller's asks the bid is accepted and the trade
 occurs. Experiments have shown  that the prices in the market will
-rapidly converge on the price equilibrium in a number of market
+ converge on the price equilibrium in a number of market
 environments\cite{smith_1962}.
 
 IBM published a paper in 2001 that showed that their Modified Gjerstad Dickhaut (MGD) trading strategy and
 Dave Cliff's ZIP were able to outperform human traders\cite{ibm_human}.
 Algorithmic strategies are able to react more quickly to changing market
-conditions and combine information from a multiple sources.
+conditions and combine information from multiple sources.
 
 In this paper we experiment with different trading strategies for the
 continuous double auction.
-We have implemented the Adaptive Aggressiveness\cite{AA_thesis} trading
-algorithm and compare its performance with other adaptive algorithms as well
-as simpler traders.\\
+We have implemented the Adaptive Aggressiveness\cite{AA_thesis} strategy and compare its performance with other adaptive algorithms and other simpler traders.\\
 
 
 \section{Environment} \label{sec:environment}
@@ -109,24 +107,24 @@ any orders or trades that have occurred since the last update.
 
 Some trading algorithms require more depth in the order book. The Modified
 Gjerstad Dickhaut (MGD) algorithm needs to be able to match trades with
-outstanding orders to build up the accepted and rejected order information.
-This is covered in more detail in Section \ref{sec:traders_GDV}. Some of the
-other traders in our experiments, such as AA and ZIP only need Level 1 data
-(bid high and ask low).
+outstanding orders to build up the accepted and rejected order histories.
+This is covered in more detail in Section \ref{sec:traders_GDV}. The
+other traders in our experiments only need Level 1 data
+(bid-high and ask-low).
 
-Traders are assigned orders to a given supply and demand schedule. BSE supports three method of price generation: fixed, random and jittered. Fixed maintains a constant difference between orders when they are sorted. Random generates orders at random in a certain range. Jittered is similar to fixed except it adds a small amount of noise which makes it more realisitic. There are also three options for determining when orders are submitted to traders: drip-fixed, drip-jitter and drip poission. With drip-fixed orders arrive at a fixed interval. Drip-jitter is the same with a small amount of added noise. Drip-poisson models the arrival of orders as a poisson process.
+Traders are assigned orders to a given supply and demand schedule. BSE supports three method of price generation: \emph{Fixed}, \emph{Random} and \emph{Jittered}. \emph{Fixed} price generation maintains a constant difference between orders when they are sorted by price. The \emph{Random} mode generates orders uniformly at random in a given range while \emph{Jittered} mode is similar to \emph{Fixed} except that it adds a small amount of noise --- making it closer to a real world exchange. There are also three options for determining when orders are submitted to traders: \emph{Drip Fixed}, \emph{Drip Jittered} and \emph{Drip Poission}. With \emph{Drip Fixed} orders arrive at a fixed interval, \emph{Drip Jittered} is similar but with a small amount of added noise and finally \emph{Drip Poisson} models the arrival of orders as a Poisson process.
 
 \subsection{Traders} \label{sec:traders}
 \subsubsection{ZIC} \label{sec:traders_ZIC}
 % OWER: Jonny
 % - 
-The Zero Intelligence (ZI) agents were first proposed in 1993\cite{ZIC_paper} and are trading agents 
+The Zero Intelligence (ZI) agents were first proposed in 1993 \cite{ZIC_paper} and are trading agents 
 which have `zero intelligence' --- they simply make offers randomly between the maximum and minimum 
 allowed market price. Zero Intelligence Constrained (ZIC) traders are marginally more intelligent as 
 they make offers randomly between the worst offer ever seen and their limit price --- preventing them 
 from losing money on trades.
 
-Their random behaviour, which appears to exhibit human-like performance\cite[p.~1]{ZIP_paper1}, 
+ZIC trader's random behaviour, which appears to exhibit human-like characteristics \cite[p.~1]{ZIP_paper1}, 
 makes them perfect as a control to test our algorithm's performance against. We used the 
 implementation of ZIC provided in the BSE (Section \ref{sec:BSE}).\\
 
@@ -136,10 +134,9 @@ implementation of ZIC provided in the BSE (Section \ref{sec:BSE}).\\
 % - What was significant --- key points
 % - Advantages/disadvantages
 Zero-Intelligence-Plus (ZIP) traders were invented in 1997 and designed to improve on ZIC traders 
-(Section \ref{sec:traders_ZIC})\cite{ZIP_paper1}. They make use of a simple learning mechanism which 
-allows them to adjust their profit margin (which in turn are used to define the their current 
-offer(s) on the market) in response to other completed trades on the market --- thus reacting to 
-current market conditions. This simplistic algorithm allows surprisingly complex behaviour with a 
+(Section \ref{sec:traders_ZIC}) \cite{ZIP_paper1}. They make use of a simple learning mechanism which 
+allows them to adjust their profit margin in response to other completed trades on the market --- thus reacting to 
+current market conditions. In turn this defines the their current offer(s). This simplistic algorithm allows surprisingly complex behaviour with a 
 minimal performance cost.
 
 The key parameters in the algorithm are the learning rate, $\beta$ --- which represents how quickly the trader reacts to market change; and the `momentum', $\gamma$ --- which represents how market 
@@ -160,7 +157,7 @@ The change in profit margin at subsequent time steps can then be defined as:
     \label{eqn:change_in_margin}
 \end{equation}
 
-The new margin can then be calculated as:
+This allows the new margin to be calculated:
 \begin{equation}
     \mu(t) = \frac{p(t) + \Gamma(t)}{l} - 1
     \label{eqn:new_margin}
@@ -182,42 +179,41 @@ We used the implementation of the ZIP algorithm provided in the BSE (Section \re
 % - MGD anonymised data (see BSE paragraph 2)
 % - We implemented it but couldn't do a full implementation
 
-The Gjerstad Dickhaut (GD) trading strategy was invented by John Dickhaut and
-Steven Gjerstad in their 1998 paper \emph{Price Formation in Double
-Auctions}\cite{gd}.
+The Gjerstad Dickhaut (GD) trading strategy was invented by Steven Gjerstad and John Dickhaut in their 1998 paper \emph{Price Formation in Double
+Auctions} \cite{gd}.
 GD works by building a belief function of whether a bid at a particular price
 will be accepted by a seller.
 The buyer then aims to maximise their profit through a combination of margin
 and chance of trading.
 The belief values are formed based on observed trades and outstanding shouts.
-The GD strategy makes some simple assumptions such as if a bid was rejected a
+The GD strategy makes some simple assumptions, such as: if a bid was rejected a
 lower bid will also be rejected since it will be less attractive to a seller.
-The results of the experiments showed that GD has a higher efficiency than ZI.
-The efficiency is the margin divided by the maximum theoretically margin
+The results of the experiments showed that GD has a higher price efficiency than ZIC.
+The price efficiency is the margin divided by the maximum theoretical margin
 (difference between limit and price equilibrium).
 They also showed that GD was able to cope with changing supply and demand
 conditions.
 
-The GD belief function for a seller:
+The GD belief function for a seller is given by:
 \begin{equation}
   f(p) = \frac{\text{AAG}(p) + \text{BG}(p)}{\text{AAG}(p) + \text{BG}(p) +
   \text{UAL}(p)}
 \end{equation}
 
-$\text{AAG}(p)$ is number of accepted asks in the history window $\geq p$.
+$\text{AAG}(p)$ is the number of accepted asks in the history window $\geq p$.
 $\text{BG}(p)$ is
 the number of bids $\geq p$. $\text{UAL}(p)$ is the number of unaccepted asks $\leq p$.
 
-Modified Gjerstad Dickhaut (MGD)\cite{mgd} is a version of GD that
+Modified Gjerstad Dickhaut (MGD) \cite{mgd} is a version of GD that
 is better suited to volatile conditions that can occur at the start of a
 session where there is very little information about accepted and rejected
 orders.
 An MGD agent remembers the highest and lowest prices from the last session.
-A MGD buyer will then set the belief function to 1 for all prices above the
+An MGD buyer will then set the belief function to 1 for all prices above the
 lowest price and to 0 for all prices below the lowest price.
 MGD is also able to hold multiple units.
 
-GDX\cite{gdx} is a Dynamic Programming based variant of GD.
+GDX \cite{gdx} is a Dynamic Programming based variant of GD.
 GDX uses the same belief function as GD but uses Dynamic Programming to
 maximise the long term reward instead of the short term reward.
 Dynamic Programming is used to compute optimal policies in Markov Decision
@@ -229,7 +225,7 @@ $\gamma = 0$ will result in the same behaviour as the standard GD strategy
 reward.
 However setting $\gamma$ close to 1 will cause GDX to always wait for a better
 deal and thus not make any trades.
-Under certain market environments GDX was able to outperform
+Under certain market environments GDX is able to outperform
 both GD and ZIP.
 With a $\gamma$ between 0.75 and 0.85 GDX always outperforms GD.
 GDX is more flexible than GD and can handle multiple goods although
@@ -248,17 +244,17 @@ controls the amount it is willing to improve the current best shout.\\
 \subsection{Adaptive Aggressive Traders} \label{sec:AA}
 % OWNER: Max
 % - ???
-The main focus of our experiments was the Adaptive Aggressive trader crated by
-Vytelingum in 2006\cite{AA_thesis}. The adaptive aggressive algorithm relies on the principal that you can be in
-two different states. One where you trade more frequently closer to your limit
+The main focus of our experiments was the Adaptive Aggressive trader created by
+Vytelingum in 2006 \cite{AA_thesis}. The Adaptive Aggressive algorithm relies on the principal that you can be in
+two different states. One where you more frequently trade closer to your limit
 price, with an increased chance of trading but lower profit per trade. The other where you
 trade further from your limit price, decreasing the likelihood of making a
 trade but increasing the amount of profit you will make when a trade is
 successful.
 
-The Adaptive-Aggressive algorithm maintains an aggressiveness value ($r$), which
+The Adaptive Aggressive algorithm maintains an aggressiveness value ($r$), which
 determines how close to your limit price you will be trading. A completely
-aggressive buyer ($r = 1$) will buy at their limit price, and a completely
+aggressive buyer ($r = 1$) will buy at their limit price while a completely
 passive trader ($r = -1$) will buy at the minimum market price (\$1 on the BSE).\\
 
 
@@ -267,29 +263,23 @@ One of the key features that most trading algorithms rely on is the ability to
 estimate the equilibrium price of the market. For this we used the following
 equation which estimates the market equilibrium price based on the N most
 recent transactions, known as a weighted moving average.
-
 \begin{equation}
     \hat p^* = \frac{\sum^T_{i=T-N+1}w_ip_i}{\sum^T_{i=T-N+1}w_i}\\
-    \text{where $w_T = 1$ and $w_{i-1} = \lambda w_i$.}
     \label{eqn:equilibrium_estimator}
 \end{equation}
+where $w_T = 1$ and $w_{i-1} = \lambda w_i$.
 
 The $w_i$ weights the transactions so more weight is given to recent
 transactions. A higher $\lambda$ value will cause the weighting of more distant
 trades to diminish. We set the value of $\lambda$ to 0.9 which was the value
-recommended in the original paper\cite[p.~100]{AA_thesis}.
-
-We also tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over 8000
-market sessions (of 600 timesteps each) to find their effect on AA's
-performance. We didn't find any statistically significant difference between
-the different values. 
+recommended in the original paper \cite[p.~100]{AA_thesis}. We also investigated the effect of different values of $\lambda$ on AA's performance, the results of which are detailed in Section \ref{sec:calibration_lambda}.
 %TODO
 
 \subsubsection{Price estimation} \label{sec:AA_price_estimation}
 % OWNER: Max
 % - Graph of all trades with projected price equilibrium
 % - MEGA GRAPH
-\begin{figure}
+\begin{figure}[H]
   \centering
   \includegraphics[width=\columnwidth]{graphs_and_stats/graph_equilibriums.pdf}
   \caption{The affect of the weighting value on the price equilibrium
@@ -297,42 +287,41 @@ the different values.
   estimate.}
 \end{figure}
 
-The adaptive aggressive algorithm calculates the price of its shout by
+The Adaptive Aggressive algorithm calculates the price of its shout by
 computing a target price ($\tau$) which is dependent upon
 the state of the market. However, before we can go into detail, we must define
-two concepts; An intra-marginal trader is a trader that bids above the
+two concepts: an intra-marginal trader is a trader that bids above the
 equilibrium if they are a buyer (or asks below the equilibrium if they are a
-seller), an extra-marginal trader will never trade above the
+seller) and an extra-marginal trader will never trade above the
 equilibrium if they are a buyer (or below the equilibrium if they are a
 seller).
 
-Whether our trader is acting in an extra-marginal or intra-marginal capacity
+Whether our trader is acting in an intra-marginal or extra-marginal capacity
 will depend upon the limit price for our order. If we have a limit price above
-the equilibrium (below the equilibrium for a seller) then we are considered an
-intra-marginal trader otherwise we are considered extra-marginal.
+the equilibrium (below the equilibrium for a seller) then we act as an
+intra-marginal trader otherwise we act as an extra-marginal trader.
 
 The price that we then submit will depend upon which capacity we are acting
-under based on the follow equations.
+under, based on the follow equations.
 
 \textbf{Intra-marginal buyer}
 \begin{equation}
     \tau =
     \begin{cases}
-        \hat{p}^*(1- \frac{e^{-r\theta}-1}{e^{\theta}-1}), &  \text{if r } \in (-1,0)  \\
-        \hat{p}^* + (l_i-\hat{p}^*)(\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if r} \in (0,1)
+        \hat{p}^*(1- \frac{e^{-r\theta}-1}{e^{\theta}-1}) &  \text{if r } \in (-1,0)  \\
+        \hat{p}^* + (l_i-\hat{p}^*)(\frac{e^{r\theta}-1}{e^\theta-1}) & \text{if r} \in (0,1)
     \end{cases}
     \label{eqn:intrabuyer}
 \end{equation}
-
-where $\theta$ (\ref{sec:AA_long_term_learning}) measures the volatility of the
-market, $l_i$ is the limit price for the buyer, $\hat{p}^*$ is the estimator of the
+where $\theta$ (Section \ref{sec:AA_long_term_learning}) measures the volatility of the
+market, $l_i$ is the limit price for the buyer, and $\hat{p}^*$ is the estimator of the
 equilibrium price.
 
 \textbf{Extra-marginal buyer}
 \begin{equation}
     \tau =
     \begin{cases}
-        l_i(1-\frac{e^{-r\theta}-1}{e^\theta-1} &  \text{if r } \in (-1,0)  \\
+        l_i(1-\frac{e^{-r\theta}-1}{e^\theta-1}) &  \text{if r } \in (-1,0)  \\
         l_i & \text{if r } \in (0,1)
     \end{cases}
     \label{eqn:extrabuyer}
@@ -342,12 +331,11 @@ equilibrium price.
 \begin{equation}
     \tau =
     \begin{cases}
-        \hat{p}^* + (\text{MAX}-\hat{p}^*)( \frac{e^{-r\theta}-1}{e^{\theta}-1}), &  \text{if r } \in (-1,0)  \\
-        c_j + (\hat{p}^*-c_j)(1-\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if r } \in (0,1)
+        \hat{p}^* + (\text{MAX}-\hat{p}^*)( \frac{e^{-r\theta}-1}{e^{\theta}-1}) &  \text{if r } \in (-1,0)  \\
+        c_j + (\hat{p}^*-c_j)(1-\frac{e^{r\theta}-1}{e^\theta-1}) & \text{if r } \in (0,1)
     \end{cases}
     \label{eqn:intraseller}
 \end{equation}
-
 where MAX is the maximum value that can be submitted to the market and $c_j$ is
 the limit price for the seller.
 
@@ -362,14 +350,16 @@ the limit price for the seller.
 \end{equation}
 
 In the paper, there was a different value used instead of $\theta$, designed to
-ensure that the curve provided by the equations was continuous. However, we
+ensure that the curve produced by the equations was continuous. However, we
 found that just using $\theta$ was still sufficiently accurate and greatly
 simplified the above equations.
+
+% TODO Jonny and Rupe proof read
 
 One of the equations is then used to determine the ideal price that we want to
 be trading at. We then use the following rules to determine the actual shout
 that we will make when asked to submit a new order. The $o_{bid}$ and $o_{ask}$
-represent the best bid (highest) and best ask (lowest) on the market that have
+represent the best (highest) bid and best (lowest) ask on the market that have
 not yet been accepted. The value of $\eta$ is set as a parameter and reflects
 how quickly we converge on our estimated price (higher $\eta$ converge slower).
 
@@ -402,7 +392,7 @@ how quickly we converge on our estimated price (higher $\eta$ converge slower).
 Since these all require an existing bid on the market, there were different
 rules that were used to determine what shout to make if we were the first
 trader selected to make a bid. These can be found in the Adaptive Aggressive
-paper\cite[p.~32]{AA_paper} but are not defined here.
+paper \cite[p.~32]{AA_paper} but are not defined here.
 
 Initially when we ran our algorithm we found that it was occasionally making a
 loss upon receiving a new order from the scheduler with a different limit
@@ -596,23 +586,25 @@ oscillate.
   \label{thetastar}
 \end{equation}
 
+
 \section{Calibration} \label{sec:calibration}
 % OWNER: Group
 % - $\beta_1$, $\beta_2$, $\gamma$, $\eta$
 % - potential to compare statistically?
+\subsection{$\eta$ parameter} \label{sec:calibration_eta}
 The $\eta$ value in the AA bidding function determines how quickly the shout
 price moves towards from the best shout to the calculated target price. A
 higher value of $\eta$ will reduce the rate of change making the trader slower
 to react to market events. This is confirmed by our tests. A trader with $\eta
 = 1000$ makes an average profit of 94.507 over 100 trades. Another trader with
 a lower $\eta = 100$ makes a higher average profit of 116.553. Using $\eta = 3$
-from the AA thesis\cite{AA_thesis} gives a profit of 136.555. So clearly it is important for the
+from the AA thesis \cite{AA_thesis} gives a profit of 136.555. So clearly it is important for the
 shout price to respond to quickly up the changing market. Setting $\eta$ too
 low would cause outlier trades to have a significant impact which would reduce
 the margins.
 
 We update our aggressiveness and theta values more often than in the original
-Adaptive Aggressiveness paper\cite{AA_thesis}. This is advantageous since it
+Adaptive Aggressiveness paper \cite{AA_thesis}. This is advantageous since it
 allows us to update to rapidly changing market conditions. Since we update
 these values more often the learning rates have to be comparatively lower
 otherwise the algorithm will effectively learn immediately. We ran tests over
@@ -627,9 +619,10 @@ algorithm will not be able to adapt to changing market conditions. Although a
 value of zero for $\beta_2$ does not appear to have a significant effect. This
 is because we initalise $\theta$ to -4 which is a fairly accurate model of our
 environment. \textbf{RUPERT PUT THE THETA=2 RESULTS HERE}
+%TODO
 
-
-\begin{table}[h]
+\subsection{$\beta_1$ and $\beta_2$ parameters} \label{sec:calibration_beta}
+\begin{table}[H]
   \centering
   \begin{tabular}{ | c | C{2.7cm} | C{2.7cm} | }
     \hline
@@ -665,7 +658,13 @@ environment. \textbf{RUPERT PUT THE THETA=2 RESULTS HERE}
   \label{tbl:beta_results}
 \end{table}
 
-\begin{table}[h]
+\subsection{$\lambda$ parameter} \label{sec:calibration_lambda}
+We tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over 8000
+market sessions (of 600 timesteps each) to find their effect on AA's
+performance. We didn't find any statistically significant difference between
+the different values. 
+
+\begin{table}[H]
   \centering
   \begin{tabular}{ | c | c | }
     \hline
