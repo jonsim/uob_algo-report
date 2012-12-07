@@ -28,7 +28,7 @@ for line in f:
 # print
 fig = plot.plot(x, y, linewidth=1.0)
 plot.show()
-plot.savefig(output_file_name)
+#plot.savefig(output_file_name) THIS IS BROKE ;(
 
 # max's weird stuff
 #ax = fig.add_subplot(111)
