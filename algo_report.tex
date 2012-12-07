@@ -16,8 +16,14 @@
 %\usepackage{fancyhdr}
 %\lfoot{HELLO}\cfoot{\thepage}\rfoot{WORLD}
 
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd{\maketitle}{\@copyrightspace}{}{}{}
+\makeatother
+
 \begin{document}
-\title{Analysis of an Adaption of the Adaptive Aggressive Algorithm: Asking are AA Algorithms Actually All that Accurate in Applicable Auctions Anyway?}
+\title{Analysis of Adaptive Agressiveness on the\\
+Bristol Stock Exchange}
 \numberofauthors{3} 
 \author{
   \alignauthor
@@ -56,29 +62,24 @@
 \end{verbatim}
 \end{abstract}
 
-\pagebreak
-
 \section{Introduction} \label{sec:introduction}
 % OWNER: Rupert
 % - What is automated trading (history)
 % - What our goal was
 
 An automated trader is an algorithm that automatically places trading orders on
-an electronic market.
-The trader receives buy or sell orders from customers with a price and
-quantity.
-The trader makes money by buying for less than the customers price or selling
-for more than the customers price.
-Therefore the goal of a trading strategy is maximise these margins and the
-trading volume to maximise the amount of profit.
+an electronic market. In 2012 on the New York Stock Exchange program trading accounted for between 30\% and 40\% of the trade volume\cite{nyse_press}.
+A trader receives buy and sell orders from customers. An order consists of a price the customer wants to trade at and the volume they want to trade.
+The trader makes money through the margin between the order price and the price they trade at. A trader aims to buy below the order price and sell above the order price.
+A trading strategy has to balance the profit margins with the change of completing a trade to maximise profit.
 
-In a double auction buyers submit bids to the market and sellers submit asks.
+In a double auction buyers submit bids to the market and sellers submit asks. The bids and asks determine the price of the good.
 When a bid equals or exceeds a seller's asks the bid is accepted and the trade
 occurs. Experiments have shown  that the prices in the market will
 rapidly converge on the price equilibrium in a number of market
 environments\cite{smith_1962}.
 
-IBM published a paper in 2001 that showed that their MGD trading strategy and
+IBM published a paper in 2001 that showed that their Modified Gjerstad Dickhaut (MGD) trading strategy and
 Dave Cliff's ZIP were able to outperform human traders\cite{ibm_human}.
 Algorithmic strategies are able to react more quickly to changing market
 conditions and combine information from a multiple sources.
@@ -86,7 +87,7 @@ conditions and combine information from a multiple sources.
 In this paper we experiment with different trading strategies for the
 continuous double auction.
 We have implemented the Adaptive Aggressiveness\cite{AA_thesis} trading
-algorithm and compared its performance with other adaptive algorithms as well
+algorithm and compare its performance with other adaptive algorithms as well
 as simpler traders.\\
 
 
@@ -97,7 +98,7 @@ continuous double auction. Each trader has access to Level 2 market data which
 includes the individual buy and sell orders (the limit order book). The
 environment is simpler than a real exchange as traders only buy or sell one
 unit of a single commodity at a time. Traders can also take as long as they
-need to respond to market events and submit orders.
+need to respond to market events and submit orders. BSE includes 5 traders: Giveaway, ZIC, Shaver, Sniper and ZIP.
 
 Traders have access to the limit order book which contains the outstanding
 shouts made in the market. The limit order book is anonymised so the identity
@@ -106,14 +107,14 @@ random trader is asked to make a shout. If the maximum bid in the market
 exceeds or equals the minimum ask a trade occurs. Each trader is updated with
 any orders or trades that have occurred since the last update.
 
-BSE includes 5 traders: Giveaway, ZIC, Shaver, Sniper and ZIP.
-
 Some trading algorithms require more depth in the order book. The Modified
 Gjerstad Dickhaut (MGD) algorithm needs to be able to match trades with
 outstanding orders to build up the accepted and rejected order information.
 This is covered in more detail in Section \ref{sec:traders_GDV}. Some of the
 other traders in our experiments, such as AA and ZIP only need Level 1 data
-(high and low).
+(bid high and ask low).
+
+Traders are assigned orders to a given supply and demand schedule. BSE supports three method of price generation: fixed, random and jittered. Fixed maintains a constant difference between orders when they are sorted. Random generates orders at random in a certain range. Jittered is similar to fixed except it adds a small amount of noise which makes it more realisitic. There are also three options for determining when orders are submitted to traders: drip-fixed, drip-jitter and drip poission. With drip-fixed orders arrive at a fixed interval. Drip-jitter is the same with a small amount of added noise. Drip-poisson models the arrival of orders as a poisson process.
 
 \subsection{Traders} \label{sec:traders}
 \subsubsection{ZIC} \label{sec:traders_ZIC}
@@ -141,8 +142,7 @@ offer(s) on the market) in response to other completed trades on the market --- 
 current market conditions. This simplistic algorithm allows surprisingly complex behaviour with a 
 minimal performance cost.
 
-The key parameters in the algorithm are the learning rate, $\beta$ --- which represents how quickly 
-you to react to market change; and the `momentum', $\gamma$ --- which represents how market 
+The key parameters in the algorithm are the learning rate, $\beta$ --- which represents how quickly the trader reacts to market change; and the `momentum', $\gamma$ --- which represents how market 
 volatility is smoothed over. More accurately, the learning rate controls how quickly the algorithm 
 moves towards its current target price while the momentum controls how quickly the algorithm changes 
 its profit margin over time.
@@ -198,6 +198,16 @@ The efficiency is the margin divided by the maximum theoretically margin
 They also showed that GD was able to cope with changing supply and demand
 conditions.
 
+The GD belief function for a seller:
+\begin{equation}
+  f(p) = \frac{\text{AAG}(p) + \text{BG}(p)}{\text{AAG}(p) + \text{BG}(p) +
+  \text{UAL}(p)}
+\end{equation}
+
+$\text{AAG}(p)$ is number of accepted asks in the history window $\geq p$.
+$\text{BG}(p)$ is
+the number of bids $\geq p$. $\text{UAL}(p)$ is the number of unaccepted asks $\leq p$.
+
 Modified Gjerstad Dickhaut (MGD)\cite{mgd} is a version of GD that
 is better suited to volatile conditions that can occur at the start of a
 session where there is very little information about accepted and rejected
@@ -219,7 +229,7 @@ $\gamma = 0$ will result in the same behaviour as the standard GD strategy
 reward.
 However setting $\gamma$ close to 1 will cause GDX to always wait for a better
 deal and thus not make any trades.
-They found that under certain market environments GDX was able to outperform
+Under certain market environments GDX was able to outperform
 both GD and ZIP.
 With a $\gamma$ between 0.75 and 0.85 GDX always outperforms GD.
 GDX is more flexible than GD and can handle multiple goods although
@@ -238,23 +248,23 @@ controls the amount it is willing to improve the current best shout.\\
 \subsection{Adaptive Aggressive Traders} \label{sec:AA}
 % OWNER: Max
 % - ???
-The adaptive aggressive algorithm relies on the principal that you can be in
+The main focus of our experiments was the Adpative Aggressive trader crated by Vytelingum in 2006. The adaptive aggressive algorithm relies on the principal that you can be in
 two different states. One where you trade more frequently closer to your limit
-price, higher chance of trading but lower profit per trade. The other where you
+price, with a higher chance of trading but lower profit per trade. The other where you
 trade further from your limit price, which decreases the likelihood of making a
 trade but increases the amount of profit you will make when you do trade.
 
-The Adaptive-Aggressive algorithm maintains an aggressiveness value (r), which
+The Adaptive-Aggressive algorithm maintains an aggressiveness value ($r$), which
 determines how close to your limit price you will be trading. A completely
 aggressive buyer ($r = 1$) will buy at their limit price, and a completely
-passive trader ($r = -1$) will buy at the minimum market price (\$1 in our case).\\
+passive trader ($r = -1$) will buy at the minimum market price (\$1 on the BSE).\\
 
 
 \subsection{Price Equilibrium Estimator}
 One of the key features that most trading algorithms rely on is the ability to
 estimate the equilibrium price of the market. For this we used the following
 equation which estimates the market equilibrium price based on the N most
-recent transactions, known as a moving average.
+recent transactions, known as a weighted moving average.
 
 \begin{equation}
     \label{eqn:equilibrium_estimator}
@@ -262,10 +272,7 @@ recent transactions, known as a moving average.
     \text{where $w_T = 1$ and $w_{i-1} = \lambda w_i$.}
 \end{equation}
 
-The $w_i$ represents the weight of the transaction so that we weight more
-recent transactions more heavily with the $\lambda$ affect how severe this
-weighting is. We set the value of $\lambda$ to 0.9 which was the value
-recommended in the original paper\cite[p.~100]{AA_thesis}.
+The $w_i$ weights the transactions so more weight is given to recent transactions. A higher $\lambda$ value will cause the weighting of more distant trades to diminish. We set the value of $\lambda$ to 0.9 which was the value recommended in the original paper\cite[p.~100]{AA_thesis}.
 
 We also tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over 8000 market sessions (of 
 600 timesteps each) to find their effect on AA's performance. We didn't find any statistically 
@@ -366,7 +373,7 @@ the limit price for the seller.
     \label{eqn:extraseller}
     \tau =
     \begin{cases}
-        c_j + (\text{MAX}-c_j)(1-\frac{e^{-r\theta}-1}{e^\theta-1} &  \text{if r } \in (-1,0)  \\
+        c_j + (\text{MAX}-c_j)(1-\frac{e^{-r\theta}-1}{e^\theta-1}) &  \text{if r } \in (-1,0)  \\
         c_j & \text{if r } \in (0,1)
     \end{cases}
 \end{equation}
@@ -419,7 +426,7 @@ how quickly we converge on our estimated price (higher $\eta$ converge slower).
 %ask_i = o_{ask} - \frac{o_{ask}-\tau}{\eta}
 %\end{equation}
 
-Since these all require an existing bid on the market, there were difficult
+Since these all require an existing bid on the market, there were different
 rules that were used to determine what shout to make if we were the first
 trader selected to make a bid. These can be found in the Adaptive Aggressive
 paper\cite[p.~32]{AA_paper} but are not defined here.
@@ -474,9 +481,11 @@ time step using Equation \ref{eqn:update_aggressive} based on the following rule
 \end{algorithm}
 
 \begin{equation}
-\label{eqn:update_aggressive}
-r(t+1) = r(t) + \beta_1(\delta(t) - r(t))\\\delta(t) = (1 \pm
-\lambda_r)r_{shout} \pm \lambda_a
+  \label{eqn:update_aggressive}
+  \begin{aligned}
+    r(t+1) &= r(t) + \beta_1(\delta(t) - r(t))\\
+    \delta(t) &= (1 \pm \lambda_r)r_{shout} \pm \lambda_a
+  \end{aligned}
 \end{equation}
 
 $\lambda_r$ and $\lambda_a$ representative the relative and absolute change in
@@ -503,7 +512,7 @@ ln\left( \frac{(e^\theta -1) (\frac{\tau - \hat p^*}{l_i - \hat p^*} + 1)
 \end{cases}
 \end{equation}
 
-The aggressive is depending on our limit price and the current market state as
+The aggressiveness is dependent on our limit price and the current market state as
 is illustrated in Figure \ref{fig:avtime}. In order to collect more data, we
 increases the scheduler to distribute items every five timesteps instead of
 every thirty. This increases the number of trades in the market which in turn
@@ -538,9 +547,9 @@ buyer}
 \subsubsection{Long term learning} \label{sec:AA_long_term_learning}
 % OWNER: Max
 % - theta
-The Adaptive Aggressive algorithm incorporates a long term learning that is
+The Adaptive Aggressive algorithm incorporates a long term learning component that is
 affected by the volatility of the market. In order to do this we create a
-measure of the market volatility ($\theta$) which is then updated every
+measure of the market volatility, $\theta$, which is then updated every
 timestep using Equation \ref{eqn:update_theta}. The value of $\theta^*(\alpha)$
 represents the value of $\theta$ that will allow us to act optimally in a
 market with a volatility of $\alpha$.  The $\alpha$ (see Equation
@@ -563,10 +572,13 @@ the equilibrium price. This is illustrated in Fig. %\ref{fig:theta}.
 \end{equation}
 
 \begin{equation}
+  \begin{split}
     \label{eqn:theta_star}
     \theta^*(\alpha) = (\theta_{max}-\theta_{min})
-    (1-\frac{(\alpha-\alpha_{min})}{(\alpha_{max} -\alpha_{min})}e^{\gamma(
-    \frac{\alpha-\alpha_{min}}{\alpha_{max}-\alpha_{min}}-1)} + \theta_{min}
+    (1-\frac{(\alpha-\alpha_{min})}{(\alpha_{max} -\alpha_{min})} \\
+    e^{\gamma(\frac{\alpha-\alpha_{min}}{\alpha_{max}-\alpha_{min}}-1)})
+    + \theta_{min}
+  \end{split}
 \end{equation}
 
 \section{Calibration} \label{sec:calibration}
@@ -581,13 +593,13 @@ to react to market events. This is confirmed by our tests. A trader with $\eta
 a lower $\eta = 100$ makes a higher average profit of 116.553. Using $\eta = 3$
 from the AA paper gives a profit of 136.555. So clearly it is important for the
 shout price to respond to quickly up the changing market. Setting $\eta$ too
-low would cause outlier trades to have a significant effect which would reduce
+low would cause outlier trades to have a significant impact which would reduce
 the margins.
 
 We update our aggressiveness and theta values more often than in the original Adaptive Aggressiveness 
 paper\cite{AA_thesis}. This is advantageous since it allows us to update to rapidly changing market 
 conditions. Since we update these values more often the learning rates have to be comparatively lower 
-otherwise the algorithm will effectively learn immediately. This is supported by TABLE that shows 
+otherwise the algorithm will effectively learn immediately. This is supported by Table \ref{tbl:beta1_results_big} that shows 
 the profits over 8000 trials for different values of $\beta_1$ don't change significantly. However 
 the same experiment with smaller $\beta_1$ values shows greater variation in profits.
 
@@ -613,6 +625,7 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
     ZIP & 117.167 \\
     \hline
   \end{tabular}
+  \caption{Beta 1}
 \end{table}
 
 % TODO This data is incomplete, long test needed
