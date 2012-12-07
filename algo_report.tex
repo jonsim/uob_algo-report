@@ -402,7 +402,7 @@ how quickly we converge on our estimated price (higher $\eta$ converge slower).
             \STATE submit no bid (market transacting above our limit).
         \ELSE
 %            \STATE submit bid given by Equation \ref{eqn:bidding_rules_buyer}.
-            \STATE submit bid given by $bid_i = \textstyle o_{bid} + \frac{(\tau - o_{bid})}{\textstyle \eta}$.
+            \STATE submit bid given by $bid_i = \textstyle o_{bid} + \frac{\textstyle \tau - o_{bid}}{\textstyle \eta}$.
         \ENDIF
     \end{algorithmic}
 \end{algorithm}
@@ -420,7 +420,7 @@ how quickly we converge on our estimated price (higher $\eta$ converge slower).
             \STATE submit no ask (market transacting below our limit).
         \ELSE
 %            \STATE submit ask given by Equation \ref{eqn:bidding_rules_seller}.
-            \STATE submit ask given by $ask_i = o_{ask} - \frac{\textstyle o_{ask}-\tau}{\textstyle \eta}$.
+            \STATE submit ask given by $ask_i = \textstyle o_{ask} - \frac{\textstyle o_{ask}-\tau}{\textstyle \eta}$.
         \ENDIF
     \end{algorithmic}
 \end{algorithm}
