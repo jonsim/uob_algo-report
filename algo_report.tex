@@ -544,31 +544,13 @@ The dips in the aggressiveness correspond to the falling equilibrium price
 where we can afford to trade further below our limit because the gap between
 our limit price and the market equilibrium is increasing.
 
-\begin{figure} 
+\begin{figure}[H]
 \centering
-\includegraphics[width=\columnwidth]{graphs_and_stats/graph_intra_buyer.pdf}
-\caption{Intra buyer}
+\includegraphics[width=\columnwidth]{graphs_and_stats/graph_r.pdf}
+\caption{Aggressiveness price relationship}
 \end{figure}
 
-\begin{figure} 
-\centering
-\includegraphics[width=\columnwidth]{graphs_and_stats/graph_intra_seller.pdf}
-\caption{Intra seller}
-\end{figure}
-
-\begin{figure} 
-\centering
-\includegraphics[width=\columnwidth]{graphs_and_stats/graph_extra_buyer.pdf}
-\caption{Extra buyer}
-\end{figure}
-
-\begin{figure} 
-\centering
-\includegraphics[width=\columnwidth]{graphs_and_stats/graph_extra_seller.pdf}
-\caption{Extra seller}
-\end{figure}
-
-\begin{figure} 
+\begin{figure}[H] 
 \centering
 \label{fig:avtime}
 \includegraphics[width=\columnwidth]{graphs_and_stats/graph_aggressiveness_vs_price.pdf}
@@ -592,7 +574,7 @@ determined by $\beta_2$. The larger value of $\beta_2$ the faster we converged
 towards $\theta^*$. We initially set the learning rate at 0.5, however the 
 
 The $\alpha$ (see Equation
-\ref{eqn:update_theta}) is measure of the volatility of the market which is calculated
+\ref{eqn:alpha}) is measure of the volatility of the market which is calculated
 by looking at the variance of the last N trades around the market equilibrium.
 So if the majority of trades are close to the equilibrium price then we are in
 a stable market and vice versa.. The $\alpha_{max}$ and $\alpha_{min}$
@@ -633,10 +615,12 @@ oscillate.
 
 \begin{equation}
 \label{eqn:update_theta}
-\begin{split}
     \theta(t+1)=\theta(t)+\beta_2(\theta^*(\alpha)-\theta_t)\\\\
+\end{equation}
+
+\begin{equation}
+\label{eqn:alpha}
     \alpha = \frac{\sqrt{\frac 1 N \sum^T_{i=T-N+1}(p_i-\hat p^*)^2}}{\hat p^*}
-\end{split}
 \end{equation}
 
 \begin{equation}
@@ -740,17 +724,21 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
 % - Experiment with changing scheduler
 % - Other graphs
 
-\begin{table}[h]
+\begin{table}[H]
   \centering
   \label{tbl:results}
-  \begin{tabular}{ | c | c | }
+  \begin{tabular}{ | c | C{2.5cm} | C{2.5cm} | }
     \hline
-    Strategy & Average finishing balance (3 dp.) \\
+    \multirow{2}{*}{\textbf{Strategy}} & \multicolumn{2}{c|}{\textbf{Average
+    finishing balance (3 dp.)}} \\
+%    \cline{2-3}
+%    & \vspace{0.05cm} Fixed & \vspace{0.05cm} Jittered \\
+    & Fixed & Jittered \\
     \hline
-    ZIC & 93.863 \\
-    SHVR & 106.139 \\
-    ZIP & 120.434 \\
-    AA & 136.555 \\
+    ZIC & 93.863 & 93.713 \\
+    SHVR & 106.139 & 106.270  \\
+    ZIP & 120.434 & 120.543 \\
+    AA & 136.555 & 136.428 \\
     \hline
   \end{tabular}
   \caption{Average balances for different trading strategies.}
@@ -761,9 +749,10 @@ buyers, half sellers). For each ratio 50 market sessions were run. The Wilcoxon
 signed-rank test was used to evaluate the significance of the results. The null
 hypothesis is that the difference between the pairs of traders is zero. For
 each trader paired with AA we can reject the null hypothesis ($p < 2.2 \cdot
-10^{-308}$).
+10^{-308}$). The results using fixed and jittered price generation were
+virtually identical.
 
-\begin{figure}[h]
+\begin{figure}[H]
   \label{fig:average_balance_vs_time}
   \centering
   \includegraphics[width=\columnwidth]{graphs_and_stats/graph_average_balance_vs_time.pdf}
@@ -772,7 +761,7 @@ each trader paired with AA we can reject the null hypothesis ($p < 2.2 \cdot
 
 Figure \ref{fig:average_balance_vs_time} shows that AA consistently makes more profit.
 
-\begin{table}[h]
+\begin{table}[H]
   \centering
   \label{tbl:two_traders}
   \begin{tabular}{ | c | c | }
@@ -800,8 +789,6 @@ ZIC and SHVR traders.
 % - Hold for applause
 Text.\\
 
-
-\pagebreak
 \bibliographystyle{unsrt}
 \bibliography{algo_report}
 \end{document}
