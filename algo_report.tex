@@ -284,30 +284,30 @@ market sessions (of 600 timesteps each) to find their effect on AA's
 performance. We didn't find any statistically significant difference between
 the different values. Our results are included in Table
 \ref{tbl:lambda_results}.
-\begin{table}[h]
-  \centering
-  \label{tbl:lambda_results}
-  \begin{tabular}{ | c | c | }
-    \hline
-    \textbf{$\lambda$ value} & \textbf{Average finishing balance (3dp)} \\
-    \hline
-    0.0 & 128.048 \\
-    0.1 & 128.040 \\
-    0.2 & 128.041 \\
-    0.3 & 128.314 \\
-    0.4 & 128.268 \\
-    0.5 & 128.278 \\
-    0.6 & 128.224 \\
-    0.7 & 128.380 \\
-    0.8 & 128.172 \\
-    0.9 & 128.365 \\
-    1.0 & 128.462 \\
-    \hline \hline
-    ZIC & 89.521 \\
-    ZIP & 116.719 \\
-    \hline
-  \end{tabular}
-\end{table}\\
+%\begin{table}[h]
+%  \centering
+%  \label{tbl:lambda_results}
+%  \begin{tabular}{ | c | c | }
+%    \hline
+%    \textbf{$\lambda$ value} & \textbf{Average finishing balance (3dp)} \\
+%    \hline
+%    0.0 & 128.048 \\
+%    0.1 & 128.040 \\
+%    0.2 & 128.041 \\
+%    0.3 & 128.314 \\
+%    0.4 & 128.268 \\
+%    0.5 & 128.278 \\
+%    0.6 & 128.224 \\
+%    0.7 & 128.380 \\
+%    0.8 & 128.172 \\
+%    0.9 & 128.365 \\
+%    1.0 & 128.462 \\
+%    \hline \hline
+%    ZIC & 89.521 \\
+%    ZIP & 116.719 \\
+%    \hline
+%  \end{tabular}
+%\end{table}\\
 
 
 \subsubsection{Price estimation} \label{sec:AA_price_estimation}
@@ -621,7 +621,7 @@ oscillate.
 \begin{figure}
   \centering
   \label{fig:theta_v_time}
-  \includegraphics[width=\columnwidth]{graphs_and_stats/time_v_theta.pdf}
+  \includegraphics[width=\columnwidth]{graphs_and_stats/graph_theta_vs_time.pdf}
   \caption{How theta varies across a market day}
 \end{figure}
 
@@ -640,13 +640,10 @@ oscillate.
 \end{equation}
 
 \begin{equation}
-  \begin{split}
-    \label{eqn:theta_star}
-    \theta^*(\alpha) = (\theta_{max}-\theta_{min})
-    (1-\frac{(\alpha-\alpha_{min})}{(\alpha_{max} -\alpha_{min})} \\
-    e^{\gamma(\frac{\alpha-\alpha_{min}}{\alpha_{max}-\alpha_{min}}-1)})
-    + \theta_{min}
-  \end{split}
+\theta^*(\alpha) = (\theta_{max}-\theta_{min})
+\left(\frac{1-e^{\gamma\left(\frac{(\alpha-\alpha_{min})}{(\alpha_{max}
+-\alpha_{min})}-1\right)}}{1-e^{-\gamma}}\right)
+\label{thetastar}
 \end{equation}
 
 \section{Calibration} \label{sec:calibration}
@@ -667,7 +664,8 @@ the margins.
 We update our aggressiveness and theta values more often than in the original Adaptive Aggressiveness 
 paper\cite{AA_thesis}. This is advantageous since it allows us to update to rapidly changing market 
 conditions. Since we update these values more often the learning rates have to be comparatively lower 
-otherwise the algorithm will effectively learn immediately. This is supported by Table \ref{tbl:beta1_results_big} that shows 
+otherwise the algorithm will effectively learn immediately. This is supported by Table 
+%\ref{tbl:beta1_results_big} that shows 
 the profits over 8000 trials for different values of $\beta_1$ don't change significantly. However 
 the same experiment with smaller $\beta_1$ values shows greater variation in profits.
 
