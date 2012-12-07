@@ -316,9 +316,9 @@ the different values. Our results are included in Table
 % - MEGA GRAPH
 \begin{figure}
   \centering
-  \label{fig:equilibrium}
   \includegraphics[width=\columnwidth]{graphs_and_stats/graph_equilibriums.pdf}
   \caption{The affect of the weighting value on the price equilibrium
+  \label{fig:equilibrium}
   estimate.}
 \end{figure}
 
@@ -570,10 +570,10 @@ our limit price and the market equilibrium is increasing.
 
 \begin{figure} 
 \centering
-\label{fig:avtime}
 \includegraphics[width=\columnwidth]{graphs_and_stats/graph_aggressiveness_vs_price.pdf}
 \caption{Aggressive and Price equilibrium throughout a trading day for an AA
 buyer}
+\label{fig:avtime}
 \end{figure}
 
 \subsubsection{Long term learning} \label{sec:AA_long_term_learning}
@@ -601,9 +601,9 @@ initialised to 0.02 and 0.15 respectively).
 
 \begin{figure}
   \centering
-  \label{fig:theta}
   \includegraphics[width=\columnwidth]{graphs_and_stats/graph_thetas.pdf}
   \caption{How different thetas affect the target price calculations}
+  \label{fig:theta}
 \end{figure}
 
 The $\theta$ affects the degree to which changing the aggressiveness moves the
@@ -620,9 +620,9 @@ oscillate.
 
 \begin{figure}
   \centering
-  \label{fig:theta_v_time}
   \includegraphics[width=\columnwidth]{graphs_and_stats/graph_theta_vs_time.pdf}
   \caption{How theta varies across a market day}
+  \label{fig:theta_v_time}
 \end{figure}
 
 %\begin{figure} 
@@ -671,7 +671,6 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
 
 \begin{table}[h]
   \centering
-  \label{tbl:beta_results}
   \begin{tabular}{ | c | C{2.7cm} | C{2.7cm} | }
     \hline
     \multirow{2}{*}{\textbf{Value ($v$)}} & \multicolumn{2}{ c | }{\textbf{Average finishing balance (3 dp.)}} \\
@@ -703,11 +702,11 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
     \hline
   \end{tabular}
   \caption{Difference in finishing balance with respect to change in $\beta_1$ and $\beta_2$ values.}
+  \label{tbl:beta_results}
 \end{table}
 
 \begin{table}[h]
   \centering
-  \label{tbl:lambda_results2}
   \begin{tabular}{ | c | c | }
     \hline
     \textbf{$\lambda$ value} & \textbf{Average finishing balance (3 dp.)} \\
@@ -729,6 +728,7 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
     \hline
   \end{tabular}
   \caption{Difference in finishing balance with respect to change in $\lambda$.}
+  \label{tbl:lambda_results}
 \end{table}
 
 
@@ -742,7 +742,6 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
 
 \begin{table}[h]
   \centering
-  \label{tbl:results}
   \begin{tabular}{ | c | c | }
     \hline
     Strategy & Average finishing balance (3 dp.) \\
@@ -754,6 +753,7 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
     \hline
   \end{tabular}
   \caption{Average balances for different trading strategies.}
+  \label{tbl:results}
 \end{table}
 
 We ran 22750 market sessions with AA, SHVR, ZIC and ZIP traders (half
@@ -764,17 +764,16 @@ each trader paired with AA we can reject the null hypothesis ($p < 2.2 \cdot
 10^{-308}$).
 
 \begin{figure}[h]
-  \label{fig:average_balance_vs_time}
   \centering
   \includegraphics[width=\columnwidth]{graphs_and_stats/graph_average_balance_vs_time.pdf}
   \caption{Average balance over 22750 trials.}
+  \label{fig:average_balance_vs_time}
 \end{figure}
 
 Figure \ref{fig:average_balance_vs_time} shows that AA consistently makes more profit.
 
 \begin{table}[h]
   \centering
-  \label{tbl:two_traders}
   \begin{tabular}{ | c | c | }
     \hline
     Strategy & Average finishing balance (3 dp.) \\
@@ -784,6 +783,7 @@ Figure \ref{fig:average_balance_vs_time} shows that AA consistently makes more p
     \hline
   \end{tabular}
   \caption{Market session with just AA and ZIP traders.}
+  \label{tbl:two_traders}
 \end{table}
 
 We ran the Wilcoxon signed-rank test on the values in Table
