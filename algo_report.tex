@@ -39,7 +39,7 @@ Bristol Stock Exchange}
 \date{7 December 2012}
 
 \maketitle
-\begin{abstract} \label{sec:abstract}
+\begin{abstract}
 \begin{verbatim}
                              .::::. 
                            .::::::::. 
@@ -149,28 +149,28 @@ its profit margin over time.
 
 The change in price at subsequent time steps can be defined mathematically for a single given trader as:
 \begin{equation}
-    \label{eqn:change_in_price}
     \Delta(t) = \beta \cdot ( \tau(t) - p(t))
+    \label{eqn:change_in_price}
 \end{equation}
 where $\tau(t)$ is your target price and $p(t)$ is your current offer on the market (or `shout').
 
 The change in profit margin at subsequent time steps can then be defined as:
 \begin{equation}
-    \label{eqn:change_in_margin}
     \Gamma(t) = \gamma \cdot \Gamma(t-1) + (1 - \gamma) \cdot \Delta(t)
+    \label{eqn:change_in_margin}
 \end{equation}
 
 The new margin can then be calculated as:
 \begin{equation}
-    \label{eqn:new_margin}
     \mu(t) = \frac{p(t) + \Gamma(t)}{l} - 1
+    \label{eqn:new_margin}
 \end{equation}
 where $l$ is your limit price.
 
 Finally the new price can be calculated by:
 \begin{equation}
-    \label{eqn:new_price}
     p(t+1) = l \cdot (1 + \mu(t))
+    \label{eqn:new_price}
 \end{equation}
 
 We used the implementation of the ZIP algorithm provided in the BSE (Section \ref{sec:BSE}).\\
@@ -269,9 +269,9 @@ equation which estimates the market equilibrium price based on the N most
 recent transactions, known as a weighted moving average.
 
 \begin{equation}
-    \label{eqn:equilibrium_estimator}
     \hat p^* = \frac{\sum^T_{i=T-N+1}w_ip_i}{\sum^T_{i=T-N+1}w_i}\\
     \text{where $w_T = 1$ and $w_{i-1} = \lambda w_i$.}
+    \label{eqn:equilibrium_estimator}
 \end{equation}
 
 The $w_i$ weights the transactions so more weight is given to recent
@@ -282,33 +282,8 @@ recommended in the original paper\cite[p.~100]{AA_thesis}.
 We also tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over 8000
 market sessions (of 600 timesteps each) to find their effect on AA's
 performance. We didn't find any statistically significant difference between
-the different values. Our results are included in Table
-\ref{tbl:lambda_results}.
-%\begin{table}[h]
-%  \centering
-%  \label{tbl:lambda_results}
-%  \begin{tabular}{ | c | c | }
-%    \hline
-%    \textbf{$\lambda$ value} & \textbf{Average finishing balance (3dp)} \\
-%    \hline
-%    0.0 & 128.048 \\
-%    0.1 & 128.040 \\
-%    0.2 & 128.041 \\
-%    0.3 & 128.314 \\
-%    0.4 & 128.268 \\
-%    0.5 & 128.278 \\
-%    0.6 & 128.224 \\
-%    0.7 & 128.380 \\
-%    0.8 & 128.172 \\
-%    0.9 & 128.365 \\
-%    1.0 & 128.462 \\
-%    \hline \hline
-%    ZIC & 89.521 \\
-%    ZIP & 116.719 \\
-%    \hline
-%  \end{tabular}
-%\end{table}\\
-
+the different values. 
+%TODO
 
 \subsubsection{Price estimation} \label{sec:AA_price_estimation}
 % OWNER: Max
@@ -341,12 +316,12 @@ under based on the follow equations.
 
 \textbf{Intra-marginal buyer}
 \begin{equation}
-    \label{eqn:intrabuyer}
     \tau =
     \begin{cases}
         \hat{p}^*(1- \frac{e^{-r\theta}-1}{e^{\theta}-1}), &  \text{if r } \in (-1,0)  \\
         \hat{p}^* + (l_i-\hat{p}^*)(\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if r} \in (0,1)
     \end{cases}
+    \label{eqn:intrabuyer}
 \end{equation}
 
 where $\theta$ (\ref{sec:AA_long_term_learning}) measures the volatility of the
@@ -355,22 +330,22 @@ equilibrium price.
 
 \textbf{Extra-marginal buyer}
 \begin{equation}
-    \label{eqn:extrabuyer}
     \tau =
     \begin{cases}
         l_i(1-\frac{e^{-r\theta}-1}{e^\theta-1} &  \text{if r } \in (-1,0)  \\
         l_i & \text{if r } \in (0,1)
     \end{cases}
+    \label{eqn:extrabuyer}
 \end{equation}
 
 \textbf{Intra-marginal seller}
 \begin{equation}
-    \label{eqn:intraseller}
     \tau =
     \begin{cases}
         \hat{p}^* + (\text{MAX}-\hat{p}^*)( \frac{e^{-r\theta}-1}{e^{\theta}-1}), &  \text{if r } \in (-1,0)  \\
         c_j + (\hat{p}^*-c_j)(1-\frac{e^{r\theta}-1}{e^\theta-1}), & \text{if r } \in (0,1)
     \end{cases}
+    \label{eqn:intraseller}
 \end{equation}
 
 where MAX is the maximum value that can be submitted to the market and $c_j$ is
@@ -378,12 +353,12 @@ the limit price for the seller.
 
 \textbf{Extra-marginal seller}
 \begin{equation}
-    \label{eqn:extraseller}
     \tau =
     \begin{cases}
         c_j + (\text{MAX}-c_j)(1-\frac{e^{-r\theta}-1}{e^\theta-1}) &  \text{if r } \in (-1,0)  \\
         c_j & \text{if r } \in (0,1)
     \end{cases}
+    \label{eqn:extraseller}
 \end{equation}
 
 In the paper, there was a different value used instead of $\theta$, designed to
@@ -400,39 +375,29 @@ how quickly we converge on our estimated price (higher $\eta$ converge slower).
 
 %\textbf{Bidding rules for buyer:}
 \begin{algorithm}[H]
-    \label{alg:bidding_rules_buyer}
     \caption{Bidding rules for buyer}
     \begin{algorithmic}
         \IF{$l_i \leq o_{bid}$}
             \STATE submit no bid (market transacting above our limit).
         \ELSE
-%            \STATE submit bid given by Equation \ref{eqn:bidding_rules_buyer}.
             \STATE submit bid given by $bid_i = \textstyle o_{bid} + \frac{\textstyle \tau - o_{bid}}{\textstyle \eta}$.
         \ENDIF
     \end{algorithmic}
+    \label{alg:bidding_rules_buyer}
 \end{algorithm}
-%\begin{equation}
-%\label{eqn:bidding_rules_buyer}
-%bid_i = \frac{o_{bid} + (\tau - o_{bid}}{\eta}
-%\end{equation}
 
 %\textbf{Bidding rules for seller:}
 \begin{algorithm}[H]
-    \label{alg:bidding_rules_seller}
     \caption{Bidding rules for seller}
     \begin{algorithmic}
         \IF{$c_j \geq o_{ask}$}
             \STATE submit no ask (market transacting below our limit).
         \ELSE
-%            \STATE submit ask given by Equation \ref{eqn:bidding_rules_seller}.
             \STATE submit ask given by $ask_i = \textstyle o_{ask} - \frac{\textstyle o_{ask}-\tau}{\textstyle \eta}$.
         \ENDIF
     \end{algorithmic}
+    \label{alg:bidding_rules_seller}
 \end{algorithm}
-%\begin{equation}
-%\label{eqn:bidding_rules_seller}
-%ask_i = o_{ask} - \frac{o_{ask}-\tau}{\eta}
-%\end{equation}
 
 Since these all require an existing bid on the market, there were different
 rules that were used to determine what shout to make if we were the first
@@ -456,9 +421,8 @@ time step using Equation \ref{eqn:update_aggressive} based on the following rule
 
 %\textbf{Learning rules for buyer:}
 \begin{algorithm}[H]
-\label{alg:learning_rules_buyer}
-\caption{Learning rules for buyer}
-\begin{algorithmic}
+  \caption{Learning rules for buyer}
+  \begin{algorithmic}
     \IF{trade occurs at price $q$}
         \IF{$\tau \geq q$}
             \STATE be less aggressive (our price too high).
@@ -468,14 +432,14 @@ time step using Equation \ref{eqn:update_aggressive} based on the following rule
     \ELSIF{ $\tau \leq o_{bid}$ }
         \STATE be more aggressive (our price too low).
     \ENDIF
-\end{algorithmic}
+  \end{algorithmic}
+  \label{alg:learning_rules_buyer}
 \end{algorithm}
 
 %\textbf{Learning rules for seller:}
 \begin{algorithm}[h]
-\label{alg:learning_rules_seller}
-\caption{Learning rules for seller}
-\begin{algorithmic}
+  \caption{Learning rules for seller}
+  \begin{algorithmic}
     \IF{trade occurs at price $q$}
         \IF{$\tau \leq q$}
             \STATE be less aggressive (our price too low).
@@ -485,15 +449,16 @@ time step using Equation \ref{eqn:update_aggressive} based on the following rule
     \ELSIF{ $\tau \leq o_{bid}$ }
         \STATE be more aggressive (our price too high).
     \ENDIF
-\end{algorithmic}
+  \end{algorithmic}
+  \label{alg:learning_rules_seller}
 \end{algorithm}
 
 \begin{equation}
-  \label{eqn:update_aggressive}
   \begin{aligned}
     r(t+1) &= r(t) + \beta_1(\delta(t) - r(t))\\
     \delta(t) &= (1 \pm \lambda_r)r_{shout} \pm \lambda_a
   \end{aligned}
+  \label{eqn:update_aggressive}
 \end{equation}
 
 $\lambda_r$ and $\lambda_a$ representative the relative and absolute change in
@@ -509,7 +474,6 @@ best outstanding shout. These were computer by reversing the functions found in
 buyer.
 
 \begin{equation}
-\label{eqn:reverse_intra_buyer}
 r_{shout}=
 \begin{cases}
  -ln\left(\frac{ (1-\frac{\tau}{\hat p^*}) (e^\theta-1) + 1}{\theta}\right) & \tau
@@ -518,6 +482,7 @@ ln\left( \frac{(e^\theta -1) (\frac{\tau - \hat p^*}{l_i - \hat p^*} + 1)
 }{\theta} \right)&
 \textstyle{otherwise}
 \end{cases}
+\label{eqn:reverse_intra_buyer}
 \end{equation}
 
 The aggressiveness is dependent on our limit price and the current market state as
@@ -548,6 +513,7 @@ our limit price and the market equilibrium is increasing.
 \centering
 \includegraphics[width=\columnwidth]{graphs_and_stats/graph_r.pdf}
 \caption{Aggressiveness price relationship}
+\label{fig:r_price}
 \end{figure}
 
 \begin{figure}[H] 
@@ -614,20 +580,20 @@ oscillate.
 %\end{figure}
 
 \begin{equation}
-\label{eqn:update_theta}
-    \theta(t+1)=\theta(t)+\beta_2(\theta^*(\alpha)-\theta_t)\\\\
+  \theta(t+1)=\theta(t)+\beta_2(\theta^*(\alpha)-\theta_t)\\\\
+  \label{eqn:update_theta}
 \end{equation}
 
 \begin{equation}
-\label{eqn:alpha}
-    \alpha = \frac{\sqrt{\frac 1 N \sum^T_{i=T-N+1}(p_i-\hat p^*)^2}}{\hat p^*}
+  \alpha = \frac{\sqrt{\frac 1 N \sum^T_{i=T-N+1}(p_i-\hat p^*)^2}}{\hat p^*}
+  \label{eqn:alpha}
 \end{equation}
 
 \begin{equation}
-\theta^*(\alpha) = (\theta_{max}-\theta_{min})
-\left(\frac{1-e^{\gamma\left(\frac{(\alpha-\alpha_{min})}{(\alpha_{max}
--\alpha_{min})}-1\right)}}{1-e^{-\gamma}}\right)
-\label{thetastar}
+  \theta^*(\alpha) = (\theta_{max}-\theta_{min})
+  \left(\frac{1-e^{\gamma\left(\frac{(\alpha-\alpha_{min})}{(\alpha_{max}
+  -\alpha_{min})}-1\right)}}{1-e^{-\gamma}}\right)
+  \label{thetastar}
 \end{equation}
 
 \section{Calibration} \label{sec:calibration}
