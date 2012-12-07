@@ -22,7 +22,7 @@
 \makeatother
 
 \begin{document}
-\title{Analysis of Adaptive Agressiveness on the\\
+\title{Analysis of Adaptive Aggressiveness on the\\
 Bristol Stock Exchange}
 \numberofauthors{3} 
 \author{
@@ -248,11 +248,13 @@ controls the amount it is willing to improve the current best shout.\\
 \subsection{Adaptive Aggressive Traders} \label{sec:AA}
 % OWNER: Max
 % - ???
-The main focus of our experiments was the Adpative Aggressive trader crated by Vytelingum in 2006. The adaptive aggressive algorithm relies on the principal that you can be in
+The main focus of our experiments was the Adaptive Aggressive trader crated by
+Vytelingum in 2006\cite{AA_thesis}. The adaptive aggressive algorithm relies on the principal that you can be in
 two different states. One where you trade more frequently closer to your limit
-price, with a higher chance of trading but lower profit per trade. The other where you
-trade further from your limit price, which decreases the likelihood of making a
-trade but increases the amount of profit you will make when you do trade.
+price, with an increased chance of trading but lower profit per trade. The other where you
+trade further from your limit price, decreasing the likelihood of making a
+trade but increasing the amount of profit you will make when a trade is
+successful.
 
 The Adaptive-Aggressive algorithm maintains an aggressiveness value ($r$), which
 determines how close to your limit price you will be trading. A completely
@@ -315,11 +317,12 @@ significant difference between the different values. Our results are included in
   estimate.}
 \end{figure}
 
-The adaptive aggressive algorithm uses a target price calculated dependent upon
-the state of the marget. However, before we can go into detail, we must define
-two concepts. An intra-marginal trader is a trader that bids above the
+The adaptive aggressive algorithm calculates the price of its shout by
+computing a target price ($\tau$) which is dependent upon
+the state of the market. However, before we can go into detail, we must define
+two concepts; An intra-marginal trader is a trader that bids above the
 equilibrium if they are a buyer (or asks below the equilibrium if they are a
-seller). Whereas an extra-marginal trader will never trade above the
+seller), an extra-marginal trader will never trade above the
 equilibrium if they are a buyer (or below the equilibrium if they are a
 seller).
 
@@ -558,10 +561,23 @@ by looking at the variance of the last N trades around the market equilibrium.
 So if the majority of trades are close to the equilibrium price then we are in
 a stable market and vice versa.
 
-The theta affects the degree to which changing the aggressiveness moves the
-target price  away from the equilibrium. So a high value of theta means that a
+The $\theta$ affects the degree to which changing the aggressiveness moves the
+target price  away from the equilibrium. So a high value of $\theta$ means that a
 relatively small change in aggressiveness will result in a large move away from
-the equilibrium price. This is illustrated in Fig. %\ref{fig:theta}.
+the equilibrium price. This is illustrated in Fig. \ref{fig:theta}, when
+$\theta=4$, between aggressiveness of -0.5 and 0.5, the price stays very close
+to the equilibrium.
+
+We initialise $\theta$ to a value of -4, allow us to rapidly react at the
+beginning of the trading day, when the market is most volatile,
+decreasing $\theta$ as the market becomes more stable.
+
+\begin{figure}
+  \centering
+  \label{fig:theta}
+  \includegraphics[width=\columnwidth]{graphs_and_stats/thetas.pdf}
+  \caption{How different thetas affect the target price calculations}
+\end{figure}
 
 \begin{equation}
 \label{eqn:update_theta}
