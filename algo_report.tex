@@ -742,10 +742,6 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
 % - Experiment with changing scheduler
 % - Other graphs
 
-We ran 22750 market sessions with the ZIC, SHVR, ZIP and AA traders.
-Each session used a different ratio of the traders.
-%TODO
-
 \begin{table}[h]
   \centering
   \label{tbl:results}
@@ -762,11 +758,41 @@ Each session used a different ratio of the traders.
   \caption{Average balances for different trading strategies.}
 \end{table}
 
-\begin{figure} 
-\centering
-\includegraphics[width=\columnwidth]{graphs_and_stats/graph_average_balance_vs_time.pdf}
-\caption{Average balance over 22750 trials using different ratios of traders.}
+We ran 22750 market sessions with AA, SHVR, ZIC and ZIP traders (half
+buyers, half sellers). For each ratio 50 market sessions were run. The Wilcoxon
+signed-rank test was used to evaluate the significance of the results. The null
+hypothesis is that the difference between the pairs of traders is zero. For
+each trader paired with AA we can reject the null hypothesis ($p < 2.2 \cdot
+10^{-308}$).
+
+\begin{figure}[h]
+  \label{fig:average_balance_vs_time}
+  \centering
+  \includegraphics[width=\columnwidth]{graphs_and_stats/graph_average_balance_vs_time.pdf}
+  \caption{Average balance over 22750 trials.}
 \end{figure}
+
+Figure \ref{fig:average_balance_vs_time} shows that AA consistently makes more profit.
+
+\begin{table}[h]
+  \centering
+  \label{tbl:two_traders}
+  \begin{tabular}{ | c | c | }
+    \hline
+    Strategy & Average finishing balance (3 dp.) \\
+    \hline
+    ZIP & 110.006 \\
+    AA & 136.378 \\
+    \hline
+  \end{tabular}
+  \caption{Market session with just AA and ZIP traders.}
+\end{table}
+
+We ran the Wilcoxon signed-rank test on the values in Table
+\ref{tbl:two_traders} which resulted in $p < 2.2 \cdot 10^{-308}$. The AA
+traders outperformed the ZIP traders 99.66\% of the time. ZIP performs worse in
+a market with just AA traders which suggests ZIP was reliant on trades with the
+ZIC and SHVR traders.
 
 % TODO: Big graph of time and price
 
