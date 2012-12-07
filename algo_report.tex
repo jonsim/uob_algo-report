@@ -358,9 +358,11 @@ if (trade occurs at price q)\\
 else if ($\tau \leq o_bid$) be more aggressive ( our price too high)
 
 \begin{equation}
-r(t+1) = r(t) + \beta_1(\delta(t) - r(t))\\\delta(t) = (1 \pm
-\lambda_r)r_{shout} \pm \lambda_a
 \label{updateaggressive}
+\begin{split}
+r(t+1) = r(t) + \beta_1(\delta(t) - r(t))\\\\
+\delta(t) = (1 \pm \lambda_r)r_{shout} \pm \lambda_a
+\end{split}
 \end{equation}
 
 $\lambda_r$ and $\lambda_a$ representive the relative and absolute change in
@@ -425,8 +427,8 @@ a stable market and vice versa.
 
 \begin{equation}
 \theta^*(\alpha) = (\theta_{max}-\theta_{min})
-(1-\frac{(\alpha-\alpha_{min})}{(\alpha_{max} -\alpha_{min})}e^{\gamma(
-\frac{\alpha-\alpha_{min}}{\alpha_{max}-\alpha_{min}}-1)} + \theta_{min}
+\left(\frac{1-e^{\gamma\left(\frac{(\alpha-\alpha_{min})}{(\alpha_{max}
+-\alpha_{min})}-1\right)}}{1-e^{-\gamma}}\right)
 \label{thetastar}
 \end{equation}
 
