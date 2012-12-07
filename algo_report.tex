@@ -9,14 +9,14 @@
 \usepackage{url}
 \usepackage{amssymb}
 
-%\usepackage{algpseudocode}
-\usepackage{algorithmic}
-\usepackage{algorithm}
-%\usepackage{program}
-%\usepackage{fancyhdr}
-%\lfoot{HELLO}\cfoot{\thepage}\rfoot{WORLD}
+% our packages
+\usepackage{algorithmic}    % AA pseudocode
+\usepackage{algorithm}      % AA pseudoocode
+\usepackage{multirow}       % results tables
+\usepackage{array}          % results tables
+\newcolumntype{C}[1]{>{\centering\let\newline\\\arraybackslash\hspace{0pt}}m{#1}} % results tables
+\usepackage{etoolbox}       % shrug
 
-\usepackage{etoolbox}
 \makeatletter
 \patchcmd{\maketitle}{\@copyrightspace}{}{}{}
 \makeatother
@@ -651,53 +651,38 @@ the same experiment with smaller $\beta_1$ values shows greater variation in pro
 
 \begin{table}[h]
   \centering
-  \label{tbl:beta1_results_big}
-  \begin{tabular}{ | c | c | }
+  \label{tbl:beta_results}
+  \begin{tabular}{ | c | C{2.7cm} | C{2.7cm} | }
     \hline
-    \textbf{$\beta_1$ value} & \textbf{Average finishing balance (3 dp.)} \\
+    \multirow{2}{*}{\textbf{Value ($v$)}} & \multicolumn{2}{ c | }{\textbf{Average finishing balance (3 dp.)}} \\
+    & $\beta_1 = v, ~ \beta_2 = 0.5$ & $\beta_1 = 0.5, ~ \beta_2 = v$ \\
     \hline
-    0.1 & 129.138 \\
-    0.2 & 129.038 \\
-    0.3 & 129.312 \\
-    0.4 & 129.230 \\
-    0.5 & 129.467 \\
-    0.6 & 129.062 \\
-    0.7 & 129.164 \\
-    0.8 & 129.137 \\
-    0.9 & 129.271 \\
-    1.0 & 129.286 \\
+        0.00 & 109.388 & 128.071 \\
+        0.01 & 127.431 & 128.212 \\
+        0.02 & 128.318 & 128.157 \\
+        0.03 & 128.971 & 128.366 \\
+        0.04 & 129.551 & 128.177 \\
+        0.05 & 129.666 & 128.088 \\
+        0.06 & 129.864 & 128.308 \\
+        0.07 & 129.797 & 128.000 \\
+        0.08 & 129.698 & 128.100 \\
+        0.09 & 130.170 & 128.173 \\
+        0.10 & 129.138 & 128.903 \\
+        0.20 & 129.038 & 129.287 \\
+        0.30 & 129.312 & 129.376 \\
+        0.40 & 129.230 & 129.344 \\
+        0.50 & 129.467 & 129.081 \\
+        0.60 & 129.062 & 129.187 \\
+        0.70 & 129.164 & 128.947 \\
+        0.80 & 129.137 & 129.144 \\
+        0.90 & 129.271 & 129.405 \\
+        1.00 & 129.286 & 129.368 \\
     \hline \hline
-    ZIC & 89.159 \\
-    ZIP & 117.167 \\
+    ZIC & \multicolumn{2}{ c | }{ 89.030} \\
+    ZIP & \multicolumn{2}{ c | }{117.461} \\
     \hline
   \end{tabular}
-  \caption{Beta 1}
-\end{table}
-
-% TODO This data is incomplete, long test needed
-\begin{table}[h]
-  \centering
-  \label{tbl:beta1_results_small}
-  \begin{tabular}{ | c | c | }
-    \hline
-    \textbf{$\beta_1$ value} & \textbf{Average finishing balance (3 dp.)} \\
-    \hline
-    0.00 & 108.298 \\
-    0.01 & 124.723 \\
-    0.02 & 129.345 \\
-    0.03 & 126.885 \\
-    0.04 & 129.817 \\
-    0.05 & 129.336 \\
-    0.06 & 128.708 \\
-    0.07 & 128.842 \\
-    0.08 & 129.643 \\
-    0.09 & 128.207 \\
-    0.10 & 132.184 \\
-    \hline \hline
-    ZIC & 89.208 \\
-    ZIP & 118.276 \\
-    \hline
-  \end{tabular}
+  \caption{Difference in finishing balance with respect to change in $\beta_1$ and $\beta_2$ values.}
 \end{table}
 
 
