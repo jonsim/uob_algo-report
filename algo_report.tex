@@ -599,6 +599,12 @@ a stable market and vice versa.. The $\alpha_{max}$ and $\alpha_{min}$
 represent the a largest and smallest market volatility to date (these are
 initialised to 0.02 and 0.15 respectively).
 
+\begin{figure}
+  \centering
+  \label{fig:theta}
+  \includegraphics[width=\columnwidth]{graphs_and_stats/graph_thetas.pdf}
+  \caption{How different thetas affect the target price calculations}
+\end{figure}
 
 The $\theta$ affects the degree to which changing the aggressiveness moves the
 target price  away from the equilibrium. So a high value of $\theta$ means that a
@@ -607,15 +613,16 @@ the equilibrium price. This is illustrated in Fig. \ref{fig:theta}, when
 $\theta=4$, between aggressiveness of -0.5 and 0.5, the price stays very close
 to the equilibrium.
 
-We initialise $\theta$ to a value of -4, allow us to rapidly react at the
-beginning of the trading day, when the market is most volatile,
-decreasing $\theta$ as the market becomes more stable.
+The graph in Fig \ref{fig:theta_v_time} represents our value of theta
+throughout the trading day. It peaks at the beginning of the market session
+when the market is most stable then decreases as the market begins to
+oscillate.
 
 \begin{figure}
   \centering
-  \label{fig:theta}
-  \includegraphics[width=\columnwidth]{graphs_and_stats/graph_thetas.pdf}
-  \caption{How different thetas affect the target price calculations}
+  \label{fig:theta_v_time}
+  \includegraphics[width=\columnwidth]{graphs_and_stats/time_v_theta.pdf}
+  \caption{How theta varies across a market day}
 \end{figure}
 
 %\begin{figure} 
