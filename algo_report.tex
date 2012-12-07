@@ -541,6 +541,30 @@ our limit price and the market equilibrium is increasing.
 
 \begin{figure} 
 \centering
+\includegraphics[width=\columnwidth]{graphs_and_stats/intra_buyer.pdf}
+\caption{Intra buyer}
+\end{figure}
+
+\begin{figure} 
+\centering
+\includegraphics[width=\columnwidth]{graphs_and_stats/intra_seller.pdf}
+\caption{Intra seller}
+\end{figure}
+
+\begin{figure} 
+\centering
+\includegraphics[width=\columnwidth]{graphs_and_stats/extra_buyer.pdf}
+\caption{Extra buyer}
+\end{figure}
+
+\begin{figure} 
+\centering
+\includegraphics[width=\columnwidth]{graphs_and_stats/extra_seller.pdf}
+\caption{Extra seller}
+\end{figure}
+
+\begin{figure} 
+\centering
 \label{fig:avtime}
 \includegraphics[width=\columnwidth]{graphs_and_stats/aggressiveness_vs_price.pdf}
 \caption{Aggressive and Price equilibrium throughout a trading day for an AA
@@ -577,6 +601,12 @@ decreasing $\theta$ as the market becomes more stable.
   \label{fig:theta}
   \includegraphics[width=\columnwidth]{graphs_and_stats/thetas.pdf}
   \caption{How different thetas affect the target price calculations}
+\end{figure}
+
+\begin{figure} 
+\centering
+\includegraphics[width=\columnwidth]{graphs_and_stats/intra_buyer_thetas.pdf}
+\caption{Intra buyer thetas}
 \end{figure}
 
 \begin{equation}
@@ -699,6 +729,12 @@ Each session used a different ratio of the traders.
   \caption{Average balances for different trading strategies.}
 \end{table}
 
+\begin{figure} 
+\centering
+\includegraphics[width=\columnwidth]{graphs_and_stats/average_balance_vs_time.pdf}
+\caption{Average balance over 22750 trials using different ratios of traders.}
+\end{figure}
+
 % TODO: Big graph of time and price
 
 \section{Conclusion} \label{sec:conclusion}
@@ -708,7 +744,7 @@ Each session used a different ratio of the traders.
 Text.\\
 
 
-%\pagebreak
+\pagebreak
 \bibliographystyle{unsrt}
 \bibliography{algo_report}
 \end{document}
