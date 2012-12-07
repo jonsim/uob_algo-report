@@ -274,11 +274,16 @@ recent transactions, known as a weighted moving average.
     \text{where $w_T = 1$ and $w_{i-1} = \lambda w_i$.}
 \end{equation}
 
-The $w_i$ weights the transactions so more weight is given to recent transactions. A higher $\lambda$ value will cause the weighting of more distant trades to diminish. We set the value of $\lambda$ to 0.9 which was the value recommended in the original paper\cite[p.~100]{AA_thesis}.
+The $w_i$ weights the transactions so more weight is given to recent
+transactions. A higher $\lambda$ value will cause the weighting of more distant
+trades to diminish. We set the value of $\lambda$ to 0.9 which was the value
+recommended in the original paper\cite[p.~100]{AA_thesis}.
 
-We also tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over 8000 market sessions (of 
-600 timesteps each) to find their effect on AA's performance. We didn't find any statistically 
-significant difference between the different values. Our results are included in Table \ref{tbl:lambda_results}.
+We also tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over 8000
+market sessions (of 600 timesteps each) to find their effect on AA's
+performance. We didn't find any statistically significant difference between
+the different values. Our results are included in Table
+\ref{tbl:lambda_results}.
 \begin{table}[h]
   \centering
   \label{tbl:lambda_results}
@@ -574,16 +579,26 @@ buyer}
 \subsubsection{Long term learning} \label{sec:AA_long_term_learning}
 % OWNER: Max
 % - theta
-The Adaptive Aggressive algorithm incorporates a long term learning component that is
-affected by the volatility of the market. In order to do this we create a
-measure of the market volatility, $\theta$, which is then updated every
+The Adaptive Aggressive algorithm incorporates a long term learning component
+that is affected by the volatility of the market. In order to do this we create
+a measure of the market volatility, $\theta$, which is then updated every
 timestep using Equation \ref{eqn:update_theta}. The value of $\theta^*(\alpha)$
 represents the value of $\theta$ that will allow us to act optimally in a
-market with a volatility of $\alpha$.  The $\alpha$ (see Equation
+market with a volatility of $\alpha$. This value of $\theta^*$ is scaled with
+respect to a minimum and maximum theta, constants that are hard coded into the
+function (we used -8 and 2 respectively), to keep it within a certain range.
+We then moved towards this desired value of $\theta^*$ at a rate that is
+determined by $\beta_2$. The larger value of $\beta_2$ the faster we converged
+towards $\theta^*$. We initially set the learning rate at 0.5, however the 
+
+The $\alpha$ (see Equation
 \ref{eqn:update_theta}) is measure of the volatility of the market which is calculated
 by looking at the variance of the last N trades around the market equilibrium.
 So if the majority of trades are close to the equilibrium price then we are in
-a stable market and vice versa.
+a stable market and vice versa.. The $\alpha_{max}$ and $\alpha_{min}$
+represent the a largest and smallest market volatility to date (these are
+initialised to 0.02 and 0.15 respectively).
+
 
 The $\theta$ affects the degree to which changing the aggressiveness moves the
 target price  away from the equilibrium. So a high value of $\theta$ means that a
@@ -603,11 +618,11 @@ decreasing $\theta$ as the market becomes more stable.
   \caption{How different thetas affect the target price calculations}
 \end{figure}
 
-\begin{figure} 
-\centering
-\includegraphics[width=\columnwidth]{graphs_and_stats/graph_intra_buyer_thetas.pdf}
-\caption{Intra buyer thetas}
-\end{figure}
+%\begin{figure} 
+%\centering
+%\includegraphics[width=\columnwidth]{graphs_and_stats/graph_intra_buyer_thetas.pdf}
+%\caption{Intra buyer thetas}
+%\end{figure}
 
 \begin{equation}
 \label{eqn:update_theta}
