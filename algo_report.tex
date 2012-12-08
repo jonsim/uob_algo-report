@@ -467,16 +467,16 @@ $\beta_1$ have on performance is explored in Section \ref{sec:calibration_beta}.
 The value of $\delta(r)$ is dependent on two main factors. The value of
 $r_{shout}$ which is the aggressiveness that would give a target price of the
 best outstanding bid (or ask if we are a seller). We compute this by reversing
-the equations found in \ref{sec:AA_price_estimation} (an example can be seen in
+the equations found in Section \ref{sec:AA_price_estimation} (an example can be seen in
 Equation \ref{eqn:reverse_intra_buyer} for calculating the reverse of the
-intra-marginal buyer).  Since we wish to be more competitive than the best
-outstanding shout, the second component measures how much more (or less
-aggressive) we will be compared with $r_{shout}$.  $\lambda_r$ and $\lambda_a$
-therefore represent the relative and absolute change in $r_{shout}$
+intra-marginal buyer).  Since we wish to submit a more competitive shout than the best
+outstanding one, the second component measures how much more (or less)
+aggressive we will be compared with $r_{shout}$.  $\lambda_r$ and $\lambda_a$
+therefore represent the relative and absolute difference from $r_{shout}$
 respectively. %TODO: Word this better
 The absolute change exists to prevent $r$ from never being able
 to update from a value of 0. Depending on the rules above, we either set the
-two values to positive to become more aggressive or negative to become less
+two $\lambda$ values to positive to become more aggressive or negative to become less
 aggressive.
 
 
