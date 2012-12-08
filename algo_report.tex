@@ -459,18 +459,22 @@ time step using Equation \ref{eqn:update_aggressive} based on the following rule
   \label{eqn:update_aggressive}
 \end{equation}
 
-$\delta(r)$ is our target aggressiveness which is slightly above or below
-(depending on the situation) $r_{shout}$, the value of
-aggressiveness that would give us the current best outstanding shout. The value
-of $r_{shout}$ was computed by reversing the equations found in
-\ref{sec:AA_price_estimation} (an example can be seen in Equation
-\ref{eqn:reverse_intra_buyer} for calculating the reverse of the intra-marginal
-buyer). The rate at which we converged on the desired aggressiveness is
-determined by $\beta_1$. The affect different $\beta_1$ values have on
-performance is explored in Section \ref{sec:calibration_beta}.
+To update our aggressiveness we first calculate our target aggressiveness,
+$\delta(r)$ and then move towards it from our original aggressiveness ($r$) at
+a rate determined by a constant($\beta_1$). The affect that different values of
+$\beta_1$ have on performance is explored in Section \ref{sec:calibration_beta}.
 
-$\lambda_r$ and $\lambda_a$ represent the relative and absolute change in
-$r$ respectively. The absolute change exists to prevent $r$ from never being able
+The value of $\delta(r)$ is dependent on two main factors. The value of
+$r_{shout}$ which is the aggressiveness that would give a target price of the
+best outstanding bid (or ask if we are a seller). We compute this by reversing
+the equations found in \ref{sec:AA_price_estimation} (an example can be seen in
+Equation \ref{eqn:reverse_intra_buyer} for calculating the reverse of the
+intra-marginal buyer).  Since we wish to be more competitive than the best
+outstanding shout, the second component measures how much more (or less
+aggressive) we will be compared with $r_{shout}$.  $\lambda_r$ and $\lambda_a$
+therefore represent the relative and absolute change in $r_{shout}$
+respectively. %TODO: Word this better
+The absolute change exists to prevent $r$ from never being able
 to update from a value of 0. Depending on the rules above, we either set the
 two values to positive to become more aggressive or negative to become less
 aggressive.
