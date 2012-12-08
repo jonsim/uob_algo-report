@@ -246,15 +246,14 @@ controls the amount it is willing to improve the current best shout.\\
 % - ???
 The main focus of our experiments was the Adaptive Aggressive trader created by
 Vytelingum in 2006 \cite{AA_thesis}. The Adaptive Aggressive algorithm relies on the principal that you can be in
-two different states. One where you more frequently trade closer to your limit
+two different states. One where you trade closer to your limit
 price, with an increased chance of trading but lower profit per trade. The other where you
 trade further from your limit price, decreasing the likelihood of making a
-trade but increasing the amount of profit you will make when a trade is
-successful.
+trade but increasing the amount of profit you will make upon a successful trade.
 
 The Adaptive Aggressive algorithm maintains an aggressiveness value ($r$), which
 determines how close to your limit price you will be trading. A completely
-aggressive buyer ($r = 1$) will buy at their limit price while a completely
+aggressive buyer ($r = 1$) will buy at their limit price whilst a completely
 passive trader ($r = -1$) will buy at the minimum market price (\$1 on the BSE).\\
 
 
@@ -292,14 +291,22 @@ computing a target price ($\tau$) which is dependent upon
 the state of the market. However, before we can go into detail, we must define
 two concepts: an intra-marginal trader is a trader that bids above the
 equilibrium if they are a buyer (or asks below the equilibrium if they are a
-seller) and an extra-marginal trader will never trade above the
+seller) whereas an extra-marginal trader will never trade above the
 equilibrium if they are a buyer (or below the equilibrium if they are a
 seller).
 
 Whether our trader is acting in an intra-marginal or extra-marginal capacity
 will depend upon the limit price for our order. If we have a limit price above
 the equilibrium (below the equilibrium for a seller) then we act as an
-intra-marginal trader otherwise we act as an extra-marginal trader.
+intra-marginal trader otherwise we act as an extra-marginal trader. The
+difference is illustrated in Figure \ref{fig:r_price}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=\columnwidth]{graphs_and_stats/graph_r.pdf}
+\caption{Aggressiveness price relationship}
+\label{fig:r_price}
+\end{figure}
 
 The price that we then submit will depend upon which capacity we are acting
 under, based on the follow equations.
@@ -349,7 +356,7 @@ the limit price for the seller.
     \label{eqn:extraseller}
 \end{equation}
 
-In the paper, there was a different value used instead of $\theta$, designed to
+In the paper\cite{AA_thesis}, there was a different value used instead of $\theta$, designed to
 ensure that the curve produced by the equations was continuous. However, we
 found that just using $\theta$ was still sufficiently accurate and greatly
 simplified the above equations.
@@ -395,12 +402,13 @@ trader selected to make a bid. These can be found in the Adaptive Aggressive
 paper \cite[p.~32]{AA_paper} but are not defined here.
 
 Initially when we ran our algorithm we found that it was occasionally making a
-loss upon receiving a new order from the scheduler with a different limit
-price. The reason for this was that our previous bids had been submitted using
-the limit price from the previous order. Since on the Bristol Stock Exchange it
+loss upon receiving a new order from the scheduler containing a different limit
+price. This was because our previous bids had been submitted using
+the limit price from the previous order (which may be outside the range
+we are now allowed to trade within). Since on the Bristol Stock Exchange it
 is not possible to remove a bid, we added additional logic to notify us of the
 new order. If it was found that the new order contained a limit that was
-outside of our trading range, we cleared our previous bid using a stub.\\
+outside of our trading range, we cleared our previous bid using a stub.
 
 
 \subsubsection{Short term learning} \label{sec:AA_short_term_learning}
@@ -427,7 +435,7 @@ time step using Equation \ref{eqn:update_aggressive} based on the following rule
 \end{algorithm}
 
 %\textbf{Learning rules for seller:}
-\begin{algorithm}[h]
+\begin{algorithm}[H]
   \caption{Learning rules for seller}
   \begin{algorithmic}
     \IF{trade occurs at price $q$}
@@ -436,7 +444,7 @@ time step using Equation \ref{eqn:update_aggressive} based on the following rule
         \ELSE
             \STATE be more aggressive (our price too high).
         \ENDIF
-    \ELSIF{ $\tau \leq o_{bid}$ }
+    \ELSIF{ $\tau \geq o_{bid}$ }
         \STATE be more aggressive (our price too high).
     \ENDIF
   \end{algorithmic}
@@ -451,17 +459,22 @@ time step using Equation \ref{eqn:update_aggressive} based on the following rule
   \label{eqn:update_aggressive}
 \end{equation}
 
-$\lambda_r$ and $\lambda_a$ representative the relative and absolute change in
-r respectively. The absolute change exists to prevent r from never being able
-to escape from a value of 0. Depending on the rules above, we either set the
+$\delta(r)$ is our target aggressiveness which is slightly above or below
+(depending on the situation) $r_{shout}$, the value of
+aggressiveness that would give us the current best outstanding shout. The value
+of $r_{shout}$ was computed by reversing the equations found in
+\ref{sec:AA_price_estimation} (an example can be seen in Equation
+\ref{eqn:reverse_intra_buyer} for calculating the reverse of the intra-marginal
+buyer). The rate at which we converged on the desired aggressiveness is
+determined by $\beta_1$. The affect different $\beta_1$ values have on
+performance is explored in Section \ref{sec:calibration_beta}.
+
+$\lambda_r$ and $\lambda_a$ represent the relative and absolute change in
+$r$ respectively. The absolute change exists to prevent $r$ from never being able
+to update from a value of 0. Depending on the rules above, we either set the
 two values to positive to become more aggressive or negative to become less
 aggressive.
 
-The $r_{shout}$ is the value of aggressiveness that would give us the current
-best outstanding shout. These were computer by reversing the functions found in
-\ref{sec:AA_price_estimation}, an example can be seen in Equation
-\ref{eqn:reverse_intra_buyer} for calculating the reverse of the intra marginal
-buyer.
 
 \begin{equation}
 r_{shout}=
@@ -477,7 +490,7 @@ ln\left( \frac{(e^\theta -1) (\frac{\tau - \hat p^*}{l_i - \hat p^*} + 1)
 
 The aggressiveness is dependent on our limit price and the current market state as
 is illustrated in Figure \ref{fig:avtime}. In order to collect more data, we
-increases the scheduler to distribute items every five timesteps instead of
+increased the scheduler to distribute orders every five timesteps instead of
 every thirty. This increases the number of trades in the market which in turn
 provides us with a far more accurate estimate of the price equilibrium and more
 trading data to work with.
@@ -499,12 +512,6 @@ The dips in the aggressiveness correspond to the falling equilibrium price
 where we can afford to trade further below our limit because the gap between
 our limit price and the market equilibrium is increasing.
 
-\begin{figure}[H]
-\centering
-\includegraphics[width=\columnwidth]{graphs_and_stats/graph_r.pdf}
-\caption{Aggressiveness price relationship}
-\label{fig:r_price}
-\end{figure}
 
 \begin{figure}[H] 
 \centering
@@ -603,6 +610,9 @@ shout price to respond to quickly up the changing market. Setting $\eta$ too
 low would cause outlier trades to have a significant impact which would reduce
 the margins.
 
+
+\subsection{$\beta_1$ and $\beta_2$ parameters} \label{sec:calibration_beta}
+
 We update our aggressiveness and theta values more often than in the original
 Adaptive Aggressiveness paper \cite{AA_thesis}. This is advantageous since it
 allows us to update to rapidly changing market conditions. Since we update
@@ -620,8 +630,6 @@ value of zero for $\beta_2$ does not appear to have a significant effect. This
 is because we initalise $\theta$ to -4 which is a fairly accurate model of our
 environment. \textbf{RUPERT PUT THE THETA=2 RESULTS HERE}
 %TODO
-
-\subsection{$\beta_1$ and $\beta_2$ parameters} \label{sec:calibration_beta}
 \begin{table}[H]
   \centering
   \begin{tabular}{ | c | C{2.7cm} | C{2.7cm} | }
