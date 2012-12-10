@@ -298,26 +298,29 @@ equilibrium if they are a buyer (or below the equilibrium if they are a
 seller).
 
 Whether our trader is acting in an intra-marginal or extra-marginal capacity
-will depend upon the limit price for our order. If we have a limit price above
-the equilibrium (below the equilibrium for a seller) then we act as an
-intra-marginal trader otherwise we act as an extra-marginal trader. The
-difference is illustrated in Figure \ref{fig:r_price}.
+will depend upon the limit price for our order. For a buyer we act as an intra-marginal trader if we 
+have a limit price above the equilibrium (or below the equilibrium for a seller) otherwise we act as 
+an extra-marginal trader. This difference is illustrated in Figure \ref{fig:r_price}, where we plot 
+our target price ($\tau$) against the aggressiveness ($r$) using the different trading strategies. In 
+this example the buyer's extra-marginal limit is 5 with an intra-marginal limit of 15 (and vice versa 
+for the seller). For an intra-marginal trader there is an inflection point at the price equilibrium 
+(10 in our example).
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=\columnwidth]{graphs_and_stats/graph_r.pdf}
-\caption{Aggressiveness price relationship.}
+\caption{Graph showing relationship between target price and aggressiveness for different trading strategies.}
 \label{fig:r_price}
 \end{figure}
 
 The price that we then submit will depend upon which capacity we are acting
-under, based on the follow equations.
+under, based on the following equations.
 
 \textbf{Intra-marginal buyer}
 \begin{equation}
     \tau =
     \begin{cases}
-        \hat{p}^*(1- \frac{e^{-r\theta}-1}{e^{\theta}-1}) &  \text{if r } \in (-1,0)  \\
+        \hat{p}^*(1- \frac{e^{-r\theta}-1}{e^{\theta}-1}) &  \text{if r} \in (-1,0)  \\
         \hat{p}^* + (l_i-\hat{p}^*)(\frac{e^{r\theta}-1}{e^\theta-1}) & \text{if r} \in (0,1)
     \end{cases}
     \label{eqn:intrabuyer}
@@ -330,8 +333,8 @@ equilibrium price.
 \begin{equation}
     \tau =
     \begin{cases}
-        l_i(1-\frac{e^{-r\theta}-1}{e^\theta-1}) &  \text{if r } \in (-1,0)  \\
-        l_i & \text{if r } \in (0,1)
+        l_i(1-\frac{e^{-r\theta}-1}{e^\theta-1}) &  \text{if r} \in (-1,0)  \\
+        l_i & \text{if r} \in (0,1)
     \end{cases}
     \label{eqn:extrabuyer}
 \end{equation}
@@ -340,35 +343,34 @@ equilibrium price.
 \begin{equation}
     \tau =
     \begin{cases}
-        \hat{p}^* + (\text{MAX}-\hat{p}^*)( \frac{e^{-r\theta}-1}{e^{\theta}-1}) &  \text{if r } \in (-1,0)  \\
-        c_j + (\hat{p}^*-c_j)(1-\frac{e^{r\theta}-1}{e^\theta-1}) & \text{if r } \in (0,1)
+        \hat{p}^* + (\text{MAX}-\hat{p}^*)( \frac{e^{-r\theta}-1}{e^{\theta}-1}) &  \text{if r} \in (-1,0)  \\
+        c_j + (\hat{p}^*-c_j)(1-\frac{e^{r\theta}-1}{e^\theta-1}) & \text{if r} \in (0,1)
     \end{cases}
     \label{eqn:intraseller}
 \end{equation}
-where MAX is the maximum value that can be submitted to the market and $c_j$ is
+where MAX is the maximum price that can be submitted to the market and $c_j$ is
 the limit price for the seller.
 
 \textbf{Extra-marginal seller}
 \begin{equation}
     \tau =
     \begin{cases}
-        c_j + (\text{MAX}-c_j)(1-\frac{e^{-r\theta}-1}{e^\theta-1}) &  \text{if r } \in (-1,0)  \\
-        c_j & \text{if r } \in (0,1)
+        c_j + (\text{MAX}-c_j)(1-\frac{e^{-r\theta}-1}{e^\theta-1}) &  \text{if r} \in (-1,0)  \\
+        c_j & \text{if r} \in (0,1)
     \end{cases}
     \label{eqn:extraseller}
 \end{equation}
 
-In the paper\cite{AA_thesis}, there was a different value used instead of $\theta$, designed to
-ensure that the curve produced by the equations was continuous. However, we
-found that just using $\theta$ was still sufficiently accurate and greatly
-simplified the above equations.
+In the paper \cite{AA_thesis} an extra variable ($\underline \theta$) is used in addition to $\theta$ 
+ensuring the first derivatives of the equations are continuous. However, we found that just using 
+$\theta$ was sufficiently accurate and greatly simplified the above equations.
 
-One of the equations is then used to determine the ideal price that we want to
-be trading at. We then use the following rules to determine the actual shout
+One of the equations is selected to determine the ideal price that we aim to
+trade at. Then the following rules are used to determine the actual shout
 that we will make when asked to submit a new order. The $o_{bid}$ and $o_{ask}$
-represent the best (highest) bid and best (lowest) ask on the market that have
+represent the highest bid and lowest ask on the market that have
 not yet been accepted. The value of $\eta$ is set as a parameter and reflects
-how quickly we converge on our estimated price (higher $\eta$ converge slower).
+how quickly we converge on our estimated price (higher $\eta$ causes slower convergence).
 
 %\textbf{Bidding rules for buyer:}
 \begin{algorithm}[H]
@@ -377,7 +379,7 @@ how quickly we converge on our estimated price (higher $\eta$ converge slower).
         \IF{$l_i \leq o_{bid}$}
             \STATE submit no bid (market transacting above our limit).
         \ELSE
-            \STATE submit bid given by $bid_i = \textstyle o_{bid} + \frac{\textstyle \tau - o_{bid}}{\textstyle \eta}$.
+            \STATE submit bid given by $\textstyle o_{bid} + \frac{\textstyle \tau - o_{bid}}{\textstyle \eta}$.
         \ENDIF
     \end{algorithmic}
     \label{alg:bidding_rules_buyer}
@@ -390,34 +392,31 @@ how quickly we converge on our estimated price (higher $\eta$ converge slower).
         \IF{$c_j \geq o_{ask}$}
             \STATE submit no ask (market transacting below our limit).
         \ELSE
-            \STATE submit ask given by $ask_i = \textstyle o_{ask} - \frac{\textstyle o_{ask}-\tau}{\textstyle \eta}$.
+            \STATE submit ask given by $\textstyle o_{ask} - \frac{\textstyle o_{ask}-\tau}{\textstyle \eta}$.
         \ENDIF
     \end{algorithmic}
     \label{alg:bidding_rules_seller}
 \end{algorithm}
 
-Since these all require an existing bid on the market, there were different
-rules that were used to determine what shout to make if we were the first
-trader selected to make a bid. These can be found in the Adaptive Aggressive
-paper \cite[p.~32]{AA_paper} but are not defined here.
+Since these all require an existing bid on the market, there are different
+rules used to determine which shout to make if we are the first
+trader selected. These rules can be found in the Adaptive Aggressive
+paper \cite[p.~32]{AA_paper}.
 
 Initially when we ran our algorithm we found that it was occasionally making a
 loss upon receiving a new order from the scheduler containing a different limit
-price. This was because our previous bids had been submitted using
-the limit price from the previous order (which may be outside the range
-we are now allowed to trade within). Since on the Bristol Stock Exchange it
-is not possible to remove a bid, we added additional logic to notify us of the
-new order. If it was found that the new order contained a limit that was
-outside of our trading range, we cleared our previous bid using a stub.
+price. This was because our last shout had been submitted using
+the limit price from the previous order (which may now be outside the range
+we are allowed to trade within). We therefore added additional logic to detect a new order enabling us to react appropriately. Since on the Bristol Stock Exchange it is not possible to withdraw a shout, if it was found that the new order contained a limit that was outside of our trading range, we cleared the previous bid using a stub.\\
+
 
 
 \subsubsection{Short term learning} \label{sec:AA_short_term_learning}
 % OWNER: Max
 % - Graphs - r vs price equilibrium.
 The aggressiveness of the Adaptive Aggressive algorithm is updated at every
-time step using Equation \ref{eqn:update_aggressive} based on the following rules.
+time step using Equation \ref{eqn:update_aggressive} based on the following rules:
 
-%\textbf{Learning rules for buyer:}
 \begin{algorithm}[H]
   \caption{Learning rules for buyer}
   \begin{algorithmic}
@@ -434,7 +433,6 @@ time step using Equation \ref{eqn:update_aggressive} based on the following rule
   \label{alg:learning_rules_buyer}
 \end{algorithm}
 
-%\textbf{Learning rules for seller:}
 \begin{algorithm}[H]
   \caption{Learning rules for seller}
   \begin{algorithmic}
@@ -451,155 +449,96 @@ time step using Equation \ref{eqn:update_aggressive} based on the following rule
   \label{alg:learning_rules_seller}
 \end{algorithm}
 
+To update our aggressiveness we first calculate our target aggressiveness:
 \begin{equation}
-  \begin{aligned}
-    r(t+1) &= r(t) + \beta_1(\delta(t) - r(t))\\
-    \delta(t) &= (1 \pm \lambda_r)r_{shout} \pm \lambda_a
-  \end{aligned}
+    \delta(t) = (1 \pm \lambda_r) \cdot r_{shout} \pm \lambda_a
+\end{equation}
+We then move towards it from our original aggressiveness ($r$) at 
+a rate determined by a constant ($\beta_1$):
+\begin{equation}
+    r(t+1) = r(t) + \beta_1 \cdot (\delta(t) - r(t))
   \label{eqn:update_aggressive}
 \end{equation}
+The affect that different values of $\beta_1$ have on performance is explored in Section \ref{sec:calibration_beta}.
 
-To update our aggressiveness we first calculate our target aggressiveness,
-$\delta(r)$ and then move towards it from our original aggressiveness ($r$) at
-a rate determined by a constant($\beta_1$). The affect that different values of
-$\beta_1$ have on performance is explored in Section \ref{sec:calibration_beta}.
-
-The value of $\delta(r)$ is dependent on two main factors. The value of
-$r_{shout}$ which is the aggressiveness that would give a target price of the
-best outstanding bid (or ask if we are a seller). We compute this by reversing
-the equations found in Section \ref{sec:AA_price_estimation} (an example can be seen in
-Equation \ref{eqn:reverse_intra_buyer} for calculating the reverse of the
-intra-marginal buyer).  Since we wish to submit a more competitive shout than the best
-outstanding one, the second component measures how much more (or less)
-aggressive we will be compared with $r_{shout}$.  $\lambda_r$ and $\lambda_a$
-therefore represent the relative and absolute difference from $r_{shout}$
-respectively. %TODO: Word this better
-The absolute change exists to prevent $r$ from never being able
-to update from a value of 0. Depending on the rules above, we either set the
-two $\lambda$ values to positive to become more aggressive or negative to become less
-aggressive.
-
-
+The function $\delta(t)$ is primarily dependent on the value of $r_{shout}$, the aggressiveness that would give a target price of the
+best outstanding shout when used in the equations found in Section \ref{sec:AA_price_estimation}. The value of $r_{shout}$ is calculated by reversing the aforementioned equations, as seen in the example given in Equation \ref{eqn:reverse_intra_buyer} which calculates $r_{shout}$ from the reverse of the intra-marginal buyer.
 \begin{equation}
 r_{shout}=
 \begin{cases}
- -ln\left(\frac{ (1-\frac{\tau}{\hat p^*}) (e^\theta-1) + 1}{\theta}\right) & \tau
+ -\ln\left(\frac{ \left( 1-\frac{\tau}{\hat p^*} \right) \left( e^\theta-1 \right) + 1}{\theta}\right) & \tau
 < \hat p^*\\
-ln\left( \frac{(e^\theta -1) (\frac{\tau - \hat p^*}{l_i - \hat p^*} + 1)
+\ln\left( \frac{ \left( e^\theta -1 \right) \left( \frac{\tau - \hat p^*}{l_i - \hat p^*} + 1 \right)
 }{\theta} \right)&
 \textstyle{otherwise}
 \end{cases}
 \label{eqn:reverse_intra_buyer}
 \end{equation}
 
-The aggressiveness is dependent on our limit price and the current market state as
-is illustrated in Figure \ref{fig:avtime}. In order to collect more data, we
-increased the scheduler to distribute orders every five timesteps instead of
-every thirty. This increases the number of trades in the market which in turn
-provides us with a far more accurate estimate of the price equilibrium and more
-trading data to work with.
-
-One of the first conclusions we can draw from the graph is that our trader is
-always playing an active role in the market, that is they are trading above the
-market equilibrium. The reason for this is that the scheduler was set to
-periodic meaning that the limit prices were provided in order to create the
-sine wave visible in Figure \ref{fig:avtime}. Therefore, everyone receives limit
-prices close to each other meaning that we have a competitive market which
-means we have to trade close to our limit price. This is further reinforced by
-the short order duration making it difficult to wait for a trade.
-
-Initially our trader has a lower aggressiveness value (close to zero), this is
-because the trader lacks information about the market and therefore adopts a
-more passive role to prevent selling far above the equilibrium.
-
-The dips in the aggressiveness correspond to the falling equilibrium price
-where we can afford to trade further below our limit because the gap between
-our limit price and the market equilibrium is increasing.
+When we wish to become more aggressive we set our target aggressiveness slightly higher than the
+value of $r_{shout}$, conversely slightly lower when we wish to become less aggressive. This is accomplished by
+setting the sign of $\lambda_r$ and $\lambda_a$ where positive $\lambda$ values increase aggressiveness,
+ whereas negative $\lambda$ values decrease aggressiveness.
+The actual values of $\lambda_r$ and $\lambda_a$ represent the relative and absolute difference from $r_{shout}$
+respectively. The absolute change exists to prevent $r$ from never being able
+to update from a value of 0.\\
 
 
-\begin{figure}[H] 
-\centering
-\includegraphics[width=\columnwidth]{graphs_and_stats/graph_aggressiveness_vs_price.pdf}
-\caption{Aggressive and Price equilibrium throughout a trading day for an AA
-buyer}
-\label{fig:avtime}
-\end{figure}
 
 \subsubsection{Long term learning} \label{sec:AA_long_term_learning}
 % OWNER: Max
 % - theta
-The Adaptive Aggressive algorithm incorporates a long term learning component
-that is affected by the volatility of the market. In order to do this we create
-a measure of the market volatility, $\theta$, which is then updated every
-timestep using Equation \ref{eqn:update_theta}. The value of $\theta^*(\alpha)$
-represents the value of $\theta$ that will allow us to act optimally in a
-market with a volatility of $\alpha$. This value of $\theta^*$ is scaled with
-respect to a minimum and maximum theta, constants that are hard coded into the
-function (we used -8 and 2 respectively), to keep it within a certain range.
-We then moved towards this desired value of $\theta^*$ at a rate that is
-determined by $\beta_2$. The larger value of $\beta_2$ the faster we converged
-towards $\theta^*$. We initially set the learning rate at 0.5, however the 
-%TODO
-The $\alpha$ (see Equation
-\ref{eqn:alpha}) is measure of the volatility of the market which is calculated
-by looking at the variance of the last N trades around the market equilibrium.
-So if the majority of trades are close to the equilibrium price then we are in
-a stable market and vice versa.. The $\alpha_{max}$ and $\alpha_{min}$
-represent the a largest and smallest market volatility to date (these are
-initialised to 0.02 and 0.15 respectively).
+The Adaptive Aggressive algorithm takes into account the volatility of the market, tracked using the
+$\alpha$ value, and adjusts its behaviour accordingly by altering the relationship between aggressiveness and price.
 
-\begin{figure}
-  \centering
-  \includegraphics[width=\columnwidth]{graphs_and_stats/graph_thetas.pdf}
-  \caption{How different thetas affect the target price calculations}
-  \label{fig:theta}
-\end{figure}
-
-The $\theta$ affects the degree to which changing the aggressiveness moves the
-target price  away from the equilibrium. So a high value of $\theta$ means that a
-relatively small change in aggressiveness will result in a large move away from
-the equilibrium price. This is illustrated in Fig. \ref{fig:theta}, when
-$\theta=4$, between aggressiveness of -0.5 and 0.5, the price stays very close
-to the equilibrium.
-
-The graph in Fig \ref{fig:theta_v_time} represents our value of theta
-throughout the trading day. It peaks at the beginning of the market session
-when the market is most stable then decreases as the market begins to
-oscillate.
-
-\begin{figure}
-  \centering
-  \includegraphics[width=\columnwidth]{graphs_and_stats/graph_theta_vs_time.pdf}
-  \caption{How theta varies across a market day}
-  \label{fig:theta_v_time}
-\end{figure}
-
-%\begin{figure} 
-%\centering
-%\includegraphics[width=\columnwidth]{graphs_and_stats/graph_intra_buyer_thetas.pdf}
-%\caption{Intra buyer thetas}
-%\end{figure}
-
-\begin{equation}
-  \theta(t+1)=\theta(t)+\beta_2(\theta^*(\alpha)-\theta_t)\\\\
-  \label{eqn:update_theta}
-\end{equation}
-
+The  value of $\alpha$ (see Equation \ref{eqn:alpha}) is calculated
+by looking at the variance of the last $N$ trades around the market equilibrium.
+If the majority of trades are close to the equilibrium price then we are in
+a stable market and vice versa. The smallest and largest market volatility to date are represented 
+by $\alpha_{min}$ and $\alpha_{max}$ (these are initialised to 0.02 and 0.15 respectively).
 \begin{equation}
   \alpha = \frac{\sqrt{\frac 1 N \sum^T_{i=T-N+1}(p_i-\hat p^*)^2}}{\hat p^*}
   \label{eqn:alpha}
 \end{equation}
-
+This long term learning is accomplished by incorporating a variable ($\theta$) which is updated every
+timestep to move towards $\theta^*(\alpha)$ at a rate determined by $\beta_2$ (see Equation \ref{eqn:update_theta}).
+The larger the value of $\beta_2$ the faster we converge towards $\theta^*$. We initially set the 
+learning rate to 0.5, however we also investigated different values of $\beta_2$, as discussed in 
+Section \ref{sec:calibration_beta}.
+\begin{equation}
+  \theta(t+1)=\theta(t)+\beta_2(\theta^*(\alpha)-\theta_t)\\\\
+  \label{eqn:update_theta}
+\end{equation}
+The value of $\theta^*(\alpha)$ represents the value of $\theta$ that will allow us to act optimally in a
+market with a volatility of $\alpha$. A high value of $\theta$ is desirable in a stable market.
 \begin{equation}
   \theta^*(\alpha) = (\theta_{max}-\theta_{min})
   \left(\frac{1-e^{\gamma\left(\frac{(\alpha-\alpha_{min})}{(\alpha_{max}
   -\alpha_{min})}-1\right)}}{1-e^{-\gamma}}\right)
   \label{thetastar}
-\end{equation}\\
+\end{equation}
+This value of $\theta^*$ is scaled with
+respect to a minimum and maximum value, $\theta_{min}$ and $\theta_{max}$, constants that are hard coded into the
+function (we used -8 and 2 respectively).
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\columnwidth]{graphs_and_stats/graph_thetas.pdf}
+  \caption{How different $\theta$ values affect the target price calculations.}
+  \label{fig:theta}
+\end{figure}
+
+The $\theta$ affects the degree to which changing the aggressiveness moves the
+target price away from the equilibrium. A high value of $\theta$ means that a
+relatively large change in aggressiveness will only result in a small move away from
+the equilibrium price. This is illustrated in Figure \ref{fig:theta}, when
+$\theta=4$ for $r \in (-0.5, 0.5)$ the price stays very close
+to the equilibrium.\\
 
 
 
 \section{Calibration} \label{sec:calibration}
+Why did we calibrate lol?
 % OWNER: Group
 % - $\beta_1$, $\beta_2$, $\gamma$, $\eta$
 % - potential to compare statistically?
@@ -619,14 +558,14 @@ the margins.\\
 
 \subsection{$\beta_1$ and $\beta_2$ parameters} \label{sec:calibration_beta}
 
-We update our aggressiveness and theta values more often than in the original
+We update our aggressiveness and $\theta$ values more often than in the original
 Adaptive Aggressiveness paper \cite{AA_thesis}. This is advantageous since it
 allows us to update to rapidly changing market conditions. Since we update
 these values more often the learning rates have to be comparatively lower
 otherwise the algorithm will effectively learn immediately. We ran tests over
 four thousand market sessions with various different values of $\beta_1$ (which
 controls the rate of change of aggressiveness) and $\beta_2$ which controls the
-rate of change of theta, the results are shown in Table \ref{tbl:beta_results}.
+rate of change of $\theta$, the results are shown in Table \ref{tbl:beta_results}.
 The average profit made by the Adaptive Aggressive algorithm did not appear to
 be heavily affected by the variation in either of the two $\beta$ values.
 However, if we set the value of $\beta_1$ to zero then we have a marked drop in
@@ -634,7 +573,7 @@ performance, this is because the aggressiveness will not change and our
 algorithm will not be able to adapt to changing market conditions. Although a
 value of zero for $\beta_2$ does not appear to have a significant effect. This
 is because we initalise $\theta$ to -4 which is a fairly accurate model of our
-environment. \textbf{RUPERT PUT THE THETA=2 RESULTS HERE}
+environment. \textbf{RUPERT PUT THE $\theta$=2 RESULTS HERE}
 %TODO
 \begin{table}[H]
   \centering
@@ -723,6 +662,58 @@ the different values.
 %   Ed's report: ``According to the conducted Wilcoxon-Mann-Whitney two-tailed rank-sum tests, the difference in the observed efficiencies is significant ($U = 2, N_1 = N_2 = 10, p < 0.0003$)."
 % - Experiment with changing scheduler
 % - Other graphs
+ 
+%TODO
+The aggressiveness is dependent on our limit price and the current market state as
+is illustrated in Figure \ref{fig:avtime}. In order to collect more data, we
+increased the scheduler to distribute orders every five timesteps instead of
+every thirty. This increases the number of trades in the market, giving us more trading data to work with and allowing us to generate a far more accurate estimate of the price equilibrium. This change only affects the data represented in Graphs \ref{fig:avtime} and \ref{fig:theta_v_time}.
+
+One of the first conclusions we can draw from the graph is that our trader is
+always playing an active role in the market, that is they are trading above the
+market equilibrium. The reason for this is that the scheduler was set to
+periodic meaning that the limit prices were provided in order to create the
+sine wave visible in Figure \ref{fig:avtime}. Therefore, everyone receives limit
+prices close to each other meaning that we have a competitive market which
+means we have to trade close to our limit price. This is further reinforced by
+the short order duration making it difficult to wait for a trade.
+
+Initially our trader has a lower aggressiveness value (close to zero), this is
+because the trader lacks information about the market and therefore adopts a
+more passive role to prevent selling far above the equilibrium.
+
+The dips in the aggressiveness correspond to the falling equilibrium price
+where we can afford to trade further below our limit because the gap between
+our limit price and the market equilibrium is increasing.
+
+
+\begin{figure}[H] 
+\centering
+\includegraphics[width=\columnwidth]{graphs_and_stats/graph_aggressiveness_vs_price.pdf}
+\caption{Aggressive and Price equilibrium throughout a trading day for an AA
+buyer}
+\label{fig:avtime}
+\end{figure}
+
+
+
+
+
+Figure \ref{fig:theta_v_time} illustrates our value of $\theta$
+throughout the trading day. It peaks at the beginning of the market session
+when the market is most stable then decreases as the market begins to
+oscillate.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\columnwidth]{graphs_and_stats/graph_theta_vs_time.pdf}
+  \caption{How $\theta$ varies across a market day.}
+  \label{fig:theta_v_time}
+\end{figure}
+
+
+
+
+
 
 \begin{table}[H]
   \centering
