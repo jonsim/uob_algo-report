@@ -40,26 +40,14 @@ Bristol Stock Exchange}
 
 \maketitle
 \begin{abstract}
-\begin{verbatim}
-                             .::::. 
-                           .::::::::. 
-                           ::::::::::: 
-                           ':::::::::::.. 
-                            :::::::::::::::' 
-                             ':::::::::::. 
-                               .::::::::::::::' 
-                             .:::::::::::... 
-                            ::::::::::::::'' 
-                .:::.       '::::::::'':::: 
-              .::::::::.      ':::::'  ':::: 
-             .::::':::::::.    :::::    '::::. 
-           .:::::' ':::::::::. :::::      ':::. 
-         .:::::'     ':::::::::.:::::       '::. 
-       .::::''         '::::::::::::::       '::. 
-      .::''              '::::::::::::         :::... 
-   ..::::                  ':::::::::'        .:' '''' 
-..''''':'                    ':::::.' 
-\end{verbatim}
+As robot traders are now commonplace within the financial environment
+\cite{nyse_press}, we
+wished to evaluate various robotic trading strategies. Our primary focus was
+the  Adaptive Aggressive algorithm considered to be one of the
+best in the field \cite{AA_thesis}. We experimented with different parameters for the algorithm
+and then evaluated the performance of it against other common traders,
+including ZIP and ZIC \cite{ZIP_paper1}, finding that it conclusively
+outperformed other approaches.
 \end{abstract}
 
 \section{Introduction} \label{sec:introduction}
@@ -559,60 +547,68 @@ to the equilibrium.\\
 % OWNER: Group
 % - $\beta_1$, $\beta_2$, $\gamma$, $\eta$
 % - potential to compare statistically?
-Adaptive Aggressive has a number of tunable parameters. In this Section we explore these and their 
-effect on the algorithm's performance in the market.\\
+Adaptive Aggressive has a number of tunable parameters. In this Section we
+explore these and their effect on the algorithm's performance in the market.\\
 
 
 \subsection{$\eta$ parameter} \label{sec:calibration_eta}
-The $\eta$ value in the Adaptive Aggressive bidding function determines how quickly the shout price 
-moves from the best shout in the market towards the calculated target price. A higher value of $\eta$ will increase 
-the time taken to converge on the target price, making the trader slower to react to market events. 
+The $\eta$ value in the Adaptive Aggressive bidding function determines how
+quickly the shout price moves from the best shout in the market towards the
+calculated target price. A higher value of $\eta$ will increase the time taken
+to converge on the target price, making the trader slower to react to market
+events. 
 
-We tested various values of $\eta$ across three thousand market sessions in order to test the effect on Adaptive Aggressive's 
-performance, including $\eta = 3$, the value recommended in the original thesis \cite{AA_thesis}.
+We tested various values of $\eta$ across 3000 market sessions in
+order to test the effect on Adaptive Aggressive's performance, including $\eta
+= 3$, the value recommended in the original thesis \cite{AA_thesis}.
 \begin{table}[H]
   \centering
   \begin{tabular}{ | c | c | }
     \hline
     \textbf{$\eta$ value} & \textbf{Average finishing balance (3 dp.)} \\
     \hline
-        1 & - \\
-        3 & 136.555 \\
-        5 & - \\
-        10 & - \\
-        100 & 116.533 \\
-        1000 & 94.507 \\
+        1 & 125.317 \\
+        3 & 138.971 \\
+        5 & 140.538 \\
+        10 &  139.560\\
+        100 & 119.576 \\
+        1000 & 117.996 \\
     \hline \hline
-        ZIC & - \\
-        ZIP & - \\
+        ZIC & 85.040 \\
+        ZIP & 124.753 \\
     \hline
   \end{tabular}
   \caption{Difference in finishing balance with respect to change in $\eta$.}
   \label{tbl:eta_results}
 \end{table}
-Clearly it is important for the shout price to respond quickly to the changing market. Setting $\eta$ 
-too low would cause outlier trades to have a significant impact on our shout price. Conversely setting 
-$\eta$ too high causes the algorithm to be too slow to react.\\
+As is illustrated in Table \ref{tbl:eta_results}, as long as $\eta$ is
+within reasonable limits, between 3 and 10 in our example, it does not
+significantly impact the performance. However, setting $\eta$ too low would cause outlier trades to have a significant
+impact on our shout price. Conversely setting $\eta$ too high causes the
+algorithm to be too slow to react. Both of these are backed up by data in Table
+\ref{tbl:eta_results}.\\
 
 
 
 \subsection{$\beta_1$ and $\beta_2$ parameters} \label{sec:calibration_beta}
-We update our aggressiveness and $\theta$ values more often than in the original
-Adaptive Aggressive paper \cite{AA_thesis}. This is advantageous as it
-allows us to adapt to rapidly changing market conditions, although it means that our learning rates 
-have to be comparatively lower to avoid the algorithm effectively learning immediately.
-We ran tests over four thousand market sessions with various different values of $\beta_1$ (which
-controls the rate of change of aggressiveness) and $\beta_2$ which controls the
-rate of change of $\theta$, the results are shown in Table \ref{tbl:beta_results}.
-The average profit made by the Adaptive Aggressive algorithm did not appear to
-be heavily affected by the variation in either of the two $\beta$ values.
-However, if we set the value of $\beta_1$ to zero then we have a marked drop in
-performance, this is because the aggressiveness will not change and our
-algorithm will not be able to adapt to changing market conditions. Although a
-value of zero for $\beta_2$ does not appear to have a significant effect. This
-is because we initalise $\theta$ to -4 which is a fairly accurate model of our
-environment. \textbf{RUPERT PUT THE $\theta$=2 RESULTS HERE}
-%TODO
+
+The constants $\beta_1$ and $\beta_2$ are the learning rates for aggressiveness
+and $\theta$ respectively.  We update our aggressiveness and $\theta$ values
+more often than in the original Adaptive Aggressive paper \cite{AA_thesis}.
+Whilst this is advantageous as it allows us to adapt to rapidly changing market
+conditions, it means that our learning rates have to be comparatively lower to
+avoid the algorithm effectively learning immediately. You would therefore
+expect that learning rates that are very high, or very low, would have an
+adverse effect on the performance of the trader. However, we ran tests over
+4000 market sessions with various different values of $\beta_1$ and
+$\beta_2$ , the results are shown in Table \ref{tbl:beta_results}.  The average
+profit made by the Adaptive Aggressive algorithm did not appear to be heavily
+affected by the variation in either of the two $\beta$ values.  However, if we
+set the value of $\beta_1$ to zero then we have a marked drop in performance,
+this is because the aggressiveness will be constant and our algorithm will not
+be able to adapt to changing market conditions. A value of zero for $\beta_2$,
+$\theta$ becomes constant, does not appear to have a significant effect. 
+%TODO EXPLAIN SOMEHOW???
 \begin{table}[H]
   \centering
   \begin{tabular}{ | c | C{2.7cm} | C{2.7cm} | }
@@ -645,14 +641,16 @@ environment. \textbf{RUPERT PUT THE $\theta$=2 RESULTS HERE}
     ZIP & \multicolumn{2}{ c | }{117.461} \\
     \hline
   \end{tabular}
-  \caption{Difference in finishing balance with respect to change in $\beta_1$ and $\beta_2$ values.}
+  \caption{Finishing balance with respect to change in $\beta_1$ and $\beta_2$ values.}
   \label{tbl:beta_results}
 \end{table}
 
 
 
 \subsection{$\lambda$ parameter} \label{sec:calibration_lambda}
-We tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over eight thousand
+The constant $\lambda$ affects the weighting %TODO
+
+We tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over 8000
 market sessions (of 600 timesteps each) to find their effect on AA's
 performance. We didn't find any statistically significant difference between
 the different values. 
@@ -700,25 +698,31 @@ the different values.
 %   Ed's report: ``According to the conducted Wilcoxon-Mann-Whitney two-tailed rank-sum tests, the difference in the observed efficiencies is significant ($U = 2, N_1 = N_2 = 10, p < 0.0003$)."
 % - Experiment with changing scheduler
 % - Other graphs
- 
-%TODO
-The aggressiveness is dependent on our limit price and the current market state as
-is illustrated in Figure \ref{fig:avtime}. In order to collect more data, we
+In this section we compare the performance of the Adaptive Aggressive trader
+with other traders as well as looking at how specific aspects of the Adaptive
+Aggressive algorithm work in practise.\\
+
+
+\subsection{Aggressiveness} \label{sec:evaluation_aggressiveness} 
+The aggressiveness across a trading day is illustrated in Figure \ref{fig:avtime}.
+In order to collect more data, we
 increased the scheduler to distribute orders every five timesteps instead of
-every thirty. This increases the number of trades in the market, giving us more trading data to work with and allowing us to generate a far more accurate estimate of the price equilibrium. This change only affects the data represented in Graphs \ref{fig:avtime} and \ref{fig:theta_v_time}.
+every thirty. This increases the number of trades in the market, giving us more
+trading data to work with and allowing us to generate a far more accurate
+estimate of the price equilibrium. This change only affects the data
+represented in Figures \ref{fig:avtime} and \ref{fig:theta_v_time}.
 
 One of the first conclusions we can draw from the graph is that our trader is
-always playing an active role in the market, that is they are trading above the
-market equilibrium. The reason for this is that the scheduler was set to
-periodic meaning that the limit prices were provided in order to create the
-sine wave visible in Figure \ref{fig:avtime}. Therefore, everyone receives limit
-prices close to each other meaning that we have a competitive market which
-means we have to trade close to our limit price. This is further reinforced by
-the short order duration making it difficult to wait for a trade.
+always playing an active role in the market ($r > 0$), trading above the market
+equilibrium. This is because the market was set up to distribute orders with a
+periodic nature. Therefore, each trader receives a similar limit price
+resulting in a competitive market necessitating trades closer to the limit
+price. 
 
-Initially our trader has a lower aggressiveness value (close to zero), this is
-because the trader lacks information about the market and therefore adopts a
-more passive role to prevent selling far above the equilibrium.
+At the start of the day, our trader has a lower aggressiveness value (close to
+zero), this is because the trader lacks information about the market and
+therefore adopts a more passive role to prevent selling far above the
+equilibrium.
 
 The dips in the aggressiveness correspond to the falling equilibrium price
 where we can afford to trade further below our limit because the gap between
@@ -728,19 +732,23 @@ our limit price and the market equilibrium is increasing.
 \begin{figure}[H] 
 \centering
 \includegraphics[width=\columnwidth]{graphs_and_stats/graph_aggressiveness_vs_price.pdf}
-\caption{Aggressive and Price equilibrium throughout a trading day for an AA
-buyer}
-\label{fig:avtime}
+\caption{Aggressive and price equilibrium throughout a trading day for an AA
+  buyer.}
+  \label{fig:avtime}
 \end{figure}
 
 
 
+\subsection{Long term learning ($\theta$)} \label{sec:evaluation_theta}
+Figure \ref{fig:theta_v_time} illustrates our value of $\theta$ throughout the
+trading day. It peaks at the beginning of the market session when the market is
+most stable then decreases as the market begins to oscillate.
 
-
-Figure \ref{fig:theta_v_time} illustrates our value of $\theta$
-throughout the trading day. It peaks at the beginning of the market session
-when the market is most stable then decreases as the market begins to
-oscillate.
+The reason the $\theta$ value is unstable is due to the fact that at the
+extremes of the sine wave all previous trades appear to be very far from the
+current equilibrium estimate, resulting in the trader believing the market is
+extremely volatile. On the other hand the slope represent a value where the
+equilibrium price is closer to the average price in the trade history.
 \begin{figure}[H]
   \centering
   \includegraphics[width=\columnwidth]{graphs_and_stats/graph_theta_vs_time.pdf}
@@ -748,10 +756,14 @@ oscillate.
   \label{fig:theta_v_time}
 \end{figure}
 
-
-
-
-
+\subsection{Comparison of traders using the sinusoidal order schedule}
+\label{sec:eval_schedule}
+In order to evaluate the performance of our Adaptive Aggressive trading
+algorithm we ran 22,750 market sessions with different ratios of AA, SHVR, ZIC
+and ZIP traders (half buyers, half sellers). For each ratio 50 market sessions
+were run and the results are presented in Table \ref{tbl:results}. As
+illustrated, we can see that Adaptive Aggressive comprehensively outperformed all of the other
+traders.
 
 \begin{table}[H]
   \centering
@@ -773,13 +785,11 @@ oscillate.
   \label{tbl:results}
 \end{table}
 
-We ran 22750 market sessions with AA, SHVR, ZIC and ZIP traders (half
-buyers, half sellers). For each ratio 50 market sessions were run. The Wilcoxon
-signed-rank test was used to evaluate the significance of the results. The null
-hypothesis is that the difference between the pairs of traders is zero. For
-each trader paired with Adaptive Aggressive we can reject the null hypothesis ($p < 2.2 \cdot
-10^{-308}$). The results using fixed and jittered price generation were
-virtually identical.
+The Wilcoxon signed-rank test was used to evaluate the significance of the
+results. The null hypothesis is that the difference between the pairs of
+traders is zero. For each trader paired with Adaptive Aggressive we can reject
+the null hypothesis ($p < 2.2 \cdot 10^{-308}$). The results using fixed and
+jittered price generation were virtually identical.
 
 \begin{figure}[H]
   \centering
@@ -788,8 +798,16 @@ virtually identical.
   \label{fig:average_balance_vs_time}
 \end{figure}
 
-Figure \ref{fig:average_balance_vs_time} shows that Adaptive Aggressive consistently makes more profit.
+The graph of performance through a trading day in Figure
+\ref{fig:average_balance_vs_time} shows that Adaptive Aggressive consistently
+makes more profit.
 
+We also compared how well the Adaptive Aggressive algorithm performed against
+only ZIP across 10,000 market sessions. This was done to verify that the
+Adaptive Aggressive algorithm is not just exploiting weaker traders which would
+not exist in a real world competitive market. As is visible in Table
+\ref{tbl:two_traders} with just two traders in the market the difference
+between Adaptive Aggressive and ZIP is even more pronounced.
 \begin{table}[H]
   \centering
   \begin{tabular}{ | c | c | }
@@ -811,14 +829,54 @@ a market with just Adaptive Aggressive traders which suggests ZIP was reliant on
 ZIC and SHVR traders.\\
 
 
-% TODO: Big graph of time and price
+\subsection{Comparison of traders using the disjoint order schedule}
 
+We also ran an experiment comparing the performance of Adaptive Aggressive, ZIP
+and ZIC traders, across 1000 market sessions, using a different order schedule.
+This divides the
+market up into three phases each with a  different limit range. For each phase,
+every trader receives a random limit from the respective range. The results of this
+experiment can be seen in Table \ref{tbl:disjoint_market}.
+\begin{table}[H]
+  \centering
+  \begin{tabular}{ | c | c | }
+    \hline
+    Strategy & Average finishing balance (3 dp.) \\
+    \hline
+    ZIC & 132.282 \\
+    ZIP & 140.774 \\
+    AA & 141.239 \\
+    \hline
+  \end{tabular}
+  \caption{Market session with disjoint order schedule.}
+  \label{tbl:disjoint_market}
+\end{table}
+In this experiment ZIP and Adaptive Aggressive had similar performance. We ran the
+Wilcoxon signed-rank test with a significance threshold of 0.05 which concluded
+that Adaptive Aggressive and ZIP were not significantly different. However,
+since the ZIC trader was also relatively competitive, it suggests that this is
+not an accurate representation of a real world market.\\
+
+% TODO: Big graph of time and price
 
 \section{Conclusion} \label{sec:conclusion}
 % OWNER: Group
 % - Thank you and good night
 % - Hold for applause
-Text.\\
+In this paper, we wrote an implementation of the Adaptive Aggressive trader and
+subsequently ran tests to evaluate the performance when using different
+parameters for the various components of the trader. After calibration, we then
+compared the performance of our implementation of the algorithm  to other well
+known market traders, including both ZIP and ZIC. In these tests we have shown
+that our implementation of the  Adaptive Aggressive trading algorithm
+consistently outperforms the other traders in a market that approximates a  real world scenario.
+
+One of the drawbacks of the Adaptive Aggressive trader is the presence of a large number of
+mathematically complex equations which impact performance. Although we have partially
+alleviated this by simplifying several of the equations, our implementation is still
+noticeably slower than other traders. It may be possible in the future to look
+into different functions to model the aggressiveness and long term learning,
+with the goal of improving efficiency.
 
 \bibliographystyle{unsrt}
 \bibliography{algo_report}
