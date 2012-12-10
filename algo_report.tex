@@ -41,13 +41,13 @@ Bristol Stock Exchange}
 \maketitle
 \begin{abstract}
 As robot traders are now commonplace within the financial environment
-\cite{nyse_press}, we
-wished to evaluate various algorithmic trading strategies. Our primary focus was
-the  Adaptive Aggressive algorithm considered to be one of the
-best in the field \cite{AA_thesis}. We experimented with different parameters for the algorithm
-and then evaluated the performance of it against other common traders,
-including ZIP and ZIC \cite{ZIP_paper1}, finding that it conclusively
-outperformed these approaches.\\
+\cite{nyse_press}, we wished to evaluate various algorithmic trading
+strategies. Our primary focus was the  Adaptive Aggressive algorithm,
+considered to be one of the best in the field \cite{AA_thesis}. We wrote our
+own implementation of the Adaptive Aggressive algorithm, experimenting with
+different parameters. After which we evaluated the performance of AA
+against other common traders, including ZIP and ZIC \cite{ZIP_paper1}, finding
+that it conclusively outperformed these traders.\\
 \end{abstract}
 
 \section{Introduction} \label{sec:introduction}
@@ -56,12 +56,13 @@ outperformed these approaches.\\
 % - What our goal was
 
 An automated trader is an algorithm that automatically places trading orders on
-an electronic market. In 2012 on the New York Stock Exchange program trading accounted for between 
-30\% and 40\% of the trade volume \cite{nyse_press}.
-A trader receives buy and sell orders from customers where an order consists of a price the customer 
-wants to trade at and the volume they want to trade.
-The trader makes money through the margin between the order price and the price they trade at.
-A trading strategy has to balance the profit margins with the change of completing a trade to maximise profit.
+an electronic market. In 2012, on the New York Stock Exchange, program trading
+accounted for between 30\% and 40\% of the trade volume \cite{nyse_press}.  A
+trader receives buy and sell orders from customers where an order consists of a
+price the customer wants to trade at and the volume they want to trade.  The
+trader makes money through the margin between the order price and the price
+they trade at.  A trading strategy has to balance the profit margins with the
+change of completing a trade to maximise profit.
 
 In a double auction the bids and asks determine the price of the commodity.
 When a bid equals or exceeds a seller's ask the bid is accepted and the trade
@@ -69,15 +70,16 @@ occurs. Experiments have shown  that the prices in the market will
  converge on the price equilibrium in a number of market
 environments \cite{smith_1962}.
 
-IBM published a paper in 2001 that showed that their Modified Gjerstad Dickhaut (MGD) trading strategy and
-Dave Cliff's ZIP were able to outperform human traders \cite{ibm_human}.
-Algorithmic strategies are able to react more quickly to changing market
-conditions and combine information from multiple sources.
+IBM published a paper in 2001 that showed that their Modified Gjerstad Dickhaut
+(MGD) trading strategy and Dave Cliff's ZIP were able to outperform human
+traders \cite{ibm_human}.  Algorithmic strategies are able to react more
+quickly to changing market conditions and combine information from multiple
+sources.
 
 In this paper we experiment with different trading strategies for the
-continuous double auction.
-We implement the Adaptive Aggressive strategy \cite{AA_thesis} and compare its performance 
-with other adaptive algorithms and simpler traders.\\
+continuous double auction.  We write our own implementation the Adaptive
+Aggressive strategy \cite{AA_thesis} and compare its performance with other
+adaptive algorithms and simpler traders.\\
 
 
 
@@ -141,8 +143,8 @@ allows them to adjust their profit margin in response to other completed trades 
 current market conditions. In turn this defines their current offer(s). This algorithm allows surprisingly complex behaviour with a 
 minimal performance cost.
 
-The key parameters in the algorithm are the learning rate, $\beta$ --- which represents how quickly 
-the trader reacts to market change; and the `momentum', $\gamma$ --- which represents how market 
+The key parameters in the algorithm are the learning rate ($\beta$) --- which represents how quickly 
+the trader reacts to market change; and the `momentum' ($\gamma$) --- which represents how market 
 volatility is smoothed over. More accurately, the learning rate controls how quickly the algorithm 
 moves towards its current target price while the momentum controls how quickly the algorithm changes 
 its profit margin over time.
@@ -190,7 +192,7 @@ will be accepted by a seller.
 The buyer then aims to maximise their profit through a combination of margin
 and chance of trading.
 The belief values are formed based on observed trades and outstanding shouts.
-The GD strategy makes some simple assumptions, such as: if a bid was rejected a
+The GD strategy makes some simple assumptions, for instance if a bid was rejected a
 lower bid will also be rejected since it will be less attractive to a seller.
 The results of the experiments showed that GD has a higher price efficiency than ZIC.
 The price efficiency is the margin divided by the maximum theoretical margin
@@ -222,8 +224,8 @@ Dynamic Programming is used to compute optimal policies in Markov Decision
 Problems.
 The emphasis placed between short and long term rewards can be controlled using
 the discount value ($\gamma$).
-$\gamma = 0$ will result in the same behaviour as the standard GD strategy
-(short-term reward) while $\gamma = 1$ will cause GDX to maximise the long term
+A $\gamma$ value of 0 will result in the same behaviour as the standard GD strategy
+(short-term reward) while a value of 1 will cause GDX to maximise the long term
 reward.
 However setting $\gamma$ close to 1 will cause GDX to always wait for a better
 deal and thus not make any trades.
@@ -266,18 +268,17 @@ passive buyer ($r = -1$) will bid at the minimum market price (\$1 on the BSE).\
 One of the key features that most trading algorithms rely on is the ability to
 estimate the equilibrium price of the market. For this we used the following
 equation which estimates the market equilibrium price based on the $N$ most
-recent transactions, known as a weighted moving average.
-\begin{equation}
-    \hat p^* = \frac{\sum^T_{i=T-N+1}w_ip_i}{\sum^T_{i=T-N+1}w_i}\\
-    \label{eqn:equilibrium_estimator}
-\end{equation}
-where $w_T = 1$ and $w_{i-1} = \lambda w_i$.
+recent transactions, known as a weighted moving average.  \begin{equation} \hat
+p^* = \frac{\sum^T_{i=T-N+1}w_ip_i}{\sum^T_{i=T-N+1}w_i}\\
+\label{eqn:equilibrium_estimator} \end{equation} where $w_T = 1$ and $w_{i-1} =
+\lambda w_i$.
 
 The $w_i$ weights the transactions so more weight is given to more recent
-transactions. A lower $\lambda$ value will increase the emphasis on more recent trades. We set the 
-value of $\lambda$ to 0.9 which was the value recommended in the original paper 
-\cite[p.~100]{AA_thesis}. We also investigated the effect of different values of $\lambda$ on the algorithm's 
-performance, the results of which are detailed in Section \ref{sec:calibration_lambda}.\\
+transactions. A lower $\lambda$ value will increase the emphasis on recent
+trades. We set the value of $\lambda$ to 0.9 which was the value recommended in
+the original paper \cite[p.~100]{AA_thesis}. We also investigated the effect of
+different values of $\lambda$ on the algorithm's performance, the results of
+which are detailed in Section \ref{sec:calibration_lambda}.\\
 
 
 
@@ -459,13 +460,15 @@ a rate determined by a constant ($\beta_1$):
     r(t+1) = r(t) + \beta_1 \cdot (\delta(t) - r(t))
   \label{eqn:update_aggressive}
 \end{equation}
-The effect that different values of $\beta_1$ have on performance is explored in Section \ref{sec:calibration_beta}.
+The effect that different values of $\beta_1$ have on performance is explored
+in Section \ref{sec:calibration_beta}.
 
-The function $\delta(t)$ is primarily dependent on the value of $r_{shout}$, the aggressiveness that 
-would give a target price of the best outstanding shout when used in the equations found in Section 
-\ref{sec:AA_price_estimation}. The value of $r_{shout}$ is calculated by reversing the aforementioned 
-equations, as seen in the example given in Equation \ref{eqn:reverse_intra_buyer} which calculates 
-$r_{shout}$ from the reverse of the intra-marginal buyer.
+The function $\delta(t)$ is primarily dependent on the value of $r_{shout}$,
+the aggressiveness that would give a target price of the best outstanding shout
+(when used in the equations found in Section \ref{sec:AA_price_estimation}). The
+value of $r_{shout}$ is calculated by reversing the aforementioned equations,
+as seen in the example given in Equation \ref{eqn:reverse_intra_buyer} which
+calculates $r_{shout}$ from the reverse of the intra-marginal buyer.
 \begin{equation}
 r_{shout}=
 \begin{cases}
@@ -478,13 +481,14 @@ r_{shout}=
 \label{eqn:reverse_intra_buyer}
 \end{equation}
 
-When we wish to become more aggressive we set our target aggressiveness slightly higher than the
-value of $r_{shout}$, conversely slightly lower when we wish to become less aggressive. This is accomplished by
-setting the sign of $\lambda_r$ and $\lambda_a$ where positive $\lambda$ values increase aggressiveness,
- whereas negative $\lambda$ values decrease aggressiveness.
-The actual values of $\lambda_r$ and $\lambda_a$ represent the relative and absolute difference from $r_{shout}$
-respectively. The absolute change exists to prevent $r$ from never being able
-to update from a value of 0.\\
+When we wish to become more aggressive we set our target aggressiveness
+slightly higher than the value of $r_{shout}$, conversely slightly lower when
+we wish to become less aggressive. This is accomplished by setting the sign of
+$\lambda_r$ and $\lambda_a$ where positive $\lambda$ values increase
+aggressiveness and negative $\lambda$ values decrease aggressiveness.  The
+actual values of $\lambda_r$ and $\lambda_a$ represent the relative and
+absolute difference from $r_{shout}$ respectively. The absolute change exists
+to prevent $r$ from never being able to update from a value of 0.\\
 
 
 
@@ -494,34 +498,38 @@ to update from a value of 0.\\
 The Adaptive Aggressive algorithm takes into account the volatility of the market, tracked using the
 $\alpha$ value, and adjusts its behaviour accordingly by altering the relationship between aggressiveness and price.
 
-The  value of $\alpha$ (see Equation \ref{eqn:alpha}) is calculated
-by looking at the variance of the last $N$ trades around the market equilibrium.
-If the majority of trades are close to the equilibrium price then we are in
-a stable market and vice versa. The smallest and largest expected market volatility are represented 
-by $\alpha_{min}$ and $\alpha_{max}$ (these are initialised to 0.02 and 0.15 respectively).
+The  value of $\alpha$ (see Equation \ref{eqn:alpha}) is calculated by looking
+at the variance of the last $N$ trades around the market equilibrium.  If the
+majority of trades are close to the equilibrium price then we are in a stable
+market and vice versa. The smallest and largest recorded market volatility are
+represented by $\alpha_{min}$ and $\alpha_{max}$ (these are initialised to 0.02
+and 0.15 respectively).
 \begin{equation}
   \alpha = \frac{\sqrt{\frac 1 N \sum^T_{i=T-N+1}(p_i-\hat p^*)^2}}{\hat p^*}
   \label{eqn:alpha}
 \end{equation}
-This long term learning is accomplished by incorporating a variable ($\theta$) which is updated every
-timestep to move towards $\theta^*(\alpha)$ at a rate determined by $\beta_2$ (see Equation \ref{eqn:update_theta}).
-The larger the value of $\beta_2$ the faster we converge towards $\theta^*$. We initially set the 
-learning rate to 0.5, however we also investigated different values of $\beta_2$, as discussed in 
-Section \ref{sec:calibration_beta}.
+This long term learning is accomplished by incorporating a variable ($\theta$)
+which is updated every timestep to move towards $\theta^*(\alpha)$, see
+following paragraph, at a rate
+determined by $\beta_2$ (see Equation \ref{eqn:update_theta}).  The larger the
+value of $\beta_2$ the faster we converge towards $\theta^*$. We initially set
+the learning rate to 0.5, however, we also investigated different values of
+$\beta_2$, as discussed in Section \ref{sec:calibration_beta}.
 \begin{equation}
   \theta(t+1)=\theta(t)+\beta_2(\theta^*(\alpha)-\theta_t)
   \label{eqn:update_theta}
 \end{equation}
-The value of $\theta^*(\alpha)$ represents the value of $\theta$ that will allow us to act optimally in a
-market with a volatility of $\alpha$. A high value of $\theta$ is desirable in a stable market.
+The value of $\theta^*(\alpha)$ represents the value of $\theta$ that will
+allow us to act optimally in a market with a volatility of $\alpha$. A high
+value of $\theta$ is desirable in a stable market.
 \begin{equation}
   \theta^*(\alpha) = (\theta_{max}-\theta_{min})
-  \left(\frac{1-e^{\gamma\left(\frac{(\alpha-\alpha_{min})}{(\alpha_{max}
-  -\alpha_{min})}-1\right)}}{1-e^{-\gamma}}\right)
+  \left(\frac{1-e^{\gamma\left(\frac{\alpha-\alpha_{min}}{\alpha_{max}
+  -\alpha_{min}}-1\right)}}{1-e^{-\gamma}}\right)
   \label{thetastar}
 \end{equation}
-This value of $\theta^*$ is scaled with
-respect to a minimum and maximum value, $\theta_{min}$ and $\theta_{max}$, constants that are hard coded into the
+This value of $\theta^*$ is scaled with respect to a minimum and maximum value,
+$\theta_{min}$ and $\theta_{max}$, constants that are hard coded into the
 function (we used -8 and 2 respectively).
 
 \begin{figure}[H]
