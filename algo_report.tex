@@ -42,12 +42,12 @@ Bristol Stock Exchange}
 \begin{abstract}
 As robot traders are now commonplace within the financial environment
 \cite{nyse_press}, we
-wished to evaluate various robotic trading strategies. Our primary focus was
+wished to evaluate various algorithmic trading strategies. Our primary focus was
 the  Adaptive Aggressive algorithm considered to be one of the
 best in the field \cite{AA_thesis}. We experimented with different parameters for the algorithm
 and then evaluated the performance of it against other common traders,
 including ZIP and ZIC \cite{ZIP_paper1}, finding that it conclusively
-outperformed other approaches.
+outperformed these approaches.\\
 \end{abstract}
 
 \section{Introduction} \label{sec:introduction}
@@ -57,27 +57,27 @@ outperformed other approaches.
 
 An automated trader is an algorithm that automatically places trading orders on
 an electronic market. In 2012 on the New York Stock Exchange program trading accounted for between 
-30\% and 40\% of the trade volume\cite{nyse_press}.
+30\% and 40\% of the trade volume \cite{nyse_press}.
 A trader receives buy and sell orders from customers where an order consists of a price the customer 
 wants to trade at and the volume they want to trade.
 The trader makes money through the margin between the order price and the price they trade at.
 A trading strategy has to balance the profit margins with the change of completing a trade to maximise profit.
 
 In a double auction the bids and asks determine the price of the commodity.
-When a bid equals or exceeds a seller's asks the bid is accepted and the trade
+When a bid equals or exceeds a seller's ask the bid is accepted and the trade
 occurs. Experiments have shown  that the prices in the market will
  converge on the price equilibrium in a number of market
-environments\cite{smith_1962}.
+environments \cite{smith_1962}.
 
 IBM published a paper in 2001 that showed that their Modified Gjerstad Dickhaut (MGD) trading strategy and
-Dave Cliff's ZIP were able to outperform human traders\cite{ibm_human}.
+Dave Cliff's ZIP were able to outperform human traders \cite{ibm_human}.
 Algorithmic strategies are able to react more quickly to changing market
 conditions and combine information from multiple sources.
 
 In this paper we experiment with different trading strategies for the
 continuous double auction.
-We have implemented the Adaptive Aggressive \cite{AA_thesis} strategy and compare its performance 
-with other adaptive algorithms and other simpler traders.\\
+We implement the Adaptive Aggressive strategy \cite{AA_thesis} and compare its performance 
+with other adaptive algorithms and simpler traders.\\
 
 
 
@@ -97,14 +97,13 @@ random trader is asked to make a shout. If the maximum bid in the market
 exceeds or equals the minimum ask a trade occurs. Each trader is updated with
 any orders or trades that have occurred since the last update.
 
-Some trading algorithms require more depth in the order book. The Modified
-Gjerstad Dickhaut (MGD) algorithm needs to be able to match trades with
+Some trading algorithms require more depth in the order book. The MGD algorithm needs to be able to match trades with
 outstanding orders to build up the accepted and rejected order histories.
 This is covered in more detail in Section \ref{sec:traders_GDV}. The
 other traders in our experiments only need Level 1 data
 (bid-high and ask-low).
 
-Traders are assigned orders to a given supply and demand schedule. BSE supports three method of price 
+Traders are assigned orders to a given supply and demand schedule. BSE supports three methods of price 
 generation: \emph{Fixed}, \emph{Random} and \emph{Jittered}. \emph{Fixed} price generation maintains 
 a constant difference between orders when they are sorted by price. The \emph{Random} mode generates 
 orders uniformly at random in a given range while \emph{Jittered} mode is similar to \emph{Fixed} 
@@ -139,7 +138,7 @@ implementation of ZIC provided in the BSE (Section \ref{sec:BSE}).\\
 Zero-Intelligence-Plus (ZIP) traders were invented in 1997 and designed to improve on ZIC traders 
 (Section \ref{sec:traders_ZIC}) \cite{ZIP_paper1}. They make use of a simple learning mechanism which 
 allows them to adjust their profit margin in response to other completed trades on the market --- thus reacting to 
-current market conditions. In turn this defines the their current offer(s). This simplistic algorithm allows surprisingly complex behaviour with a 
+current market conditions. In turn this defines their current offer(s). This algorithm allows surprisingly complex behaviour with a 
 minimal performance cost.
 
 The key parameters in the algorithm are the learning rate, $\beta$ --- which represents how quickly 
@@ -204,10 +203,8 @@ The GD belief function for a seller is given by:
   f(p) = \frac{\text{AAG}(p) + \text{BG}(p)}{\text{AAG}(p) + \text{BG}(p) +
   \text{UAL}(p)}
 \end{equation}
-
-$\text{AAG}(p)$ is the number of accepted asks in the history window $\geq p$.
-$\text{BG}(p)$ is
-the number of bids $\geq p$. $\text{UAL}(p)$ is the number of unaccepted asks $\leq p$.
+where $\text{AAG}(p)$ is the number of accepted asks in the history window $\geq p$.
+$\text{BG}(p)$ is the number of bids $\geq p$. $\text{UAL}(p)$ is the number of unaccepted asks $\leq p$.
 
 Modified Gjerstad Dickhaut (MGD) \cite{mgd} is a version of GD that
 is better suited to volatile conditions that can occur at the start of a
@@ -260,8 +257,8 @@ trade but increasing the amount of profit you will make upon a successful trade.
 
 The Adaptive Aggressive algorithm maintains an aggressiveness value ($r$) which
 determines how close to your limit price you will be trading. A completely
-aggressive buyer ($r = 1$) will buy at their limit price whilst a completely
-passive trader ($r = -1$) will buy at the minimum market price (\$1 on the BSE).\\
+aggressive buyer ($r = 1$) will bid at their limit price whilst a completely
+passive buyer ($r = -1$) will bid at the minimum market price (\$1 on the BSE).\\
 
 
 
@@ -279,7 +276,7 @@ where $w_T = 1$ and $w_{i-1} = \lambda w_i$.
 The $w_i$ weights the transactions so more weight is given to more recent
 transactions. A lower $\lambda$ value will increase the emphasis on more recent trades. We set the 
 value of $\lambda$ to 0.9 which was the value recommended in the original paper 
-\cite[p.~100]{AA_thesis}. We also investigated the effect of different values of $\lambda$ on AA's 
+\cite[p.~100]{AA_thesis}. We also investigated the effect of different values of $\lambda$ on the algorithm's 
 performance, the results of which are detailed in Section \ref{sec:calibration_lambda}.\\
 
 
@@ -291,7 +288,7 @@ performance, the results of which are detailed in Section \ref{sec:calibration_l
 The Adaptive Aggressive algorithm calculates the price of its shout by
 computing a target price ($\tau$) which is dependent upon
 the state of the market. However, before we can go into detail, we must define
-two concepts: an intra-marginal trader is a trader that bids above the
+two concepts: intra-marginal and extra marginal traders. An intra-marginal trader bids above the
 equilibrium if they are a buyer (or asks below the equilibrium if they are a
 seller) whereas an extra-marginal trader will never trade above the
 equilibrium if they are a buyer (or below the equilibrium if they are a
@@ -366,11 +363,11 @@ ensuring the first derivatives of the equations are continuous. However, we foun
 $\theta$ was sufficiently accurate and greatly simplified the above equations.
 
 One of the equations is selected to determine the ideal price that we aim to
-trade at. Then the following rules are used to determine the actual shout
+trade at. The following rules are then used to determine the actual shout
 that we will make when asked to submit a new order. The $o_{bid}$ and $o_{ask}$
 represent the highest bid and lowest ask on the market that have
 not yet been accepted. The value of $\eta$ is set as a parameter and reflects
-how quickly we converge on our estimated price (higher $\eta$ causes slower convergence).
+how quickly we converge on our estimated price (higher $\eta$ causes slower convergence). We investigated the effect of different $\eta$ values on profits as detailed in Section \ref{sec:calibration_eta}.
 
 %\textbf{Bidding rules for buyer:}
 \begin{algorithm}[H]
@@ -462,7 +459,7 @@ a rate determined by a constant ($\beta_1$):
     r(t+1) = r(t) + \beta_1 \cdot (\delta(t) - r(t))
   \label{eqn:update_aggressive}
 \end{equation}
-The affect that different values of $\beta_1$ have on performance is explored in Section \ref{sec:calibration_beta}.
+The effect that different values of $\beta_1$ have on performance is explored in Section \ref{sec:calibration_beta}.
 
 The function $\delta(t)$ is primarily dependent on the value of $r_{shout}$, the aggressiveness that 
 would give a target price of the best outstanding shout when used in the equations found in Section 
@@ -500,7 +497,7 @@ $\alpha$ value, and adjusts its behaviour accordingly by altering the relationsh
 The  value of $\alpha$ (see Equation \ref{eqn:alpha}) is calculated
 by looking at the variance of the last $N$ trades around the market equilibrium.
 If the majority of trades are close to the equilibrium price then we are in
-a stable market and vice versa. The smallest and largest market volatility to date are represented 
+a stable market and vice versa. The smallest and largest expected market volatility are represented 
 by $\alpha_{min}$ and $\alpha_{max}$ (these are initialised to 0.02 and 0.15 respectively).
 \begin{equation}
   \alpha = \frac{\sqrt{\frac 1 N \sum^T_{i=T-N+1}(p_i-\hat p^*)^2}}{\hat p^*}
@@ -558,7 +555,7 @@ calculated target price. A higher value of $\eta$ will increase the time taken
 to converge on the target price, making the trader slower to react to market
 events. 
 
-We tested various values of $\eta$ across 3000 market sessions in
+We tested various values of $\eta$ across 3,000 market sessions in
 order to test the effect on Adaptive Aggressive's performance, including $\eta
 = 3$, the value recommended in the original thesis \cite{AA_thesis}.
 \begin{table}[H]
@@ -585,7 +582,7 @@ As is illustrated in Table \ref{tbl:eta_results}, as long as $\eta$ is
 within reasonable limits, between 3 and 10 in our example, it does not
 significantly impact the performance. However, setting $\eta$ too low would cause outlier trades to have a significant
 impact on our shout price. Conversely setting $\eta$ too high causes the
-algorithm to be too slow to react. Both of these are backed up by data in Table
+algorithm to be slow to react. Both of these are backed up by data in Table
 \ref{tbl:eta_results}.\\
 
 
@@ -597,18 +594,14 @@ and $\theta$ respectively.  We update our aggressiveness and $\theta$ values
 more often than in the original Adaptive Aggressive paper \cite{AA_thesis}.
 Whilst this is advantageous as it allows us to adapt to rapidly changing market
 conditions, it means that our learning rates have to be comparatively lower to
-avoid the algorithm effectively learning immediately. You would therefore
-expect that learning rates that are very high, or very low, would have an
-adverse effect on the performance of the trader. However, we ran tests over
-4000 market sessions with various different values of $\beta_1$ and
-$\beta_2$ , the results are shown in Table \ref{tbl:beta_results}.  The average
-profit made by the Adaptive Aggressive algorithm did not appear to be heavily
-affected by the variation in either of the two $\beta$ values.  However, if we
-set the value of $\beta_1$ to zero then we have a marked drop in performance,
-this is because the aggressiveness will be constant and our algorithm will not
-be able to adapt to changing market conditions. A value of zero for $\beta_2$,
-$\theta$ becomes constant, does not appear to have a significant effect. 
-%TODO EXPLAIN SOMEHOW???
+avoid the algorithm effectively learning immediately. Learning rates that are very high, or very low, should have an
+adverse effect on the performance of the trader. We ran tests over
+4,000 market sessions with various different values of $\beta_1$ and
+$\beta_2$, the results are shown in Table \ref{tbl:beta_results}.  The average
+profit made by the Adaptive Aggressive algorithm did not appear to be significantly affected by the $\beta_2$ value. Variation in $\beta_1$ had more of an effect; setting the value of $\beta_1$ to zero gave a marked drop in performance.
+This is because the aggressiveness will be constant and our algorithm will not
+be able to adapt to changing market conditions. With a value of zero for $\beta_2$,
+$\theta$ becomes constant although this does not appear to have a significant effect on profits. 
 \begin{table}[H]
   \centering
   \begin{tabular}{ | c | C{2.7cm} | C{2.7cm} | }
@@ -616,26 +609,26 @@ $\theta$ becomes constant, does not appear to have a significant effect.
     \multirow{2}{*}{\textbf{Value ($v$)}} & \multicolumn{2}{ c | }{\textbf{Average finishing balance (3 dp.)}} \\
     & $\beta_1 = v, ~ \beta_2 = 0.5$ & $\beta_1 = 0.5, ~ \beta_2 = v$ \\
     \hline
-        0.00 & 109.388 & 128.071 \\
-        0.01 & 127.431 & 128.212 \\
-        0.02 & 128.318 & 128.157 \\
-        0.03 & 128.971 & 128.366 \\
-        0.04 & 129.551 & 128.177 \\
-        0.05 & 129.666 & 128.088 \\
-        0.06 & 129.864 & 128.308 \\
-        0.07 & 129.797 & 128.000 \\
-        0.08 & 129.698 & 128.100 \\
-        0.09 & 129.570 & 128.173 \\
-        0.10 & 129.138 & 128.903 \\
-        0.20 & 129.038 & 129.287 \\
-        0.30 & 129.312 & 129.376 \\
-        0.40 & 129.230 & 129.344 \\
-        0.50 & 129.467 & 129.081 \\
-        0.60 & 129.062 & 129.187 \\
-        0.70 & 129.164 & 128.947 \\
-        0.80 & 129.137 & 129.144 \\
-        0.90 & 129.271 & 129.405 \\
-        1.00 & 129.286 & 129.368 \\
+        0.00 & 112.970 & 128.071 \\
+        0.01 & 124.706 & 128.212 \\
+        0.02 & 125.680 & 128.157 \\
+        0.03 & 126.911 & 128.366 \\
+        0.04 & 127.360 & 128.177 \\
+        0.05 & 127.744 & 128.088 \\
+        0.06 & 127.607 & 128.308 \\
+        0.07 & 127.770 & 128.000 \\
+        0.08 & 128.672 & 128.100 \\
+        0.09 & 128.827 & 128.173 \\
+        0.10 & 128.839 & 128.903 \\
+        0.20 & 129.402 & 129.287 \\
+        0.30 & 129.097 & 129.376 \\
+        0.40 & 128.766 & 129.344 \\
+        0.50 & 129.228 & 129.081 \\
+        0.60 & 129.510 & 129.187 \\
+        0.70 & 129.023 & 128.947 \\
+        0.80 & 129.384 & 129.144 \\
+        0.90 & 129.480 & 129.405 \\
+        1.00 & 129.357 & 129.368 \\
     \hline \hline
     ZIC & \multicolumn{2}{ c | }{ 89.030} \\
     ZIP & \multicolumn{2}{ c | }{117.461} \\
@@ -648,11 +641,9 @@ $\theta$ becomes constant, does not appear to have a significant effect.
 
 
 \subsection{$\lambda$ parameter} \label{sec:calibration_lambda}
-The constant $\lambda$ affects the weighting %TODO
-
-We tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over 8000
-market sessions (of 600 timesteps each) to find their effect on AA's
-performance. We didn't find any statistically significant difference between
+The constant parameter $\lambda$ controls the weighting of prices in the trade history. The higher the $\lambda$ value the more weight will be given to older trades. We tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over 8,000
+market sessions to find their effect on our trader's
+performance. We did not find any statistically significant difference between
 the different values. 
 
 \begin{table}[H]
@@ -684,7 +675,7 @@ the different values.
 \begin{figure}[H]
   \centering
   \includegraphics[width=\columnwidth]{graphs_and_stats/graph_equilibriums.pdf}
-  \caption{The affect of the weighting value on the price equilibrium
+  \caption{The effect of the weighting value on the price equilibrium
   \label{fig:equilibrium}
   estimate.}
 \end{figure}
@@ -700,7 +691,7 @@ the different values.
 % - Other graphs
 In this section we compare the performance of the Adaptive Aggressive trader
 with other traders as well as looking at how specific aspects of the Adaptive
-Aggressive algorithm work in practise.\\
+Aggressive algorithm work in practice.\\
 
 
 \subsection{Aggressiveness} \label{sec:evaluation_aggressiveness} 
@@ -732,7 +723,7 @@ our limit price and the market equilibrium is increasing.
 \begin{figure}[H] 
 \centering
 \includegraphics[width=\columnwidth]{graphs_and_stats/graph_aggressiveness_vs_price.pdf}
-\caption{Aggressive and price equilibrium throughout a trading day for an AA
+\caption{Aggressiveness and price equilibrium throughout a trading day for an AA
   buyer.}
   \label{fig:avtime}
 \end{figure}
@@ -747,7 +738,7 @@ most stable then decreases as the market begins to oscillate.
 The reason the $\theta$ value is unstable is due to the fact that at the
 extremes of the sine wave all previous trades appear to be very far from the
 current equilibrium estimate, resulting in the trader believing the market is
-extremely volatile. On the other hand the slope represent a value where the
+extremely volatile. On the other hand the slope represents a value where the
 equilibrium price is closer to the average price in the trade history.
 \begin{figure}[H]
   \centering
@@ -762,7 +753,7 @@ In order to evaluate the performance of our Adaptive Aggressive trading
 algorithm we ran 22,750 market sessions with different ratios of AA, SHVR, ZIC
 and ZIP traders (half buyers, half sellers). For each ratio 50 market sessions
 were run and the results are presented in Table \ref{tbl:results}. As
-illustrated, we can see that Adaptive Aggressive comprehensively outperformed all of the other
+illustrated, we can see that the Adaptive Aggressive trader comprehensively outperformed all of the other
 traders.
 
 \begin{table}[H]
@@ -787,19 +778,18 @@ traders.
 
 The Wilcoxon signed-rank test was used to evaluate the significance of the
 results. The null hypothesis is that the difference between the pairs of
-traders is zero. For each trader paired with Adaptive Aggressive we can reject
+traders is zero. For each trader paired with the Adaptive Aggressive trader we can reject
 the null hypothesis ($p < 2.2 \cdot 10^{-308}$). The results using fixed and
 jittered price generation were virtually identical.
 
 \begin{figure}[H]
   \centering
   \includegraphics[width=\columnwidth]{graphs_and_stats/graph_average_balance_vs_time.pdf}
-  \caption{Average balance over 22750 trials.}
+  \caption{Average balance over 22,750 trials.}
   \label{fig:average_balance_vs_time}
 \end{figure}
 
-The graph of performance through a trading day in Figure
-\ref{fig:average_balance_vs_time} shows that Adaptive Aggressive consistently
+Figure \ref{fig:average_balance_vs_time} graphs performance throughout a trading day and shows that the Adaptive Aggressive trader consistently
 makes more profit.
 
 We also compared how well the Adaptive Aggressive algorithm performed against
@@ -807,7 +797,7 @@ only ZIP across 10,000 market sessions. This was done to verify that the
 Adaptive Aggressive algorithm is not just exploiting weaker traders which would
 not exist in a real world competitive market. As is visible in Table
 \ref{tbl:two_traders} with just two traders in the market the difference
-between Adaptive Aggressive and ZIP is even more pronounced.
+between AA and ZIP is even more pronounced.
 \begin{table}[H]
   \centering
   \begin{tabular}{ | c | c | }
@@ -823,16 +813,15 @@ between Adaptive Aggressive and ZIP is even more pronounced.
 \end{table}
 
 We ran the Wilcoxon signed-rank test on the values in Table
-\ref{tbl:two_traders} which resulted in $p < 2.2 \cdot 10^{-308}$. The AA
-traders outperformed the ZIP traders 99.66\% of the time. ZIP performs worse in
-a market with just Adaptive Aggressive traders which suggests ZIP was reliant on trades with the
+\ref{tbl:two_traders} which resulted in $p < 2.2 \cdot 10^{-308}$ which proves that AA is better than ZIP in this market. The Adaptive Aggressive
+traders outperformed the ZIP traders 99.66\% of the time. Since ZIP performs worse it suggests that ZIP was reliant on trades with the
 ZIC and SHVR traders.\\
 
 
 \subsection{Comparison of traders using the disjoint order schedule}
 
 We also ran an experiment comparing the performance of Adaptive Aggressive, ZIP
-and ZIC traders, across 1000 market sessions, using a different order schedule.
+and ZIC traders, across 1,000 market sessions, using a different order schedule.
 This divides the
 market up into three phases each with a  different limit range. For each phase,
 every trader receives a random limit from the respective range. The results of this
@@ -855,7 +844,7 @@ In this experiment ZIP and Adaptive Aggressive had similar performance. We ran t
 Wilcoxon signed-rank test with a significance threshold of 0.05 which concluded
 that Adaptive Aggressive and ZIP were not significantly different. However,
 since the ZIC trader was also relatively competitive, it suggests that this is
-not an accurate representation of a real world market.\\
+not an accurate representation of a real world market as ZIC is essentially random.\\
 
 % TODO: Big graph of time and price
 
