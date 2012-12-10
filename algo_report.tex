@@ -22,7 +22,7 @@
 \makeatother
 
 \begin{document}
-\title{Analysis of Adaptive Aggressiveness on the\\
+\title{Analysis of Adaptive Aggressive on the\\
 Bristol Stock Exchange}
 \numberofauthors{3} 
 \author{
@@ -68,8 +68,10 @@ Bristol Stock Exchange}
 % - What our goal was
 
 An automated trader is an algorithm that automatically places trading orders on
-an electronic market. In 2012 on the New York Stock Exchange program trading accounted for between 30\% and 40\% of the trade volume\cite{nyse_press}.
-A trader receives buy and sell orders from customers where an order consists of a price the customer wants to trade at and the volume they want to trade.
+an electronic market. In 2012 on the New York Stock Exchange program trading accounted for between 
+30\% and 40\% of the trade volume\cite{nyse_press}.
+A trader receives buy and sell orders from customers where an order consists of a price the customer 
+wants to trade at and the volume they want to trade.
 The trader makes money through the margin between the order price and the price they trade at.
 A trading strategy has to balance the profit margins with the change of completing a trade to maximise profit.
 
@@ -86,7 +88,8 @@ conditions and combine information from multiple sources.
 
 In this paper we experiment with different trading strategies for the
 continuous double auction.
-We have implemented the Adaptive Aggressiveness\cite{AA_thesis} strategy and compare its performance with other adaptive algorithms and other simpler traders.\\
+We have implemented the Adaptive Aggressive \cite{AA_thesis} strategy and compare its performance 
+with other adaptive algorithms and other simpler traders.\\
 
 
 
@@ -113,7 +116,15 @@ This is covered in more detail in Section \ref{sec:traders_GDV}. The
 other traders in our experiments only need Level 1 data
 (bid-high and ask-low).
 
-Traders are assigned orders to a given supply and demand schedule. BSE supports three method of price generation: \emph{Fixed}, \emph{Random} and \emph{Jittered}. \emph{Fixed} price generation maintains a constant difference between orders when they are sorted by price. The \emph{Random} mode generates orders uniformly at random in a given range while \emph{Jittered} mode is similar to \emph{Fixed} except that it adds a small amount of noise --- making it closer to a real world exchange. There are also three options for determining when orders are submitted to traders: \emph{Drip Fixed}, \emph{Drip Jittered} and \emph{Drip Poission}. With \emph{Drip Fixed} orders arrive at a fixed interval, \emph{Drip Jittered} is similar but with a small amount of added noise and finally \emph{Drip Poisson} models the arrival of orders as a Poisson process.\\
+Traders are assigned orders to a given supply and demand schedule. BSE supports three method of price 
+generation: \emph{Fixed}, \emph{Random} and \emph{Jittered}. \emph{Fixed} price generation maintains 
+a constant difference between orders when they are sorted by price. The \emph{Random} mode generates 
+orders uniformly at random in a given range while \emph{Jittered} mode is similar to \emph{Fixed} 
+except that it adds a small amount of noise --- making it closer to a real world exchange. There are 
+also three options for determining when orders are submitted to traders: \emph{Drip Fixed}, 
+\emph{Drip Jittered} and \emph{Drip Poission}. With \emph{Drip Fixed} orders arrive at a fixed 
+interval, \emph{Drip Jittered} is similar but with a small amount of added noise and finally 
+\emph{Drip Poisson} models the arrival of orders as a Poisson process.\\
 
 
 
@@ -143,7 +154,8 @@ allows them to adjust their profit margin in response to other completed trades 
 current market conditions. In turn this defines the their current offer(s). This simplistic algorithm allows surprisingly complex behaviour with a 
 minimal performance cost.
 
-The key parameters in the algorithm are the learning rate, $\beta$ --- which represents how quickly the trader reacts to market change; and the `momentum', $\gamma$ --- which represents how market 
+The key parameters in the algorithm are the learning rate, $\beta$ --- which represents how quickly 
+the trader reacts to market change; and the `momentum', $\gamma$ --- which represents how market 
 volatility is smoothed over. More accurately, the learning rate controls how quickly the algorithm 
 moves towards its current target price while the momentum controls how quickly the algorithm changes 
 its profit margin over time.
@@ -184,8 +196,8 @@ We used the implementation of the ZIP algorithm provided in the BSE (Section \re
 % - MGD anonymised data (see BSE paragraph 2)
 % - We implemented it but couldn't do a full implementation
 
-The Gjerstad Dickhaut (GD) trading strategy was invented by Steven Gjerstad and John Dickhaut in their 1998 paper \emph{Price Formation in Double
-Auctions} \cite{gd}.
+The Gjerstad Dickhaut (GD) trading strategy was invented by Steven Gjerstad and John Dickhaut in 
+their 1998 paper \emph{Price Formation in Double Auctions} \cite{gd}.
 GD works by building a belief function of whether a bid at a particular price
 will be accepted by a seller.
 The buyer then aims to maximise their profit through a combination of margin
@@ -407,7 +419,10 @@ Initially when we ran our algorithm we found that it was occasionally making a
 loss upon receiving a new order from the scheduler containing a different limit
 price. This was because our last shout had been submitted using
 the limit price from the previous order (which may now be outside the range
-we are allowed to trade within). We therefore added additional logic to detect a new order enabling us to react appropriately. Since on the Bristol Stock Exchange it is not possible to withdraw a shout, if it was found that the new order contained a limit that was outside of our trading range, we cleared the previous bid using a stub.\\
+we are allowed to trade within). We therefore added additional logic to detect a new order enabling 
+us to react appropriately. Since on the Bristol Stock Exchange it is not possible to withdraw a shout, 
+if it was found that the new order contained a limit that was outside of our trading range, we 
+cleared the previous bid using a stub.\\
 
 
 
@@ -461,8 +476,11 @@ a rate determined by a constant ($\beta_1$):
 \end{equation}
 The affect that different values of $\beta_1$ have on performance is explored in Section \ref{sec:calibration_beta}.
 
-The function $\delta(t)$ is primarily dependent on the value of $r_{shout}$, the aggressiveness that would give a target price of the
-best outstanding shout when used in the equations found in Section \ref{sec:AA_price_estimation}. The value of $r_{shout}$ is calculated by reversing the aforementioned equations, as seen in the example given in Equation \ref{eqn:reverse_intra_buyer} which calculates $r_{shout}$ from the reverse of the intra-marginal buyer.
+The function $\delta(t)$ is primarily dependent on the value of $r_{shout}$, the aggressiveness that 
+would give a target price of the best outstanding shout when used in the equations found in Section 
+\ref{sec:AA_price_estimation}. The value of $r_{shout}$ is calculated by reversing the aforementioned 
+equations, as seen in the example given in Equation \ref{eqn:reverse_intra_buyer} which calculates 
+$r_{shout}$ from the reverse of the intra-marginal buyer.
 \begin{equation}
 r_{shout}=
 \begin{cases}
@@ -506,7 +524,7 @@ The larger the value of $\beta_2$ the faster we converge towards $\theta^*$. We 
 learning rate to 0.5, however we also investigated different values of $\beta_2$, as discussed in 
 Section \ref{sec:calibration_beta}.
 \begin{equation}
-  \theta(t+1)=\theta(t)+\beta_2(\theta^*(\alpha)-\theta_t)\\\\
+  \theta(t+1)=\theta(t)+\beta_2(\theta^*(\alpha)-\theta_t)
   \label{eqn:update_theta}
 \end{equation}
 The value of $\theta^*(\alpha)$ represents the value of $\theta$ that will allow us to act optimally in a
@@ -538,32 +556,52 @@ to the equilibrium.\\
 
 
 \section{Calibration} \label{sec:calibration}
-Why did we calibrate lol?
 % OWNER: Group
 % - $\beta_1$, $\beta_2$, $\gamma$, $\eta$
 % - potential to compare statistically?
+Adaptive Aggressive has a number of tunable parameters. In this Section we explore these and their 
+effect on the algorithm's performance in the market.\\
+
+
 \subsection{$\eta$ parameter} \label{sec:calibration_eta}
-The $\eta$ value in the AA bidding function determines how quickly the shout
-price moves towards from the best shout to the calculated target price. A
-higher value of $\eta$ will reduce the rate of change making the trader slower
-to react to market events. This is confirmed by our tests. A trader with $\eta
-= 1000$ makes an average profit of 94.507 over 100 trades. Another trader with
-a lower $\eta = 100$ makes a higher average profit of 116.553. Using $\eta = 3$
-from the AA thesis \cite{AA_thesis} gives a profit of 136.555. So clearly it is important for the
-shout price to respond to quickly up the changing market. Setting $\eta$ too
-low would cause outlier trades to have a significant impact which would reduce
-the margins.\\
+The $\eta$ value in the Adaptive Aggressive bidding function determines how quickly the shout price 
+moves from the best shout in the market towards the calculated target price. A higher value of $\eta$ will increase 
+the time taken to converge on the target price, making the trader slower to react to market events. 
+
+We tested various values of $\eta$ across three thousand market sessions in order to test the effect on Adaptive Aggressive's 
+performance, including $\eta = 3$, the value recommended in the original thesis \cite{AA_thesis}.
+\begin{table}[H]
+  \centering
+  \begin{tabular}{ | c | c | }
+    \hline
+    \textbf{$\eta$ value} & \textbf{Average finishing balance (3 dp.)} \\
+    \hline
+        1 & - \\
+        3 & 136.555 \\
+        5 & - \\
+        10 & - \\
+        100 & 116.533 \\
+        1000 & 94.507 \\
+    \hline \hline
+        ZIC & - \\
+        ZIP & - \\
+    \hline
+  \end{tabular}
+  \caption{Difference in finishing balance with respect to change in $\eta$.}
+  \label{tbl:eta_results}
+\end{table}
+Clearly it is important for the shout price to respond quickly to the changing market. Setting $\eta$ 
+too low would cause outlier trades to have a significant impact on our shout price. Conversely setting 
+$\eta$ too high causes the algorithm to be too slow to react.\\
 
 
 
 \subsection{$\beta_1$ and $\beta_2$ parameters} \label{sec:calibration_beta}
-
 We update our aggressiveness and $\theta$ values more often than in the original
-Adaptive Aggressiveness paper \cite{AA_thesis}. This is advantageous since it
-allows us to update to rapidly changing market conditions. Since we update
-these values more often the learning rates have to be comparatively lower
-otherwise the algorithm will effectively learn immediately. We ran tests over
-four thousand market sessions with various different values of $\beta_1$ (which
+Adaptive Aggressive paper \cite{AA_thesis}. This is advantageous as it
+allows us to adapt to rapidly changing market conditions, although it means that our learning rates 
+have to be comparatively lower to avoid the algorithm effectively learning immediately.
+We ran tests over four thousand market sessions with various different values of $\beta_1$ (which
 controls the rate of change of aggressiveness) and $\beta_2$ which controls the
 rate of change of $\theta$, the results are shown in Table \ref{tbl:beta_results}.
 The average profit made by the Adaptive Aggressive algorithm did not appear to
@@ -591,7 +629,7 @@ environment. \textbf{RUPERT PUT THE $\theta$=2 RESULTS HERE}
         0.06 & 129.864 & 128.308 \\
         0.07 & 129.797 & 128.000 \\
         0.08 & 129.698 & 128.100 \\
-        0.09 & 130.170 & 128.173 \\
+        0.09 & 129.570 & 128.173 \\
         0.10 & 129.138 & 128.903 \\
         0.20 & 129.038 & 129.287 \\
         0.30 & 129.312 & 129.376 \\
@@ -614,7 +652,7 @@ environment. \textbf{RUPERT PUT THE $\theta$=2 RESULTS HERE}
 
 
 \subsection{$\lambda$ parameter} \label{sec:calibration_lambda}
-We tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over 8000
+We tested $\lambda$ values from $0$ to $1$ in $0.1$ increments over eight thousand
 market sessions (of 600 timesteps each) to find their effect on AA's
 performance. We didn't find any statistically significant difference between
 the different values. 
@@ -655,7 +693,7 @@ the different values.
 
 
 
-\section{Results} \label{sec:results}
+\section{Evaluation} \label{sec:evaluation}
 % OWNER: Group
 % - Graph: Average balance over time
 % - Statistical analysis - why you used a certain test
@@ -739,7 +777,7 @@ We ran 22750 market sessions with AA, SHVR, ZIC and ZIP traders (half
 buyers, half sellers). For each ratio 50 market sessions were run. The Wilcoxon
 signed-rank test was used to evaluate the significance of the results. The null
 hypothesis is that the difference between the pairs of traders is zero. For
-each trader paired with AA we can reject the null hypothesis ($p < 2.2 \cdot
+each trader paired with Adaptive Aggressive we can reject the null hypothesis ($p < 2.2 \cdot
 10^{-308}$). The results using fixed and jittered price generation were
 virtually identical.
 
@@ -750,7 +788,7 @@ virtually identical.
   \label{fig:average_balance_vs_time}
 \end{figure}
 
-Figure \ref{fig:average_balance_vs_time} shows that AA consistently makes more profit.
+Figure \ref{fig:average_balance_vs_time} shows that Adaptive Aggressive consistently makes more profit.
 
 \begin{table}[H]
   \centering
@@ -769,7 +807,7 @@ Figure \ref{fig:average_balance_vs_time} shows that AA consistently makes more p
 We ran the Wilcoxon signed-rank test on the values in Table
 \ref{tbl:two_traders} which resulted in $p < 2.2 \cdot 10^{-308}$. The AA
 traders outperformed the ZIP traders 99.66\% of the time. ZIP performs worse in
-a market with just AA traders which suggests ZIP was reliant on trades with the
+a market with just Adaptive Aggressive traders which suggests ZIP was reliant on trades with the
 ZIC and SHVR traders.\\
 
 
